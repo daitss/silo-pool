@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+require 'time'
+
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
+
+require 'store/tsmexecutor'
+require 'store/utils'
+
+Struct.new('Options', :tape_server)
+
+# The defaults defined here pretty good; you may want to specify the syslog.
+
+def get_options args
+
+  conf = Struct::Options.new
+
+  # defaults for FCLA:
+
+  conf.tape_server    = 'BERNARD_SERVER'
+
+  opts = OptionParser.new do |opts|
+    opts.on("--tape-server NAME", String, "The name of the tivloi tape server (defaults to #{conf.tape_server}).") do |name|
+      conf.tape_server = name
+    end
+  end
+
+  opts.parse!(args)
+  raise "No tape server name specified."  unless conf.tape_server
+
+rescue => e
+  STDERR.puts e, opts
+  exit
+else
+  return conf
+end
+
+options  = get_options ARGV
+tsm      = Store::TsmExecutor.new(options.tape_server)
+
+
+tsm.restore('/daitssfs/028/c13/851ee13f2c735c943688c9da6445d/', '/var/daitss/tmp/')
+
+if tsm.status > 4
+  STDERR.puts "Command '#{tsm.command}', exited with status #{tsm.status}"
+  if not tsm.errors.empty?
+    STDERR.puts "Tivoli error log follows:"
+    tsm.errors.each { |line| STDERR.puts line.chomp }
+  end
+  if not tsm.output.empty?
+    STDERR.puts "Tivoli output log follows:"
+    tsm.output.each { |line| STDERR.puts line.chomp }
+  end
+end
+

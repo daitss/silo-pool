@@ -1,0 +1,149 @@
+#!/usr/bin/env ruby
+
+require 'tempfile'
+require 'tmpdir'
+require 'fileutils'
+
+
+# create some silo directories; create and setup a temporary database for it; 
+# kick off a silo server on it. Control-C should clean up.
+
+class SiloMaker
+
+  attr_reader :root, :db, :db_config, :pid_file, :port, :project_dir, :server_addr, :log_file
+
+  def initialize
+
+    # create silos 001, 002, 003
+    
+    @root = Dir.mktmpdir('silos-', '/tmp')
+    @server_addr = '127.0.0.1'
+    subdirs = ['001', '002', '003'].map { |sub| File.join(@root, sub) }
+    FileUtils.mkdir_p subdirs
+
+    # create a database on localhost
+
+    @db = DbMaker.new server_addr, *subdirs
+    @db_config = Tempfile.new('db-config-', '/tmp')
+    db_config.puts "test: { vendor: mysql, hostname: #{db.hostname}, database: #{db.database}, username: #{db.username}, password:  #{db.password} }"
+    db_config.close
+
+    # rack supporting files 
+
+    @log_file = Tempfile.new('rackup-log-', '/tmp')
+    @pid_file = Tempfile.new('rackup-pid-', '/tmp')
+    @project_dir = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+    @port = '9292' # the default rackup port
+  end
+
+  def close
+    db.drop
+    FileUtils.chmod_R 0777, root
+    FileUtils.rm_rf root
+    [ log_file, pid_file, db_config ].each { |tmpfile| tmpfile.delete  if File.exists? tmpfile.path }
+  end
+
+  def addr subdir = '001'
+    File.join("http://#{server_addr}:#{port}/#{subdir}/data/")    
+  end
+
+  def start
+    Dir.chdir project_dir
+    ENV['DATABASE_CONFIG_FILE'] = db_config.path
+    ENV['DATABASE_CONFIG_KEY']  = 'test'
+    ENV['SILO_ROOT']            = root
+   `rackup --pid #{pid_file.path} --host 127.0.0.1 --port #{port} >& #{log_file.path}`
+  end
+
+end
+
+
+# creates (and later deletes)
+
+class DbMaker
+
+  attr_reader :database, :hostname, :username, :password
+
+  def initialize server_addr, *silos
+    @database = 'cucumber_tests_' + sprintf("%04d", rand(10000).to_s)
+    `mysqladmin -uroot create #{database}`
+    @hostname = 'localhost'
+    @password = nil
+    @username = 'root'
+    @server_addr = server_addr
+    mysql ddl
+    text = ''
+    silos.each do |s|
+      text += "insert into silos(hostname,filesystem) values('#{server_addr}', '#{s}');\n"
+    end
+    mysql text
+  end
+
+  def mysql(text)
+    IO.popen("mysql -uroot -hlocalhost #{database}", "w") { |io| io.puts text }
+  end
+
+  def drop
+    mysql "drop database #{database};"
+  end
+
+  def ddl
+    <<EOF 
+    CREATE TABLE histories (
+      id int(10) unsigned NOT NULL AUTO_INCREMENT,
+      action int(11) NOT NULL,
+      sha1 varchar(40) DEFAULT NULL,
+      md5 varchar(32) DEFAULT NULL,
+      timestamp datetime DEFAULT NULL,
+      package_record_id int(10) unsigned NOT NULL,
+      PRIMARY KEY (id),
+      KEY index_histories_package_record (package_record_id)
+    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+
+    CREATE TABLE packages (
+      id int(10) unsigned NOT NULL AUTO_INCREMENT,
+      extant tinyint(1) DEFAULT NULL,
+      name varchar(50) NOT NULL,
+      initial_sha1 varchar(40) NOT NULL,
+      initial_md5 varchar(32) NOT NULL,
+      initial_timestamp datetime NOT NULL,
+      size bigint(20) unsigned NOT NULL,
+      type varchar(50) NOT NULL,
+      latest_sha1 varchar(40) DEFAULT NULL,
+      latest_md5 varchar(32) DEFAULT NULL,
+      latest_timestamp datetime DEFAULT NULL,
+      silo_record_id int(10) unsigned NOT NULL,
+      version int(10) unsigned DEFAULT '1',
+      PRIMARY KEY (id),
+      KEY index_packages_name (name),
+      KEY index_packages_size (size),
+      KEY index_packages_initial_sha1 (initial_sha1),
+      KEY index_packages_initial_md5 (initial_md5),
+      KEY index_packages_silo_record (silo_record_id),
+      KEY index_packages_latest_sha1 (latest_sha1),
+      KEY index_packages_initial_timestamp (initial_timestamp),
+      KEY index_packages_latest_md5 (latest_md5),
+      KEY index_packages_latest_timestamp (latest_timestamp),
+      KEY index_packages_exists (extant)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+    CREATE TABLE silos (
+      id int(10) unsigned NOT NULL AUTO_INCREMENT,
+      filesystem varchar(255) NOT NULL,
+      hostname varchar(127) NOT NULL,
+      state int(11) DEFAULT '1',
+      forbidden int(11) DEFAULT '24',
+      version int(10) unsigned DEFAULT '1',
+      PRIMARY KEY (id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+EOF
+  end
+end
+
+@silo_server = SiloMaker.new
+
+Signal.trap('INT')  { @silo_server.close; exit  }
+Signal.trap('TERM') { @silo_server.close; exit  }
+
+@silo_server.start
+

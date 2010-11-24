@@ -1,0 +1,9 @@
+-- List out the histories for everything on this silo
+--
+   select  silos.hostname, silos.filesystem, packages.name, histories.action, histories.timestamp, histories.md5, histories.sha1
+     from  histories, packages, silos 
+    where  packages.silo_record_id = silos.id 
+      and  histories.package_record_id = packages.id 
+ order by  packages.name, histories.timestamp
+
+

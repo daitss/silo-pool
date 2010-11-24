@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+    <script type="text/javascript"  src="/jquery-1.4.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+      $('.entries tbody tr:odd').addClass('odd');
+      $('.entries tbody tr:even').addClass('even');
+      $('.fixities tbody tr:odd').addClass('odd');
+      $('.fixities tbody tr:even').addClass('even');
+      });
+    </script>
+    <title>Package IEID <%= name  %></title>
+  </head>
+
+  <body>
+    <h1> 
+      <a href="/silos/"><%= silo.hostname %> silos</a> 
+      &rArr; 
+      <a href="../"><%= filesystem_to_text(silo.filesystem) %> packages</a> 
+      &rArr; 
+      <%= name %> 
+    </h1>
+
+    <h2>
+      Contents (<a href="../<%= name  %>">tar file</a>)
+    </h2>
+
+    <table class="entries">
+      <thead>
+	<tr class="border">
+	  <th>File Name</th>
+	  <th style="text-align: right;">KB</th>
+	  <th>Date</th>
+	</tr>
+      </thead>
+      <tbody>	  
+	<% headers.each do |h| %>
+	<tr>
+	  <td><a href="<%= h['filename'].gsub(%r{^[./]*}, '') %>"><%= h['filename']  %></a></td>
+	  <td align="right"><%= StoreUtils.commify(sprintf("%5.2f", h['size']/1000.0)) %></td>
+	  <td><%= h['mtime'].strftime("%B %d, %Y - %r") %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <h2>Fixities (<a href="../../fixity/<%= name %>">xml file</a>)</h2>
+
+    <table class="fixities">
+      <thead>
+	<tr class="border">
+	  <th>Action</th>
+	  <th>Date</th>
+	  <th>MD5</th>
+	  <th>SHA1</th>
+	  <th>Status</th>
+	</tr>
+      </thead>
+      <tbody>
+	<% fixities.each do |f| %>
+	<tr>
+	  <td><%= f[:action].to_s %></td>
+	  <td><%= f[:time].strftime("%B %d, %Y - %r") %></td>
+	  <td><%= f[:md5] %></td>
+	  <td><%= f[:sha1] %></td>
+	  <td><%= (f[:action] == :fixity) ? f[:status].to_s : '' %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    
+    <p class="footer">
+      <%= revision %>
+    </p>
+
+  </body>
+</html>

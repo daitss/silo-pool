@@ -1,0 +1,22 @@
+Some of these are really setup for the super server
+
+Authenticate DELETE/PUTS
+No MD5 computation on HEAD.
+
+silos: access internals of tar files with E2001010_DEBABE# as toc,
+others as E2001010_DEBABE#UF01010010.xml as entry.
+
+
+administrivia:
+ show specs of all silos
+ add/delete/edit a silo
+ mark a silo as retired
+ assign to a pool
+ add a note
+ 
+PUT
+ mime-type of tar
+ size
+ md5
+
+

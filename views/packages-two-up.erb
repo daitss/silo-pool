@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />   
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+    <script type="text/javascript"  src="/jquery-1.4.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+      $('.packages_1 tbody tr:odd').addClass('odd');
+      $('.packages_1 tbody tr:even').addClass('even');
+      $('.packages_2 tbody tr:odd').addClass('odd');
+      $('.packages_2 tbody tr:even').addClass('even');
+      });
+    </script>
+    <title>Packages on <%= silo.hostname %>:<%= silo.filesystem %></title>
+  </head>
+
+  <body>
+    <h1> 
+      <a href="/silos/"><%= silo.hostname %> silos</a> 
+      &rArr; 
+      <%= filesystem_to_text(silo.filesystem) %> packages
+    </h1>
+
+    <% search_str = search.nil?  ? '' : "&search=#{search}" %>
+    <table style="border:none;">
+      <tr>
+	<td class="tl">
+	  <% if (page > 1) %>
+  	  <a href="?page=<%= page - 1 %><%= search_str %>">prev</a>
+	  <% else %>
+	  (prev)
+	  <% end %>
+	  page <%= page %> of <%= number_of_pages %>
+	  <% if (page < number_of_pages) %>
+	     <a href="?page=<%= page + 1 %><%= search_str %>">next</a>
+	     <% else %>
+	     (next)
+	     <% end %>
+	</td>
+
+	<td class="tr">
+	  <form>
+	    <input type="text" name="search"  value="<%= search %>" style="background-color: #fdd;">
+	    <input type="hidden" name="page"  value="1">
+	  </form>
+
+	</td>
+      </tr>
+
+      <tr>
+	<td style="vertical-align: top;">
+	  <% unless (packages_1.nil? or packages_1.empty?) %>
+	  <table class="packages_1">
+	    <thead>
+	      <tr class="border">
+		<th>Package Name</th>
+		<th style="text-align: right;">MB</th>
+		<th>Date</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <% packages_1.each do |name| %>
+	      <tr>
+		<td><a href="<%= name %>/"><%= name %></a></td>
+		<td align="right"><%= StoreUtils.commify(sprintf("%5.2f", silo.size(name)/1000000.0)) %></td>
+		<td><%= silo.datetime(name).strftime("%B %d, %Y - %r") %></td>
+              </tr>
+              <% end %>
+	    </tbody>
+	  </table>
+	  <% end %>
+
+	</td>
+	<td style="vertical-align: top;">
+	  <% unless (packages_2.nil? or packages_2.empty?) %>
+	  <table class="packages_2">
+	    <thead>
+	      <tr class="border">
+		<th>Package Name</th>
+		<th>MB</th>
+		<th>Date</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <% packages_2.each do |name| %>
+	      <tr>
+		<td><a href="<%= name %>/"><%= name %></a></td>
+		<td align="right"><%= StoreUtils.commify(sprintf("%5.2f", silo.size(name)/1000000.0)) %></td>
+		<td><%= silo.datetime(name).strftime("%B %d, %Y - %r") %></td>
+              </tr>
+              <% end %>
+	    </tbody>
+	  </table>
+
+	  <% end %>
+	</td>
+      </tr>
+    </table>
+
+    <p class="footer">
+      <%= revision %>
+    </p>
+
+  </body>
+</html>

@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+#
+# Given one or more daitss filesystems,  return a listing as tivoli reports it on tape, e.g.
+#
+# /daitssfs/004/005/2c371bf7c2255c43d99c8d36384b9/data          81,223,680  Thu Jul 03 15:11:21 -0400 2008
+# /daitssfs/004/005/2c371bf7c2255c43d99c8d36384b9/datetime              26  Thu Jul 03 15:11:21 -0400 2008
+# /daitssfs/004/005/2c371bf7c2255c43d99c8d36384b9/md5                   33  Thu Jul 03 15:11:21 -0400 2008
+# /daitssfs/004/005/2c371bf7c2255c43d99c8d36384b9/name                  17  Thu Jul 03 15:11:21 -0400 2008
+# /daitssfs/004/005/2c371bf7c2255c43d99c8d36384b9/sha1                  41  Thu Apr 15 03:50:31 -0400 2010
+# /daitssfs/004/005/2c371bf7c2255c43d99c8d36384b9/type                  18  Thu Apr 15 03:50:31 -0400 2010
+# /daitssfs/004/005/5e527fa1bea3f60dc0c0c2fc303fa/data         116,398,080  Wed Jul 02 20:07:05 -0400 2008
+# /daitssfs/004/005/5e527fa1bea3f60dc0c0c2fc303fa/datetime              26  Wed Jul 02 20:07:05 -0400 2008
+# /daitssfs/004/005/5e527fa1bea3f60dc0c0c2fc303fa/md5                   33  Wed Jul 02 20:07:05 -0400 2008
+# /daitssfs/004/005/5e527fa1bea3f60dc0c0c2fc303fa/name                  17  Wed Jul 02 20:07:05 -0400 2008
+# /daitssfs/004/005/5e527fa1bea3f60dc0c0c2fc303fa/sha1                  41  Thu Apr 15 03:50:33 -0400 2010
+# /daitssfs/004/005/5e527fa1bea3f60dc0c0c2fc303fa/type                  18  Thu Apr 15 03:50:31 -0400 2010
+
+require 'optparse'
+require 'time'
+
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
+
+require 'store/tsmexecutor'
+require 'store/utils'
+
+Struct.new('Options', :tape_server)
+
+# The defaults defined here pretty good; you may want to specify the syslog.
+
+def get_options args
+
+  conf = Struct::Options.new
+
+  # defaults for FCLA:
+
+  conf.tape_server    = 'BERNARD_SERVER'
+
+  opts = OptionParser.new do |opts|
+    opts.on("--tape-server NAME", String, "The name of the tivloi tape server (defaults to #{conf.tape_server}).") do |name|
+      conf.tape_server = name
+    end
+  end
+
+  opts.parse!(args)
+  raise "No tape server name specified."  unless conf.tape_server
+
+rescue => e
+  STDERR.puts e, opts
+  exit
+else
+  return conf
+end
+
+options  = get_options ARGV
+tsm      = Store::TsmExecutor.new(options.tape_server)
+
+ARGV.each do |filesystem| 
+  ls = tsm.list(filesystem.gsub(%r{/+$}, '') + '/')    # make sure has traiing /
+
+  max_size = 0
+  filepath_column_length = 0
+
+  ls.each do |rec|
+    filepath_column_length = rec.path.length > filepath_column_length ?  rec.path.length : filepath_column_length
+    max_size     = rec.size > max_size ? rec.size : max_size
+  end
+
+  size_column_length = StoreUtils.commify( max_size.to_s).length
+
+  ls.each do |rec|
+    puts sprintf("%-#{filepath_column_length}s  %#{size_column_length}s  %s", rec.path, StoreUtils.commify(rec.size), rec.mtime.to_s)
+  end
+end

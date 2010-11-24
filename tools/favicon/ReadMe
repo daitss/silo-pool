@@ -1,0 +1,3 @@
+First cut, no transparency:
+
+  pngtopnm daitss.png | pnmrotate 33 | pnmcrop | pnmscale -x 48 -y 48 | pnmquant 32 | ppmtowinicon > ..../public/favicon.ico

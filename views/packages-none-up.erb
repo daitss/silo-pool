@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+    <script type="text/javascript"  src="/jquery-1.4.js"></script>
+    <title>Packages on <%= silo.hostname %>:<%= silo.filesystem %></title>
+  </head>
+
+  <body>
+    <h1> 
+      <a href="/silos/"><%= silo.hostname %> silos</a> 
+      &rArr; 
+      <%= filesystem_to_text(silo.filesystem) %> packages
+    </h1>
+
+    <% search_str = search.nil?  ? '' : "&search=#{search}" %>
+    <table width="50%">
+      <tr>
+	<th class="tl">
+	  No packages meet the search criteria.
+	</th>
+
+	<th class="tr">
+	  <form>
+	    <input type="text" name="search"  value="<%= search %>" style="background-color: #fdd;">
+	    <input type="hidden" name="page"  value="1">
+	  </form>
+	</th>
+      </tr>
+    </table>
+
+    <p class="footer">
+      <%= revision %>
+    </p>
+
+  </body>
+</html>

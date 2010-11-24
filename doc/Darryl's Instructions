@@ -1,0 +1,22 @@
+Randy,
+
+The management classes in the test tape environment were "LOCAL1",
+"LOCAL2", and "REMOTE".  REMOTE of course no longer works since
+we are long off of NWRDC's Tivoli server.
+
+The key to accessing the test environment instead of the production
+one was to use the option
+
+ Servername=ADSM_TEST
+
+whenever writing to or reading from the tapes.
+
+The associated tape pools with those management classes still are
+
+ "darchive1test3" for LOCAL1
+
+ "darchive2test3" for LOCAL2
+
+Let me know if you need any more info.
+
+Darryl

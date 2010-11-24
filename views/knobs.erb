@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+    <title>Silo Knobs</title>
+  </head>
+
+  <body>
+    <h1>Silo Control</h1>
+
+    <h2><%= silo.hostname %>:<%= silo.filesystem %></h2>
+
+    <% id='label000' %>
+
+      <form method="post"  action="allowed-states">
+      <fieldset>
+	<legend>
+	  Allowed States
+	</legend>
+	
+	<table class="expansive" style="border: none;">
+	  <tr>
+	    <td class="bl">
+	      <ul>
+		<% silo.allowed_states.each do |state| %>
+		<% id.succ! %>
+		<li> 
+		  <input id="<%= id %>" type="radio" name="state" value="<%= state_to_text(state) %>" <%= silo.state == state ? 'checked="checked"' : ''  %>>
+		  <label for="<%= id %>"> <%= state_to_text(state) %> </label>
+		</li>
+		<% end %>
+	      </ul>
+	    </td>
+	    
+	    <td class="br">
+	      <input type="submit" value="proceed">
+	    </td>
+	  </tr>
+	</table>
+	
+      </fieldset>  
+      </form>
+
+      <form method="post" action="allowed-methods">
+      <fieldset>
+	<legend>
+	  Allowed Methods
+	</legend>
+
+	<table class="expansive" style="border: none;">
+	  <tr>
+	    <td class="bl">
+	      <ul>
+		<% silo.possible_methods.each do |meth| %>
+		<% id.succ! %>
+		<li> 
+		  <input id="<%= id %>" type="checkbox" name="selected-methods[]" value="<%= method_to_text(meth) %>"
+			 <%= silo.allowed_methods.include?(meth) ? 'checked="checked"' : ''  %>>
+		  <label for="<%= id %>"> <%= method_to_text(meth) %> </label> 
+		</li>
+		<% end %>
+	      </ul>
+	    </td>
+	    
+	    <td class="br">
+	      <input type="submit" value="proceed">
+	    </td>
+	  </tr>
+	</table>
+	
+      </fieldset>
+      </form>
+
+      <form method="get" name="cancel" action="/silos/">
+      <div style="margin:20px;">
+	<input type="submit" value="cancel">
+      </div>
+      </form>
+      
+      <p class="footer">
+	<%= revision %>
+      </p>
+  </body>
+</html>

@@ -1,0 +1,220 @@
+#!/usr/bin/ruby
+$LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+# TODO: problem when one of the directories goes awy: we can't get any where
+
+require 'readline'
+require 'store/db'
+require 'store/silodb'
+require 'store/silotape'
+require 'store/trie'
+
+include Store
+
+class ExitRequest  < StandardError; end
+class SanityFailed < StandardError; end
+
+trap('INT')  { exit }
+trap('PIPE') { exit }
+
+def add_silo_completions completions, names
+  return if names.empty?
+  # Use a trie to get shortest unique suffixes in here; if it returns a '' string, we can't use them (longest prefix is a key itself)
+  trie = Trie.new
+  names.each { |name| trie[name] = true }
+  keys = trie.twigs
+  if  keys.include? ''
+     completions += names
+  else
+     completions += keys 
+  end
+  completions
+end
+
+# setup silo data
+
+DB.setup '/opt/fda/etc/db.yml', 'silos'
+@state = :silos
+@silos = DB::SiloRecord.list
+
+@silos = {}
+DB::SiloRecord.list.each do |rec|
+  hostname    = rec.hostname
+  filesystem  = rec.filesystem
+  url         = hostname + ':' + filesystem
+  @silos[url] = { :hostname => hostname, :url => url, :filesystem => filesystem, :db_record => rec }
+end
+
+# TODO: want to add shrtest suffix that identifies silo, above
+
+
+@selected = nil
+
+# setup autocomplete
+
+@completions = [ 'add', 'allow', 'forbid', 'help', 'list', 'select', 'show' ] 
+
+@completions += @silos.keys.sort
+
+comp = proc { |s| @completions.grep( /^#{Regexp.escape(s)}/ ) }
+Readline.completion_append_character = " "
+Readline.completion_proc = comp
+
+
+states = [ :silos, :edit ]
+
+def repl
+  puts user_help
+  loop do
+    begin      
+      result = eval_command(Readline.readline("#{@selected.nil?  ? '' : @selected[:url] }> ", true))
+      puts result unless result == ''
+    rescue SanityFailed => e
+      puts e.message
+    rescue ExitRequest => e
+      puts "\nbye.."
+      exit
+    rescue => e
+      puts e.message
+      # e.backtrace.each { |mess| puts mess }
+    end
+  end
+end
+
+def eval_command  command_line
+  exit if command_line.nil?
+  exit if command_line.downcase == 'exit'
+  commands = command_line.split(/\s+/)
+  command = commands.shift
+  case command
+  when 'add';        user_add(*commands)
+  when 'allow';      user_allow(*commands)
+  when 'forbid';     user_forbid(*commands)
+  when 'help', '?';  user_help(*commands)
+  when 'idle';       user_idle(*commands)
+  when 'list';       user_list(*commands)
+  when 'select';     user_select(*commands)
+  when 'show';       user_show(*commands)
+  when  nil;         ''
+  else
+    raise SanityFailed, "Unsupported command '#{command}'\n" + user_help()
+  end
+end
+
+def user_select *args
+  if args.length != 1
+    raise SanityFailed, "Usage:\n  select <siloname>\n" + "where <siloname> is one of the following:\n"  + user_list
+  else
+    new_silo_url  = args[0]
+    raise SanityFailed, "#{new_silo_url} is not on the list of silos for this host." if @silos[new_silo_url].nil? 
+    @selected = @silos[new_silo_url]
+  end
+  user_show
+end
+  
+def user_help *args
+  if @selected.nil?
+    "
+Available commands: 
+
+    help             - This text.
+    add <silo>       - adds a new silo to the list of silos.  It becomes the selected silo.
+                       It will be a disk-based silo, and the filesystem it refers to must exist.
+    list             - list the available silos.
+    select <silo>    - select the silo to do management operations such as allowing or forbidding 
+                       PUT, GET or DELETEs. Use help once a silo has been selected to see the 
+                       options.
+
+"
+    else 
+    "
+Available commands: for silo #{@selected[:url]}
+
+    allow  <action>  - allow method <action>,  one of GET, PUT or DELETE.
+    forbid <action>  - forbid method <action>, one of GET, PUT or DELETE.
+    idle             - for disk-master silos, schedule the backup tape to be fixity-checked 
+                       and the silo made into a tape-master.
+    list             - list the available silos.
+    show             - show the state of the silo, and the allowed methods for it.
+    select <silo>    - select a different silo.
+
+"
+  end
+end
+
+def user_list
+  text = ''
+  @silos.keys.sort.each do |key|
+    silo = get_silo @silos[key]
+    text +=  "  #{key}	#{silo.media} (#{silo.state})	#{silo.allowed_methods.join(', ')}\n"
+  end
+  text
+end
+
+def check_selected
+  raise SanityFailed, "Use 'select <siloname>' to select a silo before using this command." unless @selected
+end
+
+def user_show  *args
+  check_selected
+  silo = get_silo(@selected)
+  
+  allowed_methods   = silo.allowed_methods
+  possible_methods  = silo.possible_methods  
+  remaining_methods = possible_methods - allowed_methods
+
+  "\nThe silo #{@selected[:url]} is a #{silo.media}-based silo in the #{silo.state} state.\n" +
+  "Allowed methods: " + 
+    (allowed_methods.empty? ? 'none' : allowed_methods.join(", ")) + 
+    (remaining_methods.empty? ? ". Those are all of the allowed methods for this type of device.\n\n"  \
+                              : "; you may allow #{remaining_methods.join(', ')}.\n\n")
+end
+
+def get_silo silo_info
+  hostname   = silo_info[:hostname]
+  filesystem = silo_info[:filesystem]
+
+  rec = DB::SiloRecord.lookup hostname, filesystem
+  silo = nil
+  case rec.media_device
+  when :disk
+    silo = SiloDB.new(hostname, filesystem)
+  when :tape
+    silo = SiloTape.new(hostname, filesystem, '/tmp/', 'UNUSED')
+  else
+    raise "Unknown silo media '#{rec.media_device}'"
+  end  
+  silo
+end
+
+def user_allow *args
+  check_selected
+  raise SanityFailed, "You must allow exactly one of PUT, DELETE, or GET, as allowed." if args.length != 1 or args[0] !~ /^GET$|^PUT$|^DELETE$/i
+  get_silo(@selected).allow args.pop
+  user_show
+end
+
+def user_forbid *args
+  check_selected
+  raise SanityFailed "You must forbid exactly one of PUT, DELETE, or GET, as allowed." if args.length != 1 or args[0] !~ /^GET$|^PUT$|^DELETE$/i
+  get_silo(@selected).forbid args.pop
+  user_show
+end
+
+def user_idle *args
+  check_selected
+  silo = get_silo(@selected)
+  silo.idle
+  user_show
+end
+
+def user_add *args
+  spec = args[0]
+  "The add command is currently unimplemented."
+end
+
+
+
+repl
+
+

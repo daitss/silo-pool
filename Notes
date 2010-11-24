@@ -1,0 +1,35 @@
+Notes for a silo reservation system for pools
+
+
+
+Procedural Description
+----------------------
+
+Add the silo information 
+
+  * is the silo ro/rw?  If rw continue
+  * does the silo have
+  * determine the partition the silo filesystem exists on
+  * what outstanding reservations are on that filesystem? (remove those that have timed out - two hours?)
+ 
+
+
+
+
+Functional Description
+----------------------
+
+SilosReservation:
+
+   ob = SiloReservation.new(*Silos) 
+   ob.silo
+   ob.release 
+
+
+Silos:
+
+silo.rw?
+silo.root_filesystem
+
+
+

@@ -1,0 +1,102 @@
+#!/usr/bin/env ruby
+
+DIR = File.dirname(File.symlink?(__FILE__) ? File.readlink(__FILE__) : File.expand_path(__FILE__))
+ENV['BUNDLE_GEMFILE'] = File.join(DIR, '..', 'Gemfile'))
+require 'bundler/setup'
+$LOAD_PATH.unshift File.join(DIR, '..', 'lib'))
+
+# This program trundles through a disk-based silo and does md5 and sha1 checksums,
+# adding them to a SiloDB/SiloTape  database.
+
+require 'store/silodb'
+require 'store/logger'
+require 'store/utils'
+require 'digest/md5'
+require 'digest/sha1'
+require 'optparse'
+
+def get_options args
+  conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_configuration_key => nil, :db_configuration_file => '/opt/fda/etc/db.yml')
+
+  opts = OptionParser.new do |opts|
+
+    opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to, otherwise log to STDERR") do |facility|
+      conf.syslog_facility = facility
+    end
+    
+    opts.on("--db-configuration-file PATH",  String, "A database yaml configuration file, defaults to #{conf.db_configuration_file}") do |path|
+      conf.db_configuration_file = path
+    end
+    
+    opts.on("--db-configuration-key KEY",  String, "The key for the database information in the database yaml configuration file #{conf.db_configuration_file}") do |key|
+      conf.db_configuration_key = key
+    end
+    
+    opts.on("--hostname HOST",   String, "The name of the host this silo is associated with (usually a virtual host)") do |hostname|
+      conf.hostname = hostname.downcase
+    end
+  end
+  opts.parse!(args) 
+  raise "No hostname provided"  unless conf.hostname
+  raise "No key into the DB configuration file (#{conf.db_configuration_file}) provided" unless conf.db_configuration_key
+  raise "Default yaml file #{conf.db_configuration_file} not found" unless File.exists? conf.db_configuration_file
+  
+rescue => e
+  STDERR.puts e, opts
+  return nil
+else
+  return conf
+end
+
+# TODO: remove silly restriction that the silo directories must be writable in silo.rb - move lock 
+# files off or just use write locks for updating the silo filesystem...
+
+exit unless conf = get_options(ARGV)
+
+
+if conf.syslog_facility
+  Logger.facility  = conf.syslog_facility 
+else
+  Logger.stderr   
+end
+
+begin
+  Store::SiloDB.setup conf.db_configuration_file, conf.db_configuration_key
+rescue => e
+  Logger.err e.message
+  exit
+end
+
+begin
+  silos = []
+  Store::DB::SiloRecord.list(conf.hostname).select{ |s| s.state == :disk_master and s.hostname == conf.hostname }.each do |rec|
+     silos.push Store::SiloDB.new(rec.hostname, rec.filesystem)
+  end
+rescue => e
+   Logger.err e.message
+   exit
+end
+
+silos.each do |silo|
+  Logger.info "Beginning bulk fixity update for silo #{silo}"
+  silo.each do |package|
+    begin
+      md5  = Digest::MD5.new
+      sha1 = Digest::SHA1.new
+      silo.get(package) do |buff|
+        md5  << buff
+        sha1 << buff
+      end
+      md5   = md5.hexdigest
+      sha1  = sha1.hexdigest
+    rescue => e    
+      Logger.err "Unexpected error in fixity checking on silo #{silo} (on package #{package}): #{e.message}."
+    else
+      silo.fixity(package, :md5 => md5, :sha1 => sha1)
+      errors = []
+      errors.push "md5 mismatch - expected #{silo.md5(package)} but got #{md5}"    if (md5  != silo.md5(package))
+      errors.push "sha1 mismatch - expected #{silo.sha1(package)} but got #{sha1}" if (sha1 != silo.sha1(package))
+      Logger.err "Fixity failure for package #{package} on silo #{silo}: #{errors.join('; ')}."  unless errors.empty?
+    end
+  end
+end

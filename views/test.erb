@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+  </head>
+  <body>
+    <h3>ENV</h3>
+      <table>
+      <% environment.keys.sort.each do |key| %>
+       <tr>
+        <td><%= key %></td>
+        <td><%= escape_html(environment[key].inspect) %></td>
+       </tr>
+      <% end %>
+     </table>
+
+
+    <h3>@env</h3>
+      <table>
+      <% env.keys.sort.each do |key| %>
+       <tr>
+        <td><%= key %></td>
+        <td><%= escape_html(env[key].inspect) %></td>
+       </tr>
+      <% end %>
+     </table>
+
+
+    <h3>Request Object</h3>
+
+      <table>
+      <% [].each do |meth| %>
+       <tr>
+        <td><%= meth %></td>
+        <td><%= escape_html(request.send(meth).inspect) %></td>
+       </tr>
+      <% end %>
+     </table>
+
+
+  </body>
+</html>

@@ -1,0 +1,103 @@
+ -- -*- mode:sql -*-
+ -- 
+ -- The DDL for creating the PostgreSQL silo-side database that tracks packages.
+ -- 
+
+create type silo_state as enum ('disk_master', 'disk_idling', 'disk_copied', 'tape_master');
+
+create table silos (
+ id serial primary key,
+
+ hostname        varchar(127)       not null,
+ filesystem      varchar(255)       not null,
+
+ state           silo_state default 'disk_master' not null, 
+
+ forbid_get      boolean    default false not null,
+ forbid_put      boolean    default false not null,
+ forbid_delete   boolean    default false not null,
+ forbid_post     boolean    default false not null,
+
+ version         integer    default 1 not null,          -- version fields enable optimistic locking at rows
+
+ unique (hostname, filesystem)
+);
+
+create index  silos_filesystem_index   on silos (filesystem);
+create index  silos_hostname_index     on silos (hostname);
+create index  silos_state_index        on silos (state);
+create index  silos_version_index      on silos (version); 
+
+create table packages (
+ id serial primary key,
+
+ name              varchar(127)  not null,
+ extant            boolean       default true not null,
+ size              bigint        not null,
+ type              varchar(127)  not null,
+
+ initial_sha1      char(40)      not null,
+ initial_md5       char(32)      not null,
+ initial_timestamp timestamp     not null,
+
+ latest_sha1       char(40)      default null,  -- null means not applicable - there was only an initial sha1 (e.g., we did a put)
+ latest_md5        char(32)      default null,  -- as above
+ latest_timestamp  timestamp     default null,  -- as above
+
+ silo_id           integer       not null references silos (id) on update cascade on delete cascade,
+
+ version           integer       default 1 not null,
+
+ unique(name)
+);
+
+
+create index  packages_extant_index             on packages (extant);
+create index  packages_name_index               on packages (name);
+create index  packages_initial_sha1_index       on packages (initial_sha1);
+create index  packages_initial_md5_index        on packages (initial_md5);
+create index  packages_initial_timestamp_index  on packages (initial_timestamp);
+create index  packages_latest_sha1_index        on packages (latest_sha1);
+create index  packages_latest_md5_index         on packages (latest_md5);
+create index  packages_latest_timestamp_index   on packages (latest_timestamp);
+create index  packages_size_index               on packages (size);
+create index  packages_type_index               on packages (type);
+create index  packages_silo_id_index            on packages (silo_id);
+create index  packages_version_index            on packages (version);
+
+create type history_action as enum ('put', 'fixity', 'delete');
+
+create table histories (
+ id bigserial primary key,                             -- we expect to go over 2 billion records for this table
+
+ package_id        integer             not null references packages (id) on update cascade on delete cascade,
+ action            history_action      not null,
+ sha1              char(40)            default null,   -- null means not applicable, e.g. the action was a delete and there is no sha1
+ md5               char(32)            default null,   -- as above
+ action_time       timestamp           not null,
+
+ version           integer             default 1 not null
+);
+
+create index  histories_package_id_index   on histories (package_id);
+create index  histories_version_index      on histories (version);
+create index  histories_action_time_index  on histories (action_time);
+create index  histories_md5_index          on histories (md5);
+create index  histories_sha1_index         on histories (sha1);
+create index  histories_action_index       on histories (action);
+
+create table silo_logs (
+ id serial primary key,
+  
+ silo_id         integer	not null references silos (id) on update cascade on delete cascade,
+ state		 silo_state	not null,
+ change_time     timestamp	not null,
+ note		 text		default '' not null,
+
+ version	 integer	default 1 not null
+);
+
+create index  silo_logs_silo_id_index	    on silo_logs (silo_id);
+create index  silo_logs_change_time_index   on silo_logs (change_time);
+create index  silo_logs_state_index 	    on silo_logs (state);
+create index  silo_logs_version_index 	    on silo_logs (version);

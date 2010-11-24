@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+    <script type="text/javascript"  src="/jquery-1.4.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+      $('#silos tbody tr:odd').addClass('odd');
+      $('#silos tbody tr:even').addClass('even');
+      });
+    </script>
+    <script type="text/javascript" src="/jquery-1.4.js"></script>
+    <title>Silos on <%= hostname %></title>
+  </head>
+
+  <body>
+    <h1> 
+      <%= hostname %> silos
+    </h1>
+    <table id="silos">
+      <thead>
+	<tr class="border">
+          <th>Silo</th>
+          <th>State</th>
+          <th>Methods</th>
+          <th>Count</th>
+          <th>Fixity Date</th>
+          <th></th>
+          <th></th>
+	</tr>
+      </thead>
+      <tbody>
+
+	<% silos.each do |silo| %>
+	<tr>
+
+          <td>
+	    <!-- %= silo.filesystem % -->
+	    /<%= silo.name %>
+	  </td>
+
+          <td>
+	    <a href="/<%= silo.name %>/knobs/"><%= state_to_text(silo.state) %></a>
+	  </td>
+
+          <td>
+	    <a href="/<%= silo.name %>/knobs/"><%= silo.allowed_methods.map{ |m| method_to_text(m) }.join(', ') %></a>
+	  </td>
+
+          <td>
+	    <%= silo.package_count %></a>
+	  </td>
+
+          <td>
+	    <%= fixity_time(silo) %></a>
+	  </td>
+
+          <td>
+	    <a href="/<%= silo.name %>/data/">list packages</a>
+	  </td>
+
+          <td>
+	    <a href="/<%= silo.name %>/fixity/">fixity xml</a>
+	  </td>
+
+	</tr>
+	<% end %>
+
+      </tbody>
+    </table>
+
+    <p class="footer">
+      <%= revision %>
+    </p>
+
+  </body>
+</html>
