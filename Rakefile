@@ -16,8 +16,6 @@ else
   spec_dependencies.push "ci:setup:rspec"
 end  
 
-
-
 task :spec => spec_dependencies
 
 Spec::Rake::SpecTask.new do |task|
@@ -73,10 +71,6 @@ task :bundle do
 end
 
 
-
-
-# Assumes you're keeping your code in a lib directory - adjust accordingly:
-
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
 
@@ -112,6 +106,14 @@ task :restart do
   end  
 end
 
+# Build local (not deployed) bundled files for in-place development.
+
+desc "Reset bundles"
+task :bundle do
+  `rm -rf #{HOME}/vendor/bundle`
+  `mkdir -p #{HOME}/vendor/bundle`
+  `cd #{HOME}; bundle install --path vendor/bundle`
+end
 
 desc "Create a marker file in the sinatra tmp directory that turns on profiling - restart to turn off"
 task :profile do
