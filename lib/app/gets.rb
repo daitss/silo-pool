@@ -6,7 +6,6 @@ require 'time'
 
 PACKAGES_PER_PAGE = 40 # should be even
 
-
 include Store
 
 REVISION = Store.version.rev
@@ -95,13 +94,13 @@ get '/:partition/data/:name' do |partition, name|
   etag silo.etag(name)
   
   headers  'Content-MD5' => StoreUtils.md5hex_to_base64(silo.md5 name), 'Content-Type' => silo.type(name)
-  send_file silo.data_path(name), :filename => "#{name}.tar"
+  send_file silo.data_path(name), :filename => "#{name}.tar", :type => silo.type(name)
 end
 
 
 get '/:partition/data/:name/' do |partition, name|
   silo = get_silo(partition, name)
-  silo.get_ok? or raise Http405                          
+  silo.get_ok? or raise Http405
 
   erb :package, 
   :locals => {

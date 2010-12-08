@@ -124,7 +124,7 @@ describe Store::Silo do
     name = some_name
     @silo.put(name, some_data)
     @silo.last_access(name).class.should == DateTime
-    (@silo.last_access(name) - DateTime.now).should be_close(0, 0.0001)
+    (@silo.last_access(name) - DateTime.now).should be_within(0.0001).of(0)
   end
 
   it "should have date for an object" do
@@ -151,7 +151,7 @@ describe Store::Silo do
     data = "some data!"
     @silo.put name, data
     t = @silo.datetime(name)
-    (DateTime.now - t).should be_close(0, 0.0001)
+    (DateTime.now - t).should be_within(0.0001).of(0)
   end
     
   it "should enumerate all of the names of the objects stored" do

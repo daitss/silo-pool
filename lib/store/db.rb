@@ -98,6 +98,7 @@ module Store
         SiloRecord.auto_migrate!
         PackageRecord.auto_migrate!
         HistoryRecord.auto_migrate!
+        ReservedDiskSpaceRecord.auto_migrate!
       end
     end
 
@@ -341,8 +342,8 @@ module Store
 
       storage_names[:default] = 'histories'
 
-      property   :id,        Serial
-##    property   :id,        Serial,  :required => true, :index => true, :min => 0, :max => 2**63 - 1
+##    property   :id,        Serial
+      property   :id,        Serial,  :required => true, :index => true, :min => 0, :max => 2**63 - 1
 
       property   :action,    Enum[ *actions ], :required => true
       property   :sha1,      String,           :required => false, :length => (40..40)
@@ -451,6 +452,21 @@ module Store
           history_record
         end
       end
-    end # of class History
+    end # of class HistoryRecord
+
+
+    class ReservedDiskSpaceRecord 
+
+      include DataMapper::Resource
+      storage_names[:default] = 'reserved_disk_spaces'
+
+      property  :id,          Serial
+      property  :filesystem,  String, :length => 255, :required => true, :index => true
+      property  :timestamp,   DateTime, :required => true,  :index => true, :default  => lambda { |resource, property| DateTime.now }
+      property  :space,       Integer, :required => true, :index => true, :min => 0, :max => 2**63 - 1      
+    end # of class ReservedDiskSpaceRecord
+
+
+
   end # of module DB
 end # of module Store

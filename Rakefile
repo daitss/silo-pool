@@ -6,6 +6,7 @@ require 'rake/rdoctask'
 require 'socket'
 require 'spec/rake/spectask'
 
+# require 'bundler/setup'
 
 spec_dependencies = []
 
@@ -61,7 +62,7 @@ FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yar
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
 
-# Rebuild bundler
+# Rebuild bundler vendor files for local development (capistrano invokes bundler remotely)
 
 desc "Reset bundles"
 task :bundle do

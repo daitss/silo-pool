@@ -3,7 +3,7 @@ $LOAD_PATH.unshift  File.dirname(__FILE__)
 require 'helpers'
 
 Before  do
-  @@active_silo = 'http://127.0.0.1:9292/001/data/'
+  @@active_silo = 'http://storage.local/a/data/'
 end
 
 After do
