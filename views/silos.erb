@@ -25,6 +25,7 @@
       <thead>
 	<tr class="border">
           <th>Silo</th>
+          <th>GB Free</th>
           <th>State</th>
           <th>Methods</th>
           <th>Count</th>
@@ -43,6 +44,10 @@
 	    /<%= silo.name %>
 	  </td>
 
+          <td align="right">
+	    <%= StoreUtils.commify(sprintf("%5.3f", StoreUtils.disk_free(silo.filesystem)/1_000_000_000.0)) %>
+	  </td>
+
           <td>
 	    <a href="/<%= silo.name %>/knobs/"><%= state_to_text(silo.state) %></a>
 	  </td>
@@ -51,7 +56,7 @@
 	    <a href="/<%= silo.name %>/knobs/"><%= silo.allowed_methods.map{ |m| method_to_text(m) }.join(', ') %></a>
 	  </td>
 
-          <td>
+          <td align="right">
 	    <%= silo.package_count %></a>
 	  </td>
 

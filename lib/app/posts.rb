@@ -1,3 +1,46 @@
+require 'store/silodb'
+require 'store/exceptions'
+require 'store/poolreservation'
+require 'builder'
+
+post '/data/:name' do |name|
+
+  # TODO: check if name is unique accross entire set of pools.
+  
+  raise SiloBadName, "The identifier #{name} does not meet our resource naming convention"    unless good_name name
+  raise MissingMD5,  "Missing the Content-MD5 header, required for POSTs to #{this_resource}" unless request_md5
+  raise MissingTar,  "#{this_resource} only accepts content types of application/x-tar"       unless request.content_type == 'application/x-tar'
+
+  silo = nil
+
+  PoolReservation.new(request.content_length.to_i) do |silo|
+    silo.put(name, request.body, request.content_type || 'application/x-tar')
+  end
+
+  computed_md5 = silo.md5(name)
+
+  if computed_md5 != request_md5
+    silo.delete(name) if silo.exists?(name)
+    raise MD5Mismatch, "The request indicated the MD5 was #{request_md5}, but the server computed #{computed_md5}"
+  end
+
+  loc = web_location(silo.filesystem.split('/')[-1], name)
+
+  status 201
+  headers 'Location' => loc, 'Content-Type' => 'application/xml'
+
+  xml = Builder::XmlMarkup.new(:indent => 2)
+  xml.instruct!(:xml, :encoding => 'UTF-8')
+  xml.created(:name     => name,
+              :etag     => silo.etag(name),
+              :md5      => silo.md5(name),
+              :sha1     => silo.sha1(name),
+              :size     => silo.size(name),
+              :type     => silo.type(name),
+              :time     => silo.datetime(name).to_s,
+              :location => loc)
+  xml.target!
+end
 
 
 post '/:partition/knobs/allowed-methods' do |partition|

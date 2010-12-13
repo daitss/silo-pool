@@ -100,9 +100,11 @@ helpers do
   def web_location partition, name = ''
     absolutely "/#{partition}/data/#{name}"
   end
+
+  # we may want to add another column in the silos table to account for the name.
  
   def filesystem_location silo_partition
-    File.join(settings.silo_root, silo_partition).gsub(%r(/+$), '')  # damn'd emacs
+    list_silos.each { |silo| return silo.filesystem if silo.filesystem =~ /#{silo_partition}$/ }
   end
 
   def methods_hash silo

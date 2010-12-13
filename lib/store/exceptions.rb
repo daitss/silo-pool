@@ -163,21 +163,28 @@ module Store
     def status_text; "HTTP Version Not Supported"; end
   end
   
-
   # ConfigurationError exception, server's fault (subclasses Http500): Something wasn't set up correctly
+  # It's expected that we have raise with a decent message, since no backtraces are provided for this:
 
   class ConfigurationError  < Http500; end            
 
-  class DataBaseError              < Http500; end        # e.g., insert constraint failed
-  class DataBaseTransactionError   < DataBaseError; end  # thrown from within transactions
+  class DataBaseError             < Http500; end        # e.g., insert constraint failed
+  class DataBaseTransactionError  < DataBaseError; end  # thrown from within transactions
 
+  class StateChangeError          < Http409; end    # e.g.  make a transition to :disk_master when no disk exists
 
-  class StateChangeError < Http409; end    # e.g.  make a transition to :disk_master when no disk exists
+  class NoSilosLargeEnough        < Http413;  end   # no room to fit it.
+  class NoSilosAvailable          < Http405;  end   # no silos in this pool
+  class CouldNotLockPool          < Http500;  end   # timed out acquiring lock.
 
-
+  class SiloBadName               < Http409;  end   # bad name
+  class SiloResourceExists        < Http405;  end   # already exists, and put/post was attempted to modify it
+  class MissingMD5                < Http400;  end   # when we require an MD5 header
+  class MissingTar                < Http400;  end   # when we require a content type of application/x-tar
+  class MD5Mismatch               < Http412;  end   # the supplied md5 didn't match the computed one
 
   # TODO investigate how each of these are used and get them subclassed into the HTTP classed errors as above
-  # These are currently way over-engineered.
+  # This set is way over-engineered.
 
   class TarReaderError < StandardError ; end
   
@@ -185,9 +192,6 @@ module Store
 
   class SiloError < StorageError; end
 
-
-  class SiloBadName < SiloError; end  
-  class SiloResourceExists < SiloError; end
        
   class TsmError < StorageError; end       # usually, these are various tivoli execution errors 
   class TsmTimeout < TsmError; end         # normally, timeout occurred during execution, but see next

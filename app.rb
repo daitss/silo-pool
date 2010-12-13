@@ -21,7 +21,6 @@ configure do
   set :raise_errors,  false                  # We handle our own errors...
 
   set :tivoli_server, ENV['TIVOLI_SERVER']   # Where to find the tape robot (see SiloTape and TsmExecutor).
-  set :silo_root,     ENV['SILO_ROOT']       # All of our disk-based silos are locally mounted under this directory (see SiloDB).
   set :silo_temp,     ENV['SILO_TEMP']       # A temporary directory for us to write mini-silos to from tape (see SiloTape).
 
   if ENV['LOG_FACILITY'].nil?

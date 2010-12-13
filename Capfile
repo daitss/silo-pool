@@ -5,21 +5,12 @@ require 'railsless-deploy'
 require 'bundler/capistrano'
 require 'socket'
 
-set :application,  "silos"
-
 set :repository,   "git://github.com/grf/silo-pool.git"
 set :use_sudo,     false
 
-# if Socket.gethostname =~ /romeo-foxtrot/
-#   set :deploy_to,    "/Users/fischer/WebServices/silo-pool"
-#   set :group,        nil
-
-# else # deployment
-  set :deploy_to,    "/opt/web-services/sites/betastore"
-  set :group,        "daitss" 
-  set :user,         "silo"
-  set :domain,       "betastore.tarchive.fcla.edu"
-# end
+set :deploy_to,    "/opt/web-services/sites/silos"
+set :group,        "daitss" 
+set :user,         "silo"
 
 set :scm,          "git"
 set :branch,       "master"

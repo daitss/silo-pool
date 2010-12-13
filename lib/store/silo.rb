@@ -40,6 +40,8 @@ module Store
       @filesystem =  storage_directory_root.gsub(%r{/+$}, '')
     end
 
+    #### TODO: change this (in refactoring) so that we leak less information
+
     def to_s
       "#<Silo: #{self.filesystem}>"
     end
@@ -54,7 +56,7 @@ module Store
         File.exists? datetime_path(name) and
         File.exists? md5_path(name) and
         File.exists? name_path(name) and
-        File.exists? type_path(name)                  ## TODO: add sh1 here when we've got everything updated (maybe)
+        File.exists? type_path(name)                  # TODO: add sh1 here when we've got everything updated (maybe)
       end
     end
 
@@ -77,17 +79,17 @@ module Store
 
       data = StringIO.new(data.to_s) unless data.respond_to? "read"
 
-      if data.respond_to? 'stat'
-        if data.stat.size > disk_free  - HEADROOM      
-          raise SiloError, "#{self} can't save #{name} - #{data.stat.size} bytes data > #{disk_free} free disk bytes plus #{HEADROOM} bytes headroom."
-        end
-      elsif data.respond_to? 'size'
-        if data.size > disk_free - HEADROOM 
-          raise SiloError, "#{self} can't save #{name} - #{data.size} bytes data > #{disk_free} free disk bytes plus #{HEADROOM} bytes headroom."
-        end
-      else
-        raise SiloError, "#{self} can't determine the size of #{name} of type #{data.class}, aborting."
-      end      
+      # if data.respond_to? 'stat'
+      #   if data.stat.size > disk_free  - HEADROOM      
+      #     raise SiloError, "#{self} can't save #{name} - #{data.stat.size} bytes data > #{disk_free} free disk bytes plus #{HEADROOM} bytes headroom."
+      #   end
+      # elsif data.respond_to? 'size'
+      #   if data.size > disk_free - HEADROOM 
+      #     raise SiloError, "#{self} can't save #{name} - #{data.size} bytes data > #{disk_free} free disk bytes plus #{HEADROOM} bytes headroom."
+      #   end
+      # else
+      #   raise SiloError, "#{self} can't determine the size of #{name} of type #{data.class}, aborting."
+      # end      
 
       write_lock(name) do
         begin

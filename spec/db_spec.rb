@@ -34,6 +34,114 @@ def mysql_setup
   DB::DM.automigrate!
 end
 
+#### .should 
+
+share_examples_for "DataMapper ReservedDiskSpaceRecord class using any database" do
+
+  it "should alow us to create a record" do
+    rec = DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000))
+    rec.saved?.should == true
+  end
+
+  it "should alow us to destroy a record based on the id" do
+    rec1 = DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000))
+    rec1.saved?.should == true
+
+    rec2 = DB::ReservedDiskSpaceRecord.get(rec1['id'])
+    rec2.destroy.should == true
+  end
+
+
+  it "should allow us to create a reservation with explicit datetime" do
+    date = DateTime.now
+    rec1 = DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000), :timestamp => date)
+    rec2 = DB::ReservedDiskSpaceRecord.get(rec1['id'])    
+    (date - rec2.timestamp).should  be_within(0.0001).of(0)
+  end
+  
+  it "should allow us to clean out stale records" do
+    DB::ReservedDiskSpaceRecord.all.destroy
+    
+    datetime = DateTime.now - 1
+
+    DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000), :timestamp => datetime)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000), :timestamp => datetime)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000)) # defaults to now
+
+    DB::ReservedDiskSpaceRecord.all.length.should == 3
+    DB::ReservedDiskSpaceRecord.cleanout_stale_reservations 0.5
+    DB::ReservedDiskSpaceRecord.all.length.should == 1
+  end
+
+
+  it "should all us to find a list of unique partitions" do
+
+    DB::ReservedDiskSpaceRecord.all.destroy
+
+    ['/a', '/b', '/c'].each do |partition|
+      DB::ReservedDiskSpaceRecord.create(:partition => partition, :size => rand(1000))
+      DB::ReservedDiskSpaceRecord.create(:partition => partition, :size => rand(1000))
+    end
+    
+    partitions = DB::ReservedDiskSpaceRecord.distinct_partitions
+
+    partitions.length.should == 3
+
+    partitions.include?('/a').should == true
+    partitions.include?('/b').should == true
+    partitions.include?('/c').should == true
+  end
+
+
+  it "should give us a hash of partition reservations" do
+
+    too_old = 100
+    
+    DB::ReservedDiskSpaceRecord.all.destroy
+
+    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
+
+    DB::ReservedDiskSpaceRecord.create(:partition => '/b', :size => 1)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/b', :size => 1)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/b', :size => 1)
+
+    DB::ReservedDiskSpaceRecord.create(:partition => '/c', :size => 1)
+    DB::ReservedDiskSpaceRecord.create(:partition => '/c', :size => 1)
+
+    DB::ReservedDiskSpaceRecord.create(:partition => '/d', :size => 1)
+
+    recs = DB::ReservedDiskSpaceRecord.partition_reservations(too_old)
+
+    recs.keys.length == 4
+
+    recs['/a'].should == 4
+    recs['/b'].should == 3
+    recs['/c'].should == 2
+    recs['/d'].should == 1
+  end
+
+end  # of DataMapper ReservedDiskSpaceRecord class using any database
+
+
+describe "DataMapper ReservedDiskSpaceRecord class using Mysql" do
+  before(:all) do
+    mysql_setup
+  end
+  it_should_behave_like "DataMapper ReservedDiskSpaceRecord class using any database"
+end
+
+describe "DataMapper ReservedDiskSpaceRecord class using Postgres" do
+  before(:all) do
+    postgres_setup
+  end
+  it_should_behave_like "DataMapper ReservedDiskSpaceRecord class using any database"
+end
+
+
+
 share_examples_for "DataMapper SiloRecord class using any database" do
 
   it "should return an empty list when there are no silos" do
@@ -446,8 +554,6 @@ share_examples_for "DataMapper HistoryRecord class using any database" do
 end # of share_examples_for "DataMapper HistoryRecord class using any database"
 
 
-
-
 describe "DataMapper HistoryRecord class using Mysql" do
 
     before(:all) do
@@ -475,3 +581,4 @@ describe "DataMapper HistoryRecord class using Postgres" do
 
   it_should_behave_like "DataMapper HistoryRecord class using any database"
 end
+

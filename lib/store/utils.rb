@@ -40,14 +40,14 @@ module StoreUtils
     File.stat(path).dev
   end
 
-  def StoreUtils.disk_free(path)
-    fs = Sys::Filesystem.stat(path)
-    fs.block_size * fs.blocks_available
-  end
-  
   def StoreUtils.disk_size(path)
     fs = Sys::Filesystem.stat(path)
-    fs.block_size * fs.blocks
+    fs.fragment_size * fs.blocks    # fragment_size is used in preference to block_size
+  end
+  
+  def StoreUtils.disk_free(path)
+    fs = Sys::Filesystem.stat(path)
+    fs.fragment_size * fs.blocks_available  # blocks_available < blocks_free;  some are reserved for root.
   end
   
   def StoreUtils.strip_trailing_slash_maybe(string)

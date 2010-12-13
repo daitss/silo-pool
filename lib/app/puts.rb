@@ -6,8 +6,6 @@ require 'builder'
 
 include Store
 
-# TODO: modify daitss 1.5 to supply mime-type application/x-tar, and require that it be set here.
-
 put '/:partition/data/:name' do |partition, name|
 
   silo = get_silo(partition)

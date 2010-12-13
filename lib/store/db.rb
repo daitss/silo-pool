@@ -1,9 +1,3 @@
-## TODO: start getting exceptions named for solved problems here
-## ConfigurationError
-
-#### TODO:  note, save! skips validity checking as well as raising an error.  FIX ME!
-
-
 require 'dm-core'
 require 'dm-constraints'
 require 'dm-types'
@@ -134,7 +128,7 @@ module Store
         filesystem = File.expand_path(filesystem)
         silo_rec = SiloRecord.new
         silo_rec.attributes = { :filesystem => filesystem, :hostname => hostname.downcase  }
-        raise "Can't create a new silo record for #{hostname}:#{filesystem}: #{silo_rec.errors.full_messages}." unless silo_rec.save
+        raise "Can't create a new silo record for #{hostname}:#{filesystem}: #{silo_rec.errors.full_messages.join('; ')}." unless silo_rec.save
         silo_rec
       end
 
@@ -288,7 +282,7 @@ module Store
         package_record.attributes = attributes
 
         if not package_record.save
-          raise "Can't create a new package #{name} for silo #{silo_record} - #{package_record.errors.full_messages}." 
+          raise "Can't create a new package #{name} for silo #{silo_record} - #{package_record.errors.full_messages.join('; ')}." 
         end
 
         package_record
@@ -333,7 +327,6 @@ module Store
 
 
     class HistoryRecord
-
       def self.actions
         [ :put, :fixity, :delete ]    # implicity ordering historical workflow here.
       end
@@ -342,9 +335,7 @@ module Store
 
       storage_names[:default] = 'histories'
 
-##    property   :id,        Serial
       property   :id,        Serial,  :required => true, :index => true, :min => 0, :max => 2**63 - 1
-
       property   :action,    Enum[ *actions ], :required => true
       property   :sha1,      String,           :required => false, :length => (40..40)
       property   :md5,       String,           :required => false, :length => (32..32)
@@ -357,8 +348,6 @@ module Store
         package_record = (args.length == 1) ?  args[0] : PackageRecord.lookup(*args)
         HistoryRecord.all(:package_record => package_record, :order => [ :timestamp.asc ])
       end
-
-      # TODO: need utility to format errors.full_messages string better (hint: mess up attribute assignment to generate lots of errors)
 
       # HistoryRecord.put(package_record, hash) or  HistoryRecord(silo_record, package_name, hash)
       #
@@ -377,8 +366,6 @@ module Store
         [ :md5, :sha1, :timestamp, :size, :type ].each do |key|
           raise "Problem creating historical PUT record: missing #{key.to_s} data" unless hashargs.include? key
         end
-
-        # TODO: Probably need to be more explicit/verbose here, checking classes as well as arg list size - will make it self-documenting, if uglier
 
         package_record = args.length == 1 ? args[0] : PackageRecord.lookup(args[0], args[1])
 
@@ -403,7 +390,7 @@ module Store
                                         :timestamp      => time }
 
           if not history_record.save
-            raise "HistoryRecord - put - can't create a new PUT record for package #{package_record} - #{history_record.errors.full_messages}." 
+            raise "HistoryRecord - put - can't create a new PUT record for package #{package_record} - #{history_record.errors.full_messages.join('; ')}." 
           end
 
           package_record.attributes = { :initial_sha1 => sha1, 
@@ -417,7 +404,7 @@ module Store
 
                                         :extant => true }
           if not package_record.save
-            raise "HistoryRecord - put - can't create current md5 and sha1 records in PUT for package #{package_record} - #{package_record.errors.full_messages}." 
+            raise "HistoryRecord - put - can't create current md5 and sha1 records in PUT for package #{package_record} - #{package_record.errors.full_messages.join('; ')}." 
           end
 
           history_record
@@ -432,9 +419,9 @@ module Store
           raise "HistoryRecord - fixity - can't look up the package based on arguments (#{args.join(', ')})." unless package_record.class == PackageRecord
           history_record = HistoryRecord.new
           history_record.attributes = {:package_record => package_record, :action => :fixity, :md5 => hashes[:md5], :sha1 => hashes[:sha1], :timestamp => hashes[:timestamp]}
-          raise "HistoryRecord - fixity - can't create a new FIXITY record for package #{package_record} - #{history_record.errors.full_messages}." unless history_record.save
+          raise "HistoryRecord - fixity - can't create a new FIXITY record for package #{package_record} - #{history_record.errors.full_messages.join('; ')}." unless history_record.save
           package_record.attributes = {:latest_sha1 => hashes[:sha1],  :latest_md5 => hashes[:md5],  :latest_timestamp => hashes[:timestamp]}
-          raise "HistoryRecord - fixity - can't update current md5 and sha1 records in FIXITY record for package #{package_record} - #{package_record.errors.full_messages}." unless package_record.save
+          raise "HistoryRecord - fixity - can't update current md5 and sha1 records in FIXITY record for package #{package_record} - #{package_record.errors.full_messages.join('; ')}." unless package_record.save
           history_record
         end
       end
@@ -446,27 +433,49 @@ module Store
           history_record = HistoryRecord.new
           now = Time.now
           history_record.attributes = {:package_record => package_record, :action => :delete }
-          raise "HistoryRecord - delete - can't create a new DELETE record for package #{package_record} - #{history_record.errors.full_messages}." unless history_record.save
+          raise "HistoryRecord - delete - can't create a new DELETE record for package #{package_record} - #{history_record.errors.full_messages.join('; ')}." unless history_record.save
           package_record.attributes = {:extant => false}
-          raise "HistoryRecord - delete - can't update the existence field for package #{package_record} - #{package_record.errors.full_messages}." unless package_record.save
+          raise "HistoryRecord - delete - can't update the existence field for package #{package_record} - #{package_record.errors.full_messages.join('; ')}." unless package_record.save
           history_record
         end
       end
     end # of class HistoryRecord
 
-
+    
     class ReservedDiskSpaceRecord 
 
       include DataMapper::Resource
       storage_names[:default] = 'reserved_disk_spaces'
 
       property  :id,          Serial
-      property  :filesystem,  String, :length => 255, :required => true, :index => true
-      property  :timestamp,   DateTime, :required => true,  :index => true, :default  => lambda { |resource, property| DateTime.now }
-      property  :space,       Integer, :required => true, :index => true, :min => 0, :max => 2**63 - 1      
+      property  :partition,   String,   :required => true, :index => true, :length => 255
+      property  :timestamp,   DateTime, :required => true, :index => true, :default  => lambda { |resource, property| DateTime.now }
+      property  :size,        Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1      
+
+      # remove all records from the database older than +max_reservation+.
+      # +max_reservation+ is expressed in days - typically this is a few hours at most
+
+      def self.cleanout_stale_reservations max_reservation
+        ReservedDiskSpaceRecord.all(:timestamp.lt => DateTime.now - max_reservation).destroy
+      end
+      
+      def self.distinct_partitions
+        ReservedDiskSpaceRecord.all.map{ |rec| rec.partition }.uniq.sort
+      end
+        
+      # return hash of partitions and sizes: { partition_name => space, ... }
+      # it automatically removes records older than max_reservation days.
+
+      def self.partition_reservations(max_reservation)
+        ReservedDiskSpaceRecord.cleanout_stale_reservations(max_reservation)
+        reservations = {}
+        
+        ReservedDiskSpaceRecord.distinct_partitions.each do |partition|
+          reservations[partition] = ReservedDiskSpaceRecord.sum(:size, :partition => partition)
+        end
+        reservations
+      end
+
     end # of class ReservedDiskSpaceRecord
-
-
-
   end # of module DB
 end # of module Store
