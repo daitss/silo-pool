@@ -8,6 +8,7 @@ gem 'dm-mysql-adapter',     '>= 1.0.0'
 case RUBY_PLATFORM
 when /darwin/
   gem 'dm-postgres-adapter', :path => '/Library/Ruby/Gems/1.8/gems/dm-postgres-adapter-1.0.2'
+# gem 'do_postgres-0.10.2',  :path => '/Library/Ruby/Gems/1.8/gems/do_postgres-0.10.2'
 else
   gem 'dm-postgres-adapter',  '>= 1.0.2'
 end
