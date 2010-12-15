@@ -4,12 +4,14 @@ gem 'mime-types', :require => 'mime/types'
 gem 'data_mapper',          '>= 1.0.0'
 gem 'dm-mysql-adapter',     '>= 1.0.0'
 
+
 case RUBY_PLATFORM
 when /darwin/
-  gem 'do_postgres',  :path => '/Library/Ruby/Gems/1.8/gems/do_postgres-0.10.2'
+  gem 'dm-postgres-adapter', :path => '/Library/Ruby/Gems/1.8/gems/dm-postgres-adapter-1.0.2'
+else
+  gem 'dm-postgres-adapter',  '>= 1.0.2'
 end
 
-gem 'dm-postgres-adapter',  '>= 1.0.0'
 gem 'builder',              '>= 2.1.0'
 gem 'log4r',                '>= 1.1.5'
 gem 'open4',                '>= 1.0.1'
