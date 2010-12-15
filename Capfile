@@ -8,9 +8,11 @@ require 'socket'
 set :repository,   "git://github.com/grf/silo-pool.git"
 set :use_sudo,     false
 
-set :deploy_to,    "/opt/web-services/sites/silos"
-set :group,        "daitss" 
-set :user,         "silo"
+# set :user,         "silo"
+# set :group,        "daitss" 
+
+set :user,         "fischer"
+set :group,        "staff" 
 
 set :scm,          "git"
 set :branch,       "master"
@@ -20,7 +22,7 @@ set :bundle_without,      []
 
 
 def usage(*messages)
-  STDERR.puts "Usage: cap deploy -S domain=<target domain>"  
+  STDERR.puts "Usage: cap deploy -S target=<host:/file/system>"  
   STDERR.puts messages.join("\n")
   STDERR.puts "You may set the remote user and group similarly."
   STDERR.puts "If you set the user, you must be able to ssh to the domain as that user."
@@ -28,7 +30,12 @@ def usage(*messages)
   exit
 end
 
-usage('The domain was not set (e.g., domain=ripple.fcla.edu).') unless variables[:domain]
+usage('The domain was not set (e.g., target=ripple.fcla.edu:/opt/web-services/sites/silos).') unless (variables[:target] and variables[:target] =~ %r{.*:.*})
+
+_domain, _filesystem = variables[:target].split(':', 2)
+
+set :deploy_to,  _filesystem
+set :domain,     _domain
 
 role :app, domain
 

@@ -18,6 +18,7 @@
   </head>
 
   <body>
+
     <h1> 
       <%= hostname %> silos
     </h1>
@@ -25,10 +26,10 @@
       <thead>
 	<tr class="border">
           <th>Silo</th>
-          <th>GB Free</th>
+          <th>Free</th>
           <th>State</th>
           <th>Methods</th>
-          <th>Count</th>
+          <th>Pkgs</th>
           <th>Fixity Date</th>
           <th></th>
           <th></th>
@@ -45,7 +46,7 @@
 	  </td>
 
           <td align="right">
-	    <%= StoreUtils.commify(sprintf("%5.3f", StoreUtils.disk_free(silo.filesystem)/1_000_000_000.0)) %>
+	    <%= pretty_free(silo) %>
 	  </td>
 
           <td>
@@ -57,7 +58,7 @@
 	  </td>
 
           <td align="right">
-	    <%= silo.package_count %></a>
+	    <%= pretty_count(silo) %></a>
 	  </td>
 
           <td>

@@ -76,7 +76,6 @@ describe Store::Silo do
     data = some_data
     @silo.put name, data
     lambda {@silo.put(name, data)}.should raise_error(Store::SiloResourceExists)
-    lambda {@silo.put(name, data)}.should raise_error(Store::StorageError)
   end
 
   it "should have size for an object" do
@@ -300,7 +299,6 @@ describe Store::Silo do
   @in_silo.put name, data
   @out_silo.put name, data
 
-  lambda { @in_silo.copy_to_silo(name, @out_silo) }.should raise_error(Store::SiloError)
   lambda { @in_silo.copy_to_silo(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
  end
 
@@ -337,7 +335,6 @@ describe Store::Silo do
   @out_silo.put name, data
 
   lambda { @in_silo.move_to_silo_with_rename(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
-  lambda { @in_silo.move_to_silo_with_rename(name, @out_silo) }.should raise_error(Store::SiloError)
  end
 
  it "should throw specific exceptions for a silo move of data that doesn't exist in the source silo" do
@@ -379,15 +376,13 @@ describe Store::Silo do
   @in_silo.put name, data
   @out_silo.put name, data
 
-  lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::StorageError)
-  lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::SiloError)
+  lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
  end
 
  it "should throw specific exceptions for a silo move of data that doesn't exist in the source silo" do
   name = some_name
 
   lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::StorageError)
-  lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::SiloError)
  end
 
 

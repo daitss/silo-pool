@@ -227,6 +227,28 @@ helpers do
     end
   end
 
+  # pretty_count(silo)
+  #
+  # pretty print the count of the numnber of packages in a silo, returning as a string.
+
+  def pretty_count silo
+    StoreUtils.commify(silo.package_count)
+  end
+
+  # pretty_free(silo)
+  #
+  # pretty print the free disk size for a silo along the lines of 'df -h', returning as a string.
+
+  def pretty_free silo    
+    size = StoreUtils.disk_free(silo.filesystem)
+    if    size > 1_000_000_000_000;  StoreUtils.commify(sprintf("%5.2f TB",  size / 1_000_000_000_000.0))
+    elsif size > 1_000_000_000;      StoreUtils.commify(sprintf("%5.2f GB",  size / 1_000_000_000.0))
+    elsif size > 1_000_000;          StoreUtils.commify(sprintf("%5.2f MB",  size / 1_000_000.0))
+    elsif size > 1_000;              StoreUtils.commify(sprintf("%5.2f KB",  size / 1_000.0))
+    else                             StoreUtils.commify(sprintf("%5.2f B",   size))      
+    end
+  end
+
 end
 
 

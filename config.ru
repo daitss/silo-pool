@@ -1,9 +1,8 @@
 require 'bundler/setup'
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
-# We normally want to set the following in an Apache config file;
-# these are example fallbacks, useful if you want to use rackup or
-# such to kick this off.
+# We normally want to set the following in an Apache config file or a startup script.
+# These are development defaults.
 
 ENV['LOG_FACILITY']         ||= nil                   # Logger sets up syslog using the facility code if set, stderr otherwise.
 

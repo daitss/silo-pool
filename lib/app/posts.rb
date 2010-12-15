@@ -3,7 +3,7 @@ require 'store/exceptions'
 require 'store/poolreservation'
 require 'builder'
 
-post '/data/:name' do |name|
+post '/create/:name' do |name|
 
   # TODO: check if name is unique accross entire set of pools.
   
