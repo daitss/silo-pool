@@ -17,7 +17,7 @@ require 'log4r/outputter/rollingfileoutputter'
 #
 #  require 'logger'
 #  
-#  Logger.logname  = "xmlresolution.example.com"
+#  Logger.setup("XmlResolution", "xmlresolution.example.com")
 #  Logger.filename = "myfile.log"
 #  ...
 #  get '/tmp' do

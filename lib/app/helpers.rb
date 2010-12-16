@@ -105,6 +105,7 @@ helpers do
  
   def filesystem_location silo_partition
     list_silos.each { |silo| return silo.filesystem if silo.filesystem =~ /#{silo_partition}$/ }
+    nil
   end
 
   def methods_hash silo
@@ -144,18 +145,21 @@ helpers do
   # crock.  should only be one silo class....
 
   def get_silo partition, name = nil
+
     dir = filesystem_location(partition)
     
+    raise Http404, "The resource #{web_location(partition)} doesn't exist" if dir.nil?
+
     rec = DB::SiloRecord.lookup hostname, dir
 
-    raise Http404, "The silo #{web_location(partition)} doesn't exist" if rec.nil?
+    raise Http404, "The resource #{web_location(partition)} doesn't exist" if rec.nil?
 
     silo = nil
 
     case rec.media_device
 
     when :disk
-      raise Http404, "The silo #{web_location(partition)} doesn't exist" unless File.directory? dir  ### this is a mistake
+      raise Http404, "The resource #{web_location(partition)} doesn't exist" unless File.directory? dir  ### this is a mistake
       silo = SiloDB.new(hostname, dir)
       raise Http404, "The resource #{web_location(partition, name)} does not exist" if name and not silo.exists?(name)
 

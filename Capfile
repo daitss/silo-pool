@@ -5,17 +5,13 @@ require 'railsless-deploy'
 require 'bundler/capistrano'
 require 'socket'
 
-set :repository,   "git://github.com/grf/silo-pool.git"
-set :use_sudo,     false
-
-# set :user,         "silo"
-# set :group,        "daitss" 
-
-set :user,         "fischer"
-set :group,        "staff" 
-
 set :scm,          "git"
+set :repository,   "git://github.com/grf/silo-pool.git"
 set :branch,       "master"
+
+set :use_sudo,     false
+set :user,         "silo"
+set :group,        "daitss" 
 
 set :bundle_flags,       "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove --quiet
 set :bundle_without,      []
@@ -30,7 +26,7 @@ def usage(*messages)
   exit
 end
 
-usage('The domain was not set (e.g., target=ripple.fcla.edu:/opt/web-services/sites/silos).') unless (variables[:target] and variables[:target] =~ %r{.*:.*})
+usage('The deployment target was not set (e.g., target=ripple.fcla.edu:/opt/web-services/sites/silos).') unless (variables[:target] and variables[:target] =~ %r{.*:.*})
 
 _domain, _filesystem = variables[:target].split(':', 2)
 
@@ -39,7 +35,9 @@ set :domain,     _domain
 
 role :app, domain
 
-after "deploy:update", "deploy:layout", "deploy:doc", "deploy:restart"
+# after "deploy:update", "deploy:layout", "deploy:doc", "deploy:restart"
+
+after "deploy:update", "deploy:layout", "deploy:restart"
 
 namespace :deploy do
 
@@ -123,9 +121,10 @@ namespace :deploy do
 
   end
   
-  desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
-  task :doc, :roles => :app do
-    run "cd #{current_path}; rake docs"
-    run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
-  end
+  # desc "Create documentation in public/internals via a rake task - tries yard, hanna, and rdoc"
+  # task :doc, :roles => :app do
+  #   run "cd #{current_path}; rake docs"
+  #   run "chmod -R ug+rwX #{File.join(current_path, 'public', 'internals')}"
+  # end
+
 end
