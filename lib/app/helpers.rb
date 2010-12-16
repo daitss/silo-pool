@@ -241,10 +241,19 @@ helpers do
 
   # pretty_free(silo)
   #
-  # pretty print the free disk size for a silo along the lines of 'df -h', returning as a string.
+  # pretty print the free disk size for a silo, returning as a string.
 
   def pretty_free silo    
-    size = StoreUtils.disk_free(silo.filesystem)
+    pretty_size StoreUtils.disk_free(silo.filesystem)
+  end
+
+
+  # pretty_size size
+  #
+  # pretty print the supplied number +size+ along the lines of 'df -h' but with
+  # American style punctuation, returning as a string.
+
+  def pretty_size size
     if    size > 1_000_000_000_000;  StoreUtils.commify(sprintf("%5.2f TB",  size / 1_000_000_000_000.0))
     elsif size > 1_000_000_000;      StoreUtils.commify(sprintf("%5.2f GB",  size / 1_000_000_000.0))
     elsif size > 1_000_000;          StoreUtils.commify(sprintf("%5.2f MB",  size / 1_000_000.0))

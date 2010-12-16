@@ -54,7 +54,7 @@
 	    <thead>
 	      <tr class="border">
 		<th>Package Name</th>
-		<th style="text-align: right;">MB</th>
+		<th style="text-align: right;">Size</th>
 		<th>Date</th>
 	      </tr>
 	    </thead>
@@ -62,7 +62,7 @@
 	      <% packages_1.each do |name| %>
 	      <tr>
 		<td><a href="<%= name %>/"><%= name %></a></td>
-		<td align="right"><%= StoreUtils.commify(sprintf("%5.2f", silo.size(name)/1000000.0)) %></td>
+		<td align="right"><%= pretty_size(silo.size(name)) %></td>
 		<td><%= silo.datetime(name).strftime("%B %d, %Y - %r") %></td>
               </tr>
               <% end %>
