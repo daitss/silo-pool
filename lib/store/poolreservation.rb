@@ -105,8 +105,8 @@ module Store
 
       available = {} ; reserved = {} ; silos = {}   # all hashes are keyed by partition
 
-      DB::ReservedDiskSpaceRecord.partition_reservations(MAX_RESERVATION).each do |partition, reserved|
-        needed[partition] = reserved 
+      DB::ReservedDiskSpaceRecord.partition_reservations(MAX_RESERVATION).each do |partition, reservation|
+        reserved[partition] = reservation
       end
 
       writable_silos.each do |silo|

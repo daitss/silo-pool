@@ -30,7 +30,7 @@ describe "pool reservation" do
     DB.setup(File.join(File.dirname(__FILE__), 'db.yml'), 'silos_mysql')
     DB::DM.automigrate!
 
-    @roots    = Dir["/Volumes/silo-0*"]
+    @roots    = Dir["/Volumes/silo-rspec-0*"]
     @hostname = 'example.com'    
     @silos    = []
 

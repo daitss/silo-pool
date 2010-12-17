@@ -29,7 +29,7 @@ configure do
   set :tivoli_server, ENV['TIVOLI_SERVER']
   set :silo_temp,     ENV['SILO_TEMP']       
 
-  Logger.setup('SiloPool')
+  Logger.setup('SiloPool')  # TODO: add vhost second arg
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 

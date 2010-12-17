@@ -2,7 +2,6 @@ require 'store/exceptions'
 require 'store/utils'
 require 'mime/types'
 
-
 helpers do
   include Rack::Utils     # to get escape_html
 
@@ -18,12 +17,10 @@ helpers do
     1
   end
 
-
   def fixity_time silo
     ts = silo.oldest_fixity
     ts.nil? ? '' : ts.strftime('%Y-%m-%d %X')
   end
-
 
   def mime_type_by_filename name
     # local color:
@@ -136,7 +133,6 @@ helpers do
     silos
   end
 
-
   # Look up the silo from our virtual hostname and the supplied
   # partition.  If name is given, check to make sure it exists.  This
   # helper method exists to select the right type of silo (disk- or
@@ -174,63 +170,7 @@ helpers do
     silo
   end
 
-  # An alternative to send_file I'd prefer to use (send_file doesn't
-  # do last-modified time flexibly enough). Not used right now, but 
-  # keep around for the TODO: exactly what were the issues with this
-  # vs. send_file?   
-
-  class SiloBuffer
-    def initialize silo, name
-      @silo = silo;  @name = name
-    end
-    def each 
-      silo.get(name) { |buff| yield buff }
-    end
-  end
-
-
-  def start_time
-    @@app_start.to_s
-  end
-
-
-  # Assumes we're in the file .../lib/app/<something.rb>, figure out what our
-  # temporary directory is.
-  #
-  # TODO: we'd really like to get the app root off of the appropriate object... a rack object? 
-
-  def my_tmp
-    File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'tmp'))
-  end
-
   
-  # Check if <app>/tmp/profile.txt  is newer than <app>/tmp/restart.txt. If so,
-  # it's an indication we should be profiling: return true
-                     
-  def profile?
-    restart_stamp = File.join(my_tmp, 'restart.txt')
-    profile_stamp = File.join(my_tmp, 'profile.txt')
-
-    File.exists?(restart_stamp) and File.exists?(profile_stamp) and (File.mtime(profile_stamp) > File.mtime(restart_stamp))
-  end
-  
-  # Come up with a name to save profiling info to - we suport :graph, :html and :flat
-  # TODO: put these files somewhere sensible and come up with a set of views that will display these results
-  # (note to self: without profiling the presentation of the view....)
-
-  def profile_filename type
-    epoch = DateTime.now.strftime('%s').to_s
-
-    case type
-    when :whence
-      File.join(my_tmp, epoch + '.' + 'whence')   # used for recording what URL we were in
-    when :graph
-      File.join(my_tmp, epoch + '.' + type.to_s + '.' + 'html')
-    else
-      File.join(my_tmp, epoch + '.' + type.to_s + '.' + 'prof')
-    end
-  end
-
   # pretty_count(silo)
   #
   # pretty print the count of the numnber of packages in a silo, returning as a string.

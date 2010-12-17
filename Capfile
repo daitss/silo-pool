@@ -20,7 +20,7 @@ set :bundle_without,      []
 def usage(*messages)
   STDERR.puts "Usage: cap deploy -S target=<host:/file/system>"  
   STDERR.puts messages.join("\n")
-  STDERR.puts "You may set the remote user and group similarly."
+  STDERR.puts "You may set the remote user and group by using -S who=<user:group> (defaults to #{user}:#{group})."
   STDERR.puts "If you set the user, you must be able to ssh to the domain as that user."
   STDERR.puts "You may set the branch in a similar manner: -S branch=<branch name> (defaults to #{variables[:branch]})."
   exit
@@ -32,6 +32,12 @@ _domain, _filesystem = variables[:target].split(':', 2)
 
 set :deploy_to,  _filesystem
 set :domain,     _domain
+
+if (variables[:who] and variables[:who] =~ %r{.*:.*})
+  _user, _group = variables[:who].split(':', 2)
+  set :user, _user
+  set :group, _group
+end
 
 role :app, domain
 
