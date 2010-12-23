@@ -42,7 +42,7 @@ module StoreUtils
 
   def StoreUtils.disk_size(path)
     fs = Sys::Filesystem.stat(path)
-    fs.fragment_size * fs.blocks    # fragment_size is used in preference to block_size
+    fs.fragment_size * fs.blocks    # fragment_size is used in preference to block_size, which is just the OS's preference
   end
   
   def StoreUtils.disk_free(path)

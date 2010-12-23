@@ -30,10 +30,10 @@
 
 class Trie
 
-  # Box let's use put a value into a box, then get it out of the box.
+  # Box let's us put a value into a box, then get it out of the box.
   # We need this because we'd like to store nil and false values on
-  # a node slot.  So the slot can have one of two values: nil, or
-  # a box (with some value in it).
+  # a node slot.  So a slot can have one of two values: nil (meaning
+  # no value), or  a box (with some value in it, including nil).
 
   class Box
 
