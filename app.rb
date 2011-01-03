@@ -3,6 +3,7 @@ require 'store/silodb'
 require 'store/silotape'
 require 'store/logger'
 
+# TODO: use LOG_TAG maybe
 # TODO: hook logger to datamapper
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 

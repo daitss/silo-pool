@@ -37,7 +37,7 @@ helpers do
   end
 
   def filesystem_to_text str
-    'silo /' + str.split('/').pop
+    '/' + str.split('/').pop
   end
 
   def state_to_text symbol

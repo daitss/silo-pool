@@ -12,10 +12,9 @@ h1 {
     letter-spacing: 1px; 
     margin-bottom: 10; 
     font-weight: bold;
-    color: #000;
-}
+    color: #000;}
 
-legend, h2 { 
+h2 { 
     font: italic normal 1.25em georgia, sans-serif;
     letter-spacing: 0px; 
     margin-bottom: 10; 
@@ -29,6 +28,17 @@ fieldset {
     border: solid;
     border-width: 1px;
     background: #ecc;
+}
+
+legend {
+  font: italic normal 1.0em georgia, sans-serif;
+  letter-spacing: 0px; 
+  font-weight: bold;
+  color: #000;
+  border: solid; 
+  border-width: 1px; 
+  padding: 0.25em; 
+  background: #fee;
 }
 
 
@@ -64,7 +74,6 @@ a:hover, a:active {
 .state-area { border-spacing:0;  padding: 3px;  } 
 
 .state-area:hover { background-color:white; color:red }
-
 
 table {
     border: solid;

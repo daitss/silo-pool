@@ -15,17 +15,18 @@
       $('.fixities tbody tr:even').addClass('even');
       });
     </script>
-    <title>Package IEID <%= name  %></title>
+    <title>Package <%= name %></title>
   </head>
 
   <body>
-    <h1> 
-      <a href="/silos/"><%= silo.hostname %> silos</a> 
+    <h1> Package <%= name %></h1>
+    <h2> 
+      <a href="/silos/"><%= silo.hostname %></a> 
       &rArr; 
-      <a href="../"><%= filesystem_to_text(silo.filesystem) %> packages</a> 
+      <a href="../"><%= silo.filesystem %></a> 
       &rArr; 
       <%= name %> 
-    </h1>
+    </h2>
 
     <h2>
       Contents (<a href="../<%= name  %>">tar file</a>)
