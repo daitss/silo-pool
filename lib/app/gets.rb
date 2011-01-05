@@ -182,7 +182,7 @@ get '/:partition/fixity/:name' do |partition, name|
                         'host="'  + xml_escape(fixity.hostname)     + '" ' +
           'fixity_check_count="'  + fixity.fixity_check_count.to_s  + '" ' +
           'first_fixity_check="'  + fixity.first_fixity_check.to_s  + '" ' +
-           'last_fixity_check="'  + fixity.last_fixity_check.to_s   + '"/>'
+           'last_fixity_check="'  + fixity.last_fixity_check.to_s   + '">'
   
   # From package level reports we only get information since the last PUT - so there
   # is never a delete record shown this way.
