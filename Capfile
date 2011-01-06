@@ -55,6 +55,8 @@ namespace :deploy do
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
+    # TODO: make docs on development server, and check into git
+
     # we don't maintain a git entry for a public directory; however, phusion requires it
     # and we dynamically build the documentation materials in it.
     
@@ -62,23 +64,7 @@ namespace :deploy do
     run "mkdir -p #{pathname}"       
     run "chmod -R ug+rwX #{pathname}" 
 
-    # shared directory creation, if necessary:
-
-    [ 'daitssfs', 'etc', 'vendor' ].each do |subdir|
-      pathname = File.join(shared_path, subdir)
-      run "mkdir -p #{pathname}"
-      run "chmod 2775 #{pathname}"
-    end
-
-    # make sample silos
-
-    [ '001', '002', '003' ].each do |silo|
-      pathname = File.join(shared_path, 'daitssfs', silo)
-      run "mkdir -p #{pathname}"       
-      run "chmod 2755 #{pathname}" 
-    end
-
-    # documentation directories
+    # documentation directories 
 
     pathname = File.join(current_path, 'public', 'internals')
     run "mkdir -p #{pathname}"       

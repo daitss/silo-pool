@@ -6,7 +6,7 @@ require 'digest/md5'
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), 'lib'))
 
 # We normally want to set the following in an Apache config file or a startup script.
-# These are development defaults.
+# These are reasonable development defaults.
 
 ENV['LOG_FACILITY']         ||= nil                   # Logger sets up syslog using the facility code if set, stderr otherwise.
 
@@ -19,9 +19,10 @@ ENV['SILO_TEMP']            ||= '/tmp'                # Filesystems restored fro
 ENV['BASIC_AUTH_USERNAME']  ||= nil                   # Requirements to connect to the silo system
 ENV['BASIC_AUTH_PASSWORD']  ||= nil                   # using basic authentication; nil USERNAME means no authentication
 
-if ENV['BASIC_AUTH_USERNAME']
+if ENV['BASIC_AUTH_USERNAME'] or ENV['BASIC_AUTH_PASSWORD']
   use Rack::Auth::Basic, "DAITSS 2.0 Silo" do |username, password|
-    username == ENV['BASIC_AUTH_USERNAME']  &&  password == ENV['BASIC_AUTH_PASSWORD']
+    username == ENV['BASIC_AUTH_USERNAME'] 
+    password == ENV['BASIC_AUTH_PASSWORD']
   end
 end
 
