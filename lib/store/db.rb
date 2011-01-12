@@ -303,10 +303,9 @@ module Store
         PackageRecord.all(params)
       end
 
+      # This allows us to go a bit faster than the above
 
-      # This was a test to see
-
-      def self.raw_list silo_record, options = {}
+      def self.raw_list silo_record = nil, options = {}
         clauses = []
         options.each do |k, v| 
           if [ FalseClass, TrueClass, Fixnum ].include? v.class
@@ -315,9 +314,10 @@ module Store
             clauses.push  "#{k.to_s} = '#{v}'"
           end
         end
+        clauses.push "silo_record_id = #{silo_record['id']}" if silo_record
 
-        sql  = "SELECT id, name, extant, size, type, initial_sha1, initial_md5, initial_timestamp, latest_sha1, latest_md5, latest_timestamp FROM packages WHERE silo_record_id = #{silo_record['id']}"
-        sql += " AND #{clauses.join(' and ')}" unless clauses.empty?
+        sql  = "SELECT id, name, extant, size, type, initial_sha1, initial_md5, initial_timestamp, latest_sha1, latest_md5, latest_timestamp FROM packages "
+        sql += " WHERE #{clauses.join(' AND ')}" unless clauses.empty?
         sql += " ORDER BY name"
 
         repository(:default).adapter.select(sql)

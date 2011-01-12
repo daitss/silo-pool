@@ -1,5 +1,6 @@
 require 'store/exceptions'
 require 'store/silodb'
+require 'store/pool'
 require 'store/tarreader'
 require 'store/utils'
 require 'time'
@@ -27,8 +28,7 @@ get '/silos.xml'  do;
   list_silos.each do |silo|
     text += "\n" + '<silo location="' + xml_escape('http://' + hostname + '/' + silo.name) + '" ' +
       [:get, :put, :delete, :post].map { |sym| silo.allowed_methods.include?(sym) ? "#{sym}=\"true\"" : "#{sym}=\"false\""  }.join(' ') +
-      " available=\"#{silo.available_space}\"" +
-      '/>'        
+      " available=\"#{silo.available_space}\"/>"
   end
   text += "</pool>\n"
   content_type 'application/xml'
@@ -131,6 +131,29 @@ get '/:partition/data/:name/*' do |partition, name, path|
   [ 200, { 'Content-Type' => mime_type_by_filename(filename) },  body ]
 end
 
+get '/fixity.xml' do 
+
+  fixity = Store::Pool.fixity_report
+  lines  = []
+
+  lines.push '<fixities host="'  + xml_escape(hostname)            + '" ' +
+         'fixity_check_count="'  + fixity.fixity_check_count.to_s  + '" ' +
+         'first_fixity_check="'  + fixity.first_fixity_check.to_s  + '" ' +
+          'last_fixity_check="'  + fixity.last_fixity_check.to_s   + '">'
+
+  fixity.fixity_records.each do |r|
+    lines.push '  <fixity name="'   + xml_escape(r[:name]) + '" ' +
+                         'sha1="'   + r[:sha1]             + '" ' +
+                          'md5="'   + r[:md5]              + '" ' +
+                         'time="'   + r[:time].to_s        + '" ' +
+                       'status="'   + r[:status].to_s      + '"/>'
+  end
+  
+  lines.push "</fixities>\n"
+
+  content_type 'application/xml'
+  lines.join("\n")
+end
 
 get '/:partition/fixity'  do |partition|
   redirect absolutely("/#{partition}/fixity/"), 301

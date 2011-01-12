@@ -214,7 +214,7 @@ module Store
       end
 
       # Copy into silo the resource identified by name from source Silo. 
-      # TODO:  add tests for this one
+      # TODO:  remove? not used?
 
       def copy_to_silo(name, destination_silo)
         if not self.exists?(name)
@@ -233,7 +233,7 @@ module Store
       end
 
       # Move into silo the resource identified by name from source Silo. 
-      # TODO:  add tests for this one
+      # TODO:  remove? not used?
 
       def move_to_silo(name, destination_silo)
         if (StoreUtils.disk_id(self.filesystem) == StoreUtils.disk_id(destination_silo.filesystem))
@@ -341,131 +341,129 @@ module Store
     end
 
      
-      def etag(name)
-        Digest::MD5.hexdigest(name + md5(name))
-      end
-
-      # Used to mixin enumerable's such as grep, etc.
-
-      def each
-        Find.find(filesystem) do |path|
-          if path =~ %r|/([a-f0-9]{3})/[a-f0-9]{29}/name|
-            yield open(path) { |io| io.read.chomp }
-          end
-        end
-      end
-
-    ### protected
-
-      # The write/read_lock methods take care of opening closing the file locks; mostly, they 
-      # should just pass exceptions up, since they'll be wrapping specific silo operations.
-
-      # We're creating lock files in the parent directories of the object, not the created
-      # directories of the objects nor the silo filesystem - this limits contention.
-
-      # Write and read use fstat to lock: once a write lock is acquired, no one else can 
-      # get a lock to read (a shared lock) or write (an exclusive lock). The way it works
-      # is this: you can have as many read locks as you want, but the OS guarantees that 
-      # there will be never more than one write lock on a filehandle, nor will it allow 
-      # a write lock and read lock exist at the same time.
-
-      def write_lock(name)
-        begin
-          FileUtils.mkdir_p parent_path(name) 
-        rescue => e
-          raise SiloError, "Parent directory creation for #{describe name} failed: #{e.message}"
-        end
-        lockfile = File.join(parent_path(name), LOCK_FILENAME)
-
-        begin
-          open(lockfile, "w") do |lock|
-            Timeout.timeout(LOCKFILE_GRAB_TIMEOUT) { lock.flock(File::LOCK_EX) }
-            yield
-          end
-        rescue Timeout::Error => e
-        end
-      end
-
-      # read shared lock - any one can get another read lock, but no-one can get an exclusive (write) lock
-
-      def read_lock(name)
-        begin
-          FileUtils.mkdir_p parent_path(name) 
-        rescue => e
-          raise SiloError, "Parent directory creation for #{describe name} failed: #{e.message}"
-        end
-        lockfile = File.join(parent_path(name), LOCK_FILENAME)
-
-        begin
-          open(lockfile, "w") do |lock|
-            Timeout.timeout(LOCKFILE_GRAB_TIMEOUT) { lock.flock(File::LOCK_SH) }
-            yield
-          end
-        rescue Timeout::Error => e
-          raise SiloError, "Timed out waiting for #{LOCKFILE_GRAB_TIMEOUT} seconds for read lock to #{describe name}: #{e.message}"
-        end
-      end
-
-      # What's in a name?  no embedded control characters, that's for sure.
-
-      def invalid_name?(string)
-        string =~ /[^ a-zA-Z\/.,0-9_+~!\'\"@#*\(\)=-]/
-      end
-
-      # Return the filesystem paths of the various meta/data associated with and object identified by name.
-      #
-      # Here are the directories and file layouts: say we have an object named "my/stuff.txt" and 
-      # silo.filesystem is "/tmp/store/".  The the md5 checksum of "my/stuff.txt" (of the string itself, 
-      # not the contents of a file) is "9203e38408ebed690ecdf40953558dbb". We have the following:
-      #
-      # parent_path     /tmp/store/920/  (this is where we create lock files)
-      # path            /tmp/store/920/3e38408ebed690ecdf40953558dbb/
-      # data_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/data
-      # datetime_path   /tmp/store/920/3e38408ebed690ecdf40953558dbb/datetime
-      # md5_path        /tmp/store/920/3e38408ebed690ecdf40953558dbb/md5
-      # sha1_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/sha1
-      # name_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/name
-      # type_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/type
-
-      def path(name)
-        md5  =  Digest::MD5.hexdigest name
-        File.join(filesystem,  StoreUtils.hashpath(name))      
-      end
-
-      def parent_path(name)
-        md5  =  Digest::MD5.hexdigest name
-        File.join(filesystem,  StoreUtils.hashpath_parent(name))
-      end
-
-      def data_path(name)
-        File.join(path(name), "data")
-      end
-
-      def datetime_path(name)
-        File.join(path(name), "datetime")
-      end
-
-      def type_path(name)
-        File.join(path(name), "type")
-      end
-
-      def md5_path(name)
-        File.join(path(name), "md5")
-      end
-
-      def sha1_path(name)
-        File.join(path(name), "sha1")
-      end
-
-      def name_path(name)
-        File.join(path(name), "name")
-      end
-
-      # Mostly for error messages:
-
-      def describe(name) 
-        "'#{name}' (located at '#{path name}')"
-      end
-
+    def etag(name)
+      Digest::MD5.hexdigest(name + md5(name))
     end
+
+    # Used to mixin enumerable's such as grep, etc.
+
+    def each
+      Find.find(filesystem) do |path|
+        if path =~ %r|/([a-f0-9]{3})/[a-f0-9]{29}/name|
+            yield open(path) { |io| io.read.chomp }
+        end
+      end
+    end
+    
+    # The write/read_lock methods take care of opening closing the file locks; mostly, they 
+    # should just pass exceptions up, since they'll be wrapping specific silo operations.
+
+    # We're creating lock files in the parent directories of the object, not the created
+    # directories of the objects nor the silo filesystem - this limits contention.
+
+    # Write and read use fstat to lock: once a write lock is acquired, no one else can
+    # get a lock to read (a shared lock) or write (an exclusive lock). The way it works
+    # is this: you can have as many read locks as you want, but the OS guarantees that
+    # there will be never more than one write lock on a filehandle, nor will it allow
+    # a write lock and read lock exist at the same time.
+
+    def write_lock(name)
+      begin
+        FileUtils.mkdir_p parent_path(name)
+      rescue => e
+        raise SiloError, "Parent directory creation for #{describe name} failed: #{e.message}"
+      end
+      lockfile = File.join(parent_path(name), LOCK_FILENAME)
+
+      begin
+        open(lockfile, "w") do |lock|
+          Timeout.timeout(LOCKFILE_GRAB_TIMEOUT) { lock.flock(File::LOCK_EX) }
+          yield
+        end
+      rescue Timeout::Error => e
+      end
+    end
+
+    # read shared lock - any one can get another read lock, but no-one can get an exclusive (write) lock
+
+    def read_lock(name)
+      begin
+        FileUtils.mkdir_p parent_path(name)
+      rescue => e
+        raise SiloError, "Parent directory creation for #{describe name} failed: #{e.message}"
+      end
+      lockfile = File.join(parent_path(name), LOCK_FILENAME)
+
+      begin
+        open(lockfile, "w") do |lock|
+          Timeout.timeout(LOCKFILE_GRAB_TIMEOUT) { lock.flock(File::LOCK_SH) }
+          yield
+        end
+      rescue Timeout::Error => e
+        raise SiloError, "Timed out waiting for #{LOCKFILE_GRAB_TIMEOUT} seconds for read lock to #{describe name}: #{e.message}"
+      end
+    end
+
+    # What's in a name?  no embedded control characters, that's for sure.
+
+    def invalid_name?(string)
+      string =~ /[^ a-zA-Z\/.,0-9_+~!\'\"@#*\(\)=-]/
+    end
+
+    # Return the filesystem paths of the various meta/data associated with and object identified by name.
+    #
+    # Here are the directories and file layouts: say we have an object named "my/stuff.txt" and
+    # silo.filesystem is "/tmp/store/".  The the md5 checksum of "my/stuff.txt" (of the string itself,
+    # not the contents of a file) is "9203e38408ebed690ecdf40953558dbb". We have the following:
+    #
+    # parent_path     /tmp/store/920/  (this is where we create lock files)
+    # path            /tmp/store/920/3e38408ebed690ecdf40953558dbb/
+    # data_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/data
+    # datetime_path   /tmp/store/920/3e38408ebed690ecdf40953558dbb/datetime
+    # md5_path        /tmp/store/920/3e38408ebed690ecdf40953558dbb/md5
+    # sha1_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/sha1
+    # name_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/name
+    # type_path       /tmp/store/920/3e38408ebed690ecdf40953558dbb/type
+
+    def path(name)
+      md5  =  Digest::MD5.hexdigest name
+      File.join(filesystem,  StoreUtils.hashpath(name))
+    end
+
+    def parent_path(name)
+      md5  =  Digest::MD5.hexdigest name
+      File.join(filesystem,  StoreUtils.hashpath_parent(name))
+    end
+
+    def data_path(name)
+      File.join(path(name), "data")
+    end
+
+    def datetime_path(name)
+      File.join(path(name), "datetime")
+    end
+
+    def type_path(name)
+      File.join(path(name), "type")
+    end
+
+    def md5_path(name)
+      File.join(path(name), "md5")
+    end
+
+    def sha1_path(name)
+      File.join(path(name), "sha1")
+    end
+
+    def name_path(name)
+      File.join(path(name), "name")
+    end
+
+    # Mostly for error messages:
+
+    def describe(name)
+      "'#{name}' (located at '#{path name}')"
+    end
+
   end
+end

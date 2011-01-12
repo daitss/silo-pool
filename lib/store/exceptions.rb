@@ -183,6 +183,8 @@ module Store
   class MissingTar                < Http400;  end   # when we require a content type of application/x-tar
   class MD5Mismatch               < Http412;  end   # the supplied md5 didn't match the computed one
 
+  class FatalFixityError          < Http500;  end
+
   # TODO investigate how each of these are used and get them subclassed into the HTTP classed errors as above
   # This set is way over-engineered.
 
