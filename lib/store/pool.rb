@@ -5,44 +5,42 @@ require 'store/db'
 
 module Store
 
-# Class Pool
+# Class PoolFixity
 #
-# One proceeds as follows:
-#
-#   require 'store/db'
-#   require 'store/pool'
-#
-#   include Store
-#
-#   DB.setup('/etc/db.yml', 'store_master')
-#   Pool.fixity_report
+# TODO: make silo fixities use this same strategem
 #
 
-  class Pool
 
-    def self.fixity_report
+  class PoolFixity
 
-      fixity_records = []
-      count          = Store::DB::PackageRecord.count(:extant => true )
-      max_time       = DateTime.parse('1970-01-01')
-      min_time       = DateTime.now
+    Struct.new('FixityHeader', :hostname, :count, :earliest, :latest)
+    Struct.new('FixityRecord', :name, :status, :md5, :sha1, :time)
 
-      Store::DB::PackageRecord.all( :order => [ :name.asc ], :extant => true ).each do |rec|
-        fixity_records.push({ :name   => rec.name, 
-                              :status => (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1) ? :ok : :fail,
-                              :md5    => rec.latest_md5, 
-                              :sha1   => rec.latest_sha1, 
-                              :time   => rec.latest_timestamp })
+    include Enumerable
 
-        max_time = rec.latest_timestamp > max_time ? rec.latest_timestamp : max_time
-        min_time = rec.latest_timestamp < min_time ? rec.latest_timestamp : min_time
+    @hostname = nil
+    @silos    = nil
+
+    def initialize hostname
+      @hostname = hostname
+      @silos = DB::SiloRecord.all(:hostname => hostname)      
+    end
+
+    def summary
+      Struct::FixityHeader.new(@hostname,
+                               Store::DB::PackageRecord.count(:extant => true, :silo_record => @silos),
+                               Store::DB::PackageRecord.min(:latest_timestamp, :extant => true, :silo_record => @silos),
+                               Store::DB::PackageRecord.max(:latest_timestamp, :extant => true, :silo_record => @silos))
+    end
+
+    def each
+      Store::DB::PackageRecord.all(:order => [ :name.asc ], :extant => true, :silo_record => @silos).each do |rec|
+        yield Struct::FixityRecord.new(rec.name, 
+                                       (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1) ? :ok : :fail,
+                                       rec.latest_md5, 
+                                       rec.latest_sha1, 
+                                       rec.latest_timestamp)
       end
-
-      OpenStruct.new(# :hostname           => hostname, 
-                     :fixity_records     => fixity_records, 
-                     :fixity_check_count => count,
-                     :first_fixity_check => min_time, 
-                     :last_fixity_check  => max_time)
     end
   end        
 end

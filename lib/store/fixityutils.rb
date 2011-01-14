@@ -31,8 +31,6 @@ def check_package_fixities web_server, silo_name, filesystem
       success = false
     else
 
-      ### TODO: we've seen a failure here with non-silo package left on disk..., protect..
-
       Store::DB::HistoryRecord.fixity(silo_record, package, :md5 => md5, :sha1 => sha1)   
       errors = []
       errors.push "database md5 mismatch - expected #{package_record.initial_md5} but got #{md5}"        if (md5  != package_record.initial_md5)
