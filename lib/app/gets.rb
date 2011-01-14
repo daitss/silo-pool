@@ -133,14 +133,16 @@ end
 
 get '/fixity.xml' do 
 
-  fixity = Store::Pool.new(hostname)
+  fixity = Store::PoolFixity.new(hostname)
 
   lines  = []
 
+  header = fixity.summary
+
   lines.push '<fixities host="'  + xml_escape(hostname)  + '" ' +
-         'fixity_check_count="'  + fixity.count.to_s     + '" ' +
-      'earliest_fixity_check="'  + fixity.earliest.to_s  + '" ' +
-        'latest_fixity_check="'  + fixity.latest.to_s    + '">'
+         'fixity_check_count="'  + header.count.to_s     + '" ' +
+      'earliest_fixity_check="'  + header.earliest.to_s  + '" ' +
+        'latest_fixity_check="'  + header.latest.to_s    + '">'
 
   fixity.each do |r|
     lines.push '  <fixity name="'   + xml_escape(r.name) + '" ' +
