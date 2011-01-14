@@ -6,7 +6,6 @@ require 'store/db'
 module Store
 
 # Class Pool
-# Utility functions to get presentation
 #
 # One proceeds as follows:
 #
@@ -16,13 +15,8 @@ module Store
 #   include Store
 #
 #   DB.setup('/etc/db.yml', 'store_master')
-#   Pool.fixities do |rec|
+#   Pool.fixity_report
 #
-
-#
-#   PoolReservation.new(size) do |silo|
-#     silo.put(name) ...
-#   end
 
   class Pool
 
@@ -42,7 +36,6 @@ module Store
 
         max_time = rec.latest_timestamp > max_time ? rec.latest_timestamp : max_time
         min_time = rec.latest_timestamp < min_time ? rec.latest_timestamp : min_time
-        count   += 1
       end
 
       OpenStruct.new(# :hostname           => hostname, 

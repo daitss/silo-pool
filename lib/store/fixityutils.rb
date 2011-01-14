@@ -1,5 +1,5 @@
 
-class FatalFixityError < StandardError; end
+require 'store/exceptions'
 
 # check_package_fixities CONF
 #
@@ -16,8 +16,6 @@ def check_package_fixities web_server, silo_name, filesystem
 
   silo.each do |package|
     begin
-
-      ### TODO: check for nil return here? (e.g. may have bogus packages on disk)
 
       package_record = Store::DB::PackageRecord.lookup(silo_record, package) 
       md5  = Digest::MD5.new
