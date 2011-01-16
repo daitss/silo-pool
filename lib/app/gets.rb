@@ -5,6 +5,8 @@ require 'store/tarreader'
 require 'store/utils'
 require 'time'
 
+# TODO: recent sinatra fixed relative-redirection problem, check to see if we can remove 'absolutely'
+
 PACKAGES_PER_PAGE = 40 # should be even
 
 include Store
@@ -12,9 +14,7 @@ include Store
 REVISION = Store.version.rev
 
 get '/'       do;    redirect absolutely('/silos/'), 302;  end
-
 get '/silos'  do;    redirect absolutely('/silos/'), 301;  end
-
 get '/silos/' do
   erb :silos, :locals => { :hostname => hostname, :silos => list_silos, :revision => REVISION}
 end
@@ -24,9 +24,9 @@ end
 
 get '/silos.xml'  do;
   text = '<?xml version="1.0" encoding="UTF-8"?>' + "\n"
-  text += '<pool location="' + xml_escape(this_resource) + '">'
+  text += '<pool location="' + StoreUtils.xml_escape(this_resource) + '">'
   list_silos.each do |silo|
-    text += "\n" + '<silo location="' + xml_escape('http://' + hostname + '/' + silo.name) + '" ' +
+    text += "\n" + '<silo location="' + StoreUtils.xml_escape('http://' + hostname + '/' + silo.name) + '" ' +
       [:get, :put, :delete, :post].map { |sym| silo.allowed_methods.include?(sym) ? "#{sym}=\"true\"" : "#{sym}=\"false\""  }.join(' ') +
       " available=\"#{silo.available_space}\"/>"
   end
@@ -127,40 +127,23 @@ get '/:partition/data/:name/*' do |partition, name, path|
   end
   
   raise Http404 unless body
-
   [ 200, { 'Content-Type' => mime_type_by_filename(filename) },  body ]
 end
 
-get '/fixity.xml' do 
-
-  fixity = Store::PoolFixity.new(hostname)
-
-  lines  = []
-
-  header = fixity.summary
-
-  lines.push '<fixities host="'  + xml_escape(hostname)  + '" ' +
-         'fixity_check_count="'  + header.count.to_s     + '" ' +
-      'earliest_fixity_check="'  + header.earliest.to_s  + '" ' +
-        'latest_fixity_check="'  + header.latest.to_s    + '">'
-
-  fixity.each do |r|
-    lines.push '  <fixity name="'   + xml_escape(r.name) + '" ' +
-                         'sha1="'   + r.sha1             + '" ' +
-                          'md5="'   + r.md5              + '" ' +
-                         'time="'   + r.time.to_s        + '" ' +
-                       'status="'   + r.status.to_s      + '"/>'
-  end
-  
-  lines.push "</fixities>\n"
-
-  content_type 'application/xml'
-  lines.join("\n")
+get '/fixity.xml' do
+  [ 200, {'Content-Type'  => 'application/xml'}, Store::PoolFixityXmlReport.new(hostname) ]
 end
+
+get '/fixity.csv' do
+  [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname) ]
+end
+
+# implement the above technique for pool/fixity for inidividual silos.
 
 get '/:partition/fixity'  do |partition|
   redirect absolutely("/#{partition}/fixity/"), 301
 end
+
 
 get '/:partition/fixity/' do |partition|
   silo   = get_silo(partition)
@@ -172,21 +155,21 @@ get '/:partition/fixity/' do |partition|
 
   lines.push '<?xml version="1.0" encoding="UTF-8"?>'
 
-  lines.push '<SILOCHECK silo="'  + xml_escape(fixity.filesystem)   + '" ' +
-                        'host="'  + xml_escape(fixity.hostname)     + '" ' +
+  lines.push '<silocheck silo="'  + StoreUtils.xml_escape(fixity.filesystem)   + '" ' +
+                        'host="'  + StoreUtils.xml_escape(fixity.hostname)     + '" ' +
           'fixity_check_count="'  + fixity.fixity_check_count.to_s  + '" ' +
           'first_fixity_check="'  + fixity.first_fixity_check.to_s  + '" ' +
            'last_fixity_check="'  + fixity.last_fixity_check.to_s   + '">'
 
   fixity.fixity_records.each do |r|
-    lines.push '  <FIXITY name="'   + xml_escape(r[:name]) + '" ' +
+    lines.push '  <fixity name="'   + StoreUtils.xml_escape(r[:name]) + '" ' +
                          'sha1="'   + r[:sha1]             + '" ' +
                           'md5="'   + r[:md5]              + '" ' +
                          'time="'   + r[:time].to_s        + '" ' +
                        'status="'   + r[:status].to_s      + '"/>'
   end
   
-  lines.push "</SILOCHECK>\n"
+  lines.push "</silocheck>\n"
 
   content_type 'application/xml'
   lines.join("\n")
@@ -203,9 +186,9 @@ get '/:partition/fixity/:name' do |partition, name|
 
   lines.push '<?xml version="1.0" encoding="UTF-8"?>'
 
-  lines.push '<HISTORY   silo="'  + xml_escape(fixity.filesystem)   + '" ' +
-                        'ieid="'  + xml_escape(name)                + '" ' +
-                        'host="'  + xml_escape(fixity.hostname)     + '" ' +
+  lines.push '<history   silo="'  + StoreUtils.xml_escape(fixity.filesystem)   + '" ' +
+                        'ieid="'  + StoreUtils.xml_escape(name)                + '" ' +
+                        'host="'  + StoreUtils.xml_escape(fixity.hostname)     + '" ' +
           'fixity_check_count="'  + fixity.fixity_check_count.to_s  + '" ' +
           'first_fixity_check="'  + fixity.first_fixity_check.to_s  + '" ' +
            'last_fixity_check="'  + fixity.last_fixity_check.to_s   + '">'
@@ -216,12 +199,12 @@ get '/:partition/fixity/:name' do |partition, name|
   fixity.fixity_records.each do |rec|
     case rec[:action]
     when :fixity
-      lines.push "<FIXITY md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" time=\"#{rec[:time].to_s}\" status=\"#{rec[:status].to_s}\"/>"
+      lines.push "<fixity md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" time=\"#{rec[:time].to_s}\" status=\"#{rec[:status].to_s}\"/>"
     when :put
-      lines.push "<PUT md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" time=\"#{rec[:time].to_s}\"/>"
+      lines.push "<put md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" time=\"#{rec[:time].to_s}\"/>"
     end
   end
-  lines.push  "</HISTORY>\n"
+  lines.push  "</history>\n"
 
   content_type 'application/xml'
   lines.join("\n") 

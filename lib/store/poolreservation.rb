@@ -36,7 +36,7 @@ module Store
       yield reservation_lock { best_fit_silo(size) }
     ensure
       rec = nil
-      reservation_lock { rec.destroy if @record_id && (rec = DB::ReservedDiskSpaceRecord.get(@record_id)) }
+      reservation_lock { rec.destroy if @record_id && (rec = DB::ReservedDiskSpace.get(@record_id)) }
     end
 
     def self.lockfile
@@ -78,7 +78,7 @@ module Store
     #
     # provide a wrapper that ensures exclusive access to something.
     # In our case, that something is a set of certain write/delete
-    # operations on the DB::ReservedDiskSpaceRecord table.  We use it
+    # operations on the DB::ReservedDiskSpace table.  We use it
     # when we want to determine, augment, or delete disk space
     # reservations for a particular disk partition.
 
@@ -105,7 +105,7 @@ module Store
 
       available = {} ; reserved = {} ; silos = {}   # all hashes are keyed by partition
 
-      DB::ReservedDiskSpaceRecord.partition_reservations(MAX_RESERVATION).each do |partition, reservation|
+      DB::ReservedDiskSpace.partition_reservations(MAX_RESERVATION).each do |partition, reservation|
         reserved[partition] = reservation
       end
 
@@ -130,7 +130,7 @@ module Store
 
       # ...and reserve +size_needed+ (and change) bytes for that partition.
 
-      @record_id = DB::ReservedDiskSpaceRecord.create(:partition => partition, :size => size_needed + HEADROOM)['id']           
+      @record_id = DB::ReservedDiskSpace.create(:partition => partition, :size => size_needed + HEADROOM)['id']           
       return silos[partition].shift
     end
     

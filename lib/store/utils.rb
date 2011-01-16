@@ -59,10 +59,14 @@ module StoreUtils
      string =~ /^E20\d{2}[0-1]\d[0-3]\d_[A-Z]{6}$/ ? true : false
   end 
 
+  def StoreUtils.xml_escape str
+    str.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub("'", '&apos;').gsub('"', '&quot;')
+  end
+
   # FIXME: Plenty of ways for disk_mount_point to go wrong: SMBFS mounted directory. Symbolic link somewhere.
   # Be careful out there...  
   
-  # N.B. We depend on a trailing slash being removed
+  # N.B. We depend on a trailing slash being removed in path
   
   def StoreUtils.disk_mount_point(path)
     path = File.expand_path(path)

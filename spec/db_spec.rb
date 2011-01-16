@@ -36,54 +36,54 @@ end
 
 #### .should 
 
-share_examples_for "DataMapper ReservedDiskSpaceRecord class using any database" do
+share_examples_for "DataMapper ReservedDiskSpace class using any database" do
 
   it "should alow us to create a record" do
-    rec = DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000))
+    rec = DB::ReservedDiskSpace.create(:partition => '/', :size => rand(1000))
     rec.saved?.should == true
   end
 
   it "should alow us to destroy a record based on the id" do
-    rec1 = DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000))
+    rec1 = DB::ReservedDiskSpace.create(:partition => '/', :size => rand(1000))
     rec1.saved?.should == true
 
-    rec2 = DB::ReservedDiskSpaceRecord.get(rec1['id'])
+    rec2 = DB::ReservedDiskSpace.get(rec1['id'])
     rec2.destroy.should == true
   end
 
 
   it "should allow us to create a reservation with explicit datetime" do
     date = DateTime.now
-    rec1 = DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000), :timestamp => date)
-    rec2 = DB::ReservedDiskSpaceRecord.get(rec1['id'])    
+    rec1 = DB::ReservedDiskSpace.create(:partition => '/', :size => rand(1000), :timestamp => date)
+    rec2 = DB::ReservedDiskSpace.get(rec1['id'])    
     (date - rec2.timestamp).should  be_within(0.0001).of(0)
   end
   
   it "should allow us to clean out stale records" do
-    DB::ReservedDiskSpaceRecord.all.destroy
+    DB::ReservedDiskSpace.all.destroy
     
     datetime = DateTime.now - 1
 
-    DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000), :timestamp => datetime)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000), :timestamp => datetime)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/', :size => rand(1000)) # defaults to now
+    DB::ReservedDiskSpace.create(:partition => '/', :size => rand(1000), :timestamp => datetime)
+    DB::ReservedDiskSpace.create(:partition => '/', :size => rand(1000), :timestamp => datetime)
+    DB::ReservedDiskSpace.create(:partition => '/', :size => rand(1000)) # defaults to now
 
-    DB::ReservedDiskSpaceRecord.all.length.should == 3
-    DB::ReservedDiskSpaceRecord.cleanout_stale_reservations 0.5
-    DB::ReservedDiskSpaceRecord.all.length.should == 1
+    DB::ReservedDiskSpace.all.length.should == 3
+    DB::ReservedDiskSpace.cleanout_stale_reservations 0.5
+    DB::ReservedDiskSpace.all.length.should == 1
   end
 
 
   it "should all us to find a list of unique partitions" do
 
-    DB::ReservedDiskSpaceRecord.all.destroy
+    DB::ReservedDiskSpace.all.destroy
 
     ['/a', '/b', '/c'].each do |partition|
-      DB::ReservedDiskSpaceRecord.create(:partition => partition, :size => rand(1000))
-      DB::ReservedDiskSpaceRecord.create(:partition => partition, :size => rand(1000))
+      DB::ReservedDiskSpace.create(:partition => partition, :size => rand(1000))
+      DB::ReservedDiskSpace.create(:partition => partition, :size => rand(1000))
     end
     
-    partitions = DB::ReservedDiskSpaceRecord.distinct_partitions
+    partitions = DB::ReservedDiskSpace.distinct_partitions
 
     partitions.length.should == 3
 
@@ -97,23 +97,23 @@ share_examples_for "DataMapper ReservedDiskSpaceRecord class using any database"
 
     too_old = 100
     
-    DB::ReservedDiskSpaceRecord.all.destroy
+    DB::ReservedDiskSpace.all.destroy
 
-    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/a', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/a', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/a', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/a', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/a', :size => 1)
 
-    DB::ReservedDiskSpaceRecord.create(:partition => '/b', :size => 1)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/b', :size => 1)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/b', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/b', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/b', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/b', :size => 1)
 
-    DB::ReservedDiskSpaceRecord.create(:partition => '/c', :size => 1)
-    DB::ReservedDiskSpaceRecord.create(:partition => '/c', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/c', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/c', :size => 1)
 
-    DB::ReservedDiskSpaceRecord.create(:partition => '/d', :size => 1)
+    DB::ReservedDiskSpace.create(:partition => '/d', :size => 1)
 
-    recs = DB::ReservedDiskSpaceRecord.partition_reservations(too_old)
+    recs = DB::ReservedDiskSpace.partition_reservations(too_old)
 
     recs.keys.length == 4
 
@@ -123,21 +123,21 @@ share_examples_for "DataMapper ReservedDiskSpaceRecord class using any database"
     recs['/d'].should == 1
   end
 
-end  # of DataMapper ReservedDiskSpaceRecord class using any database
+end  # of DataMapper ReservedDiskSpace class using any database
 
 
-describe "DataMapper ReservedDiskSpaceRecord class using Mysql" do
+describe "DataMapper ReservedDiskSpace class using Mysql" do
   before(:all) do
     mysql_setup
   end
-  it_should_behave_like "DataMapper ReservedDiskSpaceRecord class using any database"
+  it_should_behave_like "DataMapper ReservedDiskSpace class using any database"
 end
 
-describe "DataMapper ReservedDiskSpaceRecord class using Postgres" do
+describe "DataMapper ReservedDiskSpace class using Postgres" do
   before(:all) do
     postgres_setup
   end
-  it_should_behave_like "DataMapper ReservedDiskSpaceRecord class using any database"
+  it_should_behave_like "DataMapper ReservedDiskSpace class using any database"
 end
 
 

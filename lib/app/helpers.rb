@@ -24,16 +24,12 @@ helpers do
 
   def mime_type_by_filename name
     # local color:
-    return 'application/xml'  if name =~ /\.mets$/
-    return 'application/xml'  if name =~ /\.xsd$/
-    return 'text/plain'       if name =~ /\.pro$/
-    # iana:
+    return 'application/xml'  if name =~ /\.mets$/i
+    return 'application/xml'  if name =~ /\.xsd$/i
+    return 'text/plain'       if name =~ /\.pro$/i
+    # IANA:
     mime = MIME::Types.type_for(name)[0]
     mime.nil? ? 'application/octet-stream' : mime.content_type
-  end
-
-  def xml_escape str
-    str.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub("'", '&apos;').gsub('"', '&quot;')
   end
 
   def filesystem_to_text str
@@ -63,7 +59,6 @@ helpers do
     raise "unknows silo method text #{text}, can't convert to symbol" unless ['get', 'put', 'delete', 'post'].include? method_text
     method_text.to_sym
   end
-
 
   def absolutely path
     'http://' + hostname + port_maybe + path

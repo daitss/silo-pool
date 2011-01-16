@@ -92,7 +92,7 @@ module Store
         SiloRecord.auto_migrate!
         PackageRecord.auto_migrate!
         HistoryRecord.auto_migrate!
-        ReservedDiskSpaceRecord.auto_migrate!
+        ReservedDiskSpace.auto_migrate!
       end
     end
 
@@ -115,6 +115,8 @@ module Store
       property  :hostname,    String, :length => 127, :required => true
       property  :state,       Enum[ *states  ], :default =>   :disk_master
       property  :forbidden,   Flag[ *methods ], :default => [ :post, :options ]
+###   TODO: add this
+###   property  :retired,     Boolean, :default  => true
 
       has n,    :package_record, :constraint => :destroy
 
@@ -144,6 +146,11 @@ module Store
         options[:hostname] = hostname.downcase if hostname
         SiloRecord.all(options)
       end      
+
+
+      def short_name
+        filesystem.split('/').pop
+      end
 
       def media_device
         case state
@@ -442,7 +449,7 @@ module Store
     end # of class HistoryRecord
 
     
-    class ReservedDiskSpaceRecord 
+    class ReservedDiskSpace 
 
       include DataMapper::Resource
       storage_names[:default] = 'reserved_disk_spaces'
@@ -456,26 +463,26 @@ module Store
       # +max_reservation+ is expressed in days - typically this is a few hours at most
 
       def self.cleanout_stale_reservations max_reservation
-        ReservedDiskSpaceRecord.all(:timestamp.lt => DateTime.now - max_reservation).destroy
+        ReservedDiskSpace.all(:timestamp.lt => DateTime.now - max_reservation).destroy
       end
       
       def self.distinct_partitions
-        ReservedDiskSpaceRecord.all.map{ |rec| rec.partition }.uniq.sort
+        ReservedDiskSpace.all.map{ |rec| rec.partition }.uniq.sort
       end
         
       # return hash of partitions and sizes: { partition_name => space, ... }
       # it automatically removes records older than max_reservation days.
 
       def self.partition_reservations(max_reservation)
-        ReservedDiskSpaceRecord.cleanout_stale_reservations(max_reservation)
+        ReservedDiskSpace.cleanout_stale_reservations(max_reservation)
         reservations = {}
         
-        ReservedDiskSpaceRecord.distinct_partitions.each do |partition|
-          reservations[partition] = ReservedDiskSpaceRecord.sum(:size, :partition => partition)
+        ReservedDiskSpace.distinct_partitions.each do |partition|
+          reservations[partition] = ReservedDiskSpace.sum(:size, :partition => partition)
         end
         reservations
       end
 
-    end # of class ReservedDiskSpaceRecord
+    end # of class ReservedDiskSpace
   end # of module DB
 end # of module Store
