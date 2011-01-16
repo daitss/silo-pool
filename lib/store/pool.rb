@@ -10,6 +10,8 @@ module Store
 # TODO: make silo fixities use this same strategem
 #
 
+  # Assemble all the recent fixity data for all silos associated with a given hostname
+
   class PoolFixity
 
     Struct.new('FixityHeader', :hostname, :count, :earliest, :latest)
@@ -44,8 +46,8 @@ module Store
     end
   end # of class PoolFixity
 
-  # A wrapper for the above that can be used as a rack response with each method; it returns an
-  # xml representation of the above
+  # A wrapper for the data returned by the PoolFixity class that can be used in a space-effiecient rack response.
+  # It returns an XML document with the fixity data.
 
   class PoolFixityXmlReport
     include Enumerable
@@ -79,6 +81,8 @@ module Store
     end
   end # of class PoolFixityXmlReport
 
+  # A wrapper for the data returned by the PoolFixity class that can be used in a space-effiecient rack response.
+  # It returns a CSV document with the fixity data.
 
   class PoolFixityCsvReport
     include Enumerable
@@ -93,11 +97,9 @@ module Store
 
     def each
       header = @pool_fixity.summary
-
-      yield "name,host,silo,sha1,md5,time,status\n"
-
+      yield "name,silo,sha1,md5,time,status\n"
       @pool_fixity.each do |fix|
-        yield [fix.name, @hostname, fix.silo, fix.sha1, fix.md5, fix.time.to_s, fix.status.to_s].join(',') + "\n"
+        yield [fix.name, fix.silo, fix.sha1, fix.md5, fix.time.to_s, fix.status.to_s].join(',') + "\n"
       end
     end
 

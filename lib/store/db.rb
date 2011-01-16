@@ -10,6 +10,9 @@ require 'socket'
 require 'store/exceptions'
 require 'time'
 
+# TODO:  make sure last compoent of the silo filesystem is unique
+
+
 # Used by SiloDB, SiloTapeDB classes; Used by utility programs such as fixity.
 
 module Store
