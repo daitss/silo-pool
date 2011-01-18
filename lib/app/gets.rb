@@ -4,6 +4,7 @@ require 'store/pool'
 require 'store/tarreader'
 require 'store/utils'
 require 'time'
+require 'builder'
 
 # TODO: recent sinatra fixed relative-redirection problem, check to see if we can remove 'absolutely'
 
@@ -19,21 +20,38 @@ get '/silos/' do
   erb :silos, :locals => { :hostname => hostname, :silos => list_silos, :revision => REVISION}
 end
 
+# provide information on the services we supply.  There are two requirements: 
+#   * a URL that we can POST to: it will return a URL that we can PUT a new resource to store.
+#   * one or more URLs where we can retrieve fixity data
 
-# Provide information on this pool...
-
-get '/silos.xml'  do;
-  text = '<?xml version="1.0" encoding="UTF-8"?>' + "\n"
-  text += '<pool location="' + StoreUtils.xml_escape(this_resource) + '">'
-  list_silos.each do |silo|
-    text += "\n" + '<silo location="' + StoreUtils.xml_escape('http://' + hostname + '/' + silo.name) + '" ' +
-      [:get, :put, :delete, :post].map { |sym| silo.allowed_methods.include?(sym) ? "#{sym}=\"true\"" : "#{sym}=\"false\""  }.join(' ') +
-      " available=\"#{silo.available_space}\"/>"
-  end
-  text += "</pool>\n"
-  content_type 'application/xml'
-  text
+get '/services' do
+  xml = Builder::XmlMarkup.new(:indent => 2)
+  xml.instruct!(:xml, :encoding => 'UTF-8')
+  xml.services(:version => '0.0.1') {
+    xml.create(:location => absolutely('/create/%s'),  :method => "post")
+    xml.fixity(:location => absolutely('/fixity.csv'), :method => "get",  :mime_type => 'text/csv')
+    xml.fixity(:location => absolutely('/fixity.xml'), :method => "get",  :mime_type => 'application/xml')
+  }
+  status 200
+  headers 'Content-Type' => 'application/xml'
+  xml.target!
 end
+
+
+# # Provide information about
+
+# get '/silos.xml'  do;
+#   text = '<?xml version="1.0" encoding="UTF-8"?>' + "\n"
+#   text += '<pool location="' + StoreUtils.xml_escape(this_resource) + '">'
+#   list_silos.each do |silo|
+#     text += "\n" + '<silo location="' + StoreUtils.xml_escape('http://' + hostname + '/' + silo.name) + '" ' +
+#       [:get, :put, :delete, :post].map { |sym| silo.allowed_methods.include?(sym) ? "#{sym}=\"true\"" : "#{sym}=\"false\""  }.join(' ') +
+#       " available=\"#{silo.available_space}\"/>"
+#   end
+#   text += "</pool>\n"
+#   content_type 'application/xml'
+#   text
+# end
 
 get '/:partition/knobs' do |partition|
   redirect absolutely("/#{partition}/knobs/"), 301
@@ -143,7 +161,6 @@ end
 get '/:partition/fixity'  do |partition|
   redirect absolutely("/#{partition}/fixity/"), 301
 end
-
 
 get '/:partition/fixity/' do |partition|
   silo   = get_silo(partition)

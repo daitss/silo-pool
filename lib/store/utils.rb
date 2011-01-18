@@ -63,6 +63,10 @@ module StoreUtils
     str.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>', '&gt;').gsub("'", '&apos;').gsub('"', '&quot;')
   end
 
+  def StoreUtils.csv_escape str
+    '"' + str.gsub('"', '""') + '"'   # 'fo,o"bar' =>  '"fo,o""bar"'
+  end
+
   # FIXME: Plenty of ways for disk_mount_point to go wrong: SMBFS mounted directory. Symbolic link somewhere.
   # Be careful out there...  
   

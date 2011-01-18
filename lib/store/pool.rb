@@ -7,10 +7,11 @@ module Store
 
 # Class PoolFixity
 #
-# TODO: make silo fixities use this same strategem
+# TODO: make silo fixities use this same strategem, include here.
 #
 
-  # Assemble all the recent fixity data for all silos associated with a given hostname
+  # Assemble all the recent fixity data for all silos associated with
+  # a given hostname.  Fixity data are returned sorted by package name.
 
   class PoolFixity
 
@@ -46,8 +47,9 @@ module Store
     end
   end # of class PoolFixity
 
-  # A wrapper for the data returned by the PoolFixity class that can be used in a space-effiecient rack response.
-  # It returns an XML document with the fixity data.
+
+  # A wrapper for the data returned by the PoolFixity class that can be used in a space-efficient rack response.
+  # It returns an XML document with the fixity data provided by a PoolFixity object.
 
   class PoolFixityXmlReport
     include Enumerable
@@ -81,25 +83,23 @@ module Store
     end
   end # of class PoolFixityXmlReport
 
-  # A wrapper for the data returned by the PoolFixity class that can be used in a space-effiecient rack response.
-  # It returns a CSV document with the fixity data.
+
+  # A wrapper for the data returned by the PoolFixity class that can be used in a space-efficient rack response.
+  # It returns a CSV document with the fixity data provided by a PoolFixity object.
 
   class PoolFixityCsvReport
     include Enumerable
 
     @pool_fixity = nil
-    @hostname    = nil
 
     def initialize hostname
-      @hostname    = hostname
       @pool_fixity = PoolFixity.new(hostname)
     end
 
     def each
-      header = @pool_fixity.summary
-      yield "name,silo,sha1,md5,time,status\n"
-      @pool_fixity.each do |fix|
-        yield [fix.name, fix.silo, fix.sha1, fix.md5, fix.time.to_s, fix.status.to_s].join(',') + "\n"
+      yield '"name","silo","sha1","md5","time","status"' + "\n"
+      @pool_fixity.each do |r|
+        yield [r.name, r.silo, r.sha1, r.md5, r.time.to_s, r.status.to_s].map{ |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
       end
     end
 

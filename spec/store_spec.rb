@@ -6,7 +6,7 @@ require 'store'
 describe Store do
 
   it "should provide a NAME constant" do
-    (Store::NAME =~ /Storage/).should_not == nil
+    (Store::NAME =~ /Silo Service/).should_not == nil
   end
 
   it "should provide a VERSION constant" do
@@ -22,7 +22,7 @@ describe Store do
   end
 
   it "should provide a to_s method on version that matches the version label information" do
-    ("#{Store.version}" =~ /^Silo Storage/).should == 0
+    ("#{Store.version}" =~ /^Silo Service/).should == 0
   end
 
   it "should provide version rev information" do
@@ -30,7 +30,7 @@ describe Store do
   end
 
   it "should provide version uri information" do
-    (Store.version.uri =~ %r{^info:fcla/daitss/silos}).should == 0
+    (Store.version.uri =~ %r{^info:fcla/daitss/silo}).should == 0
   end
   
 
