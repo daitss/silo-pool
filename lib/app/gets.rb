@@ -27,7 +27,7 @@ end
 get '/services' do
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
-  xml.services(:version => '0.0.1') {
+  xml.services(:version => Store::VERSION) {
     xml.create(:location => absolutely('/create/%s'),  :method => "post")
     xml.fixity(:location => absolutely('/fixity.csv'), :method => "get",  :mime_type => 'text/csv')
     xml.fixity(:location => absolutely('/fixity.xml'), :method => "get",  :mime_type => 'application/xml')
