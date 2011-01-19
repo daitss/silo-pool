@@ -62,15 +62,25 @@ FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yar
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
 
-# Rebuild bundler vendor files for local development (capistrano invokes bundler remotely)
+# Rebuild bundler vendor files for local development (capistrano invokes bundler remotely).
+# This will rebuild the Gemfile.lock, which we check in, but place the gems under the local
+# vendor/ tree....
 
 desc "Reset bundles"
 task :bundle do
-  `rm -rf #{HOME}/vendor/bundle`
-  `mkdir -p #{HOME}/vendor/bundle`
-  `cd #{HOME}; bundle install --path vendor/bundle`
+  sh "rm -rf #{HOME}/vendor/bundle"
+  sh "mkdir -p #{HOME}/vendor/bundle"
+  sh "cd #{HOME}; bundle install --path vendor/bundle"
 end
 
+desc "deploy to darchive betasilos"
+task :darchive do
+  
+  sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"
+  sh "test -s /tmp/silos.diff && git commit -a"
+  sh "git push"
+  sh "cap deploy -S target=darchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
+end
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
@@ -105,15 +115,6 @@ task :restart do
   if not (File.exists?(restart) and `find "#{HOME}" -type f -newer "#{restart}" 2> /dev/null`.empty?)
     File.open(restart, 'w') { |f| f.write "" }
   end  
-end
-
-# Build local (not deployed) bundled files for in-place development.
-
-desc "Reset bundles"
-task :bundle do
-  `rm -rf #{HOME}/vendor/bundle`
-  `mkdir -p #{HOME}/vendor/bundle`
-  `cd #{HOME}; bundle install --path vendor/bundle`
 end
 
 desc "Create a marker file in the sinatra tmp directory that turns on profiling - restart to turn off"
