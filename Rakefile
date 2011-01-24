@@ -73,7 +73,7 @@ task :bundle do
   sh "cd #{HOME}; bundle install --path vendor/bundle"
 end
 
-desc "deploy to darchive betasilos"
+desc "deploy to darchive's betasilos"
 task :darchive do
   
   sh "git diff > /tmp/silos.diff; test -s /tmp/silos.diff && open /tmp/silos.diff"

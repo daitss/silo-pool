@@ -1,6 +1,6 @@
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-require 'store/tables'
+require 'datyl/tables'
 require 'store/exceptions'
 require 'lib/spec_helpers'
 

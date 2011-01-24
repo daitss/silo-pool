@@ -144,7 +144,7 @@ module Store
 ### TODO: these need to be pulled out into different more appropriately named mixin, or just back into DB, maybe:
 
     def package_count search = nil
-      if search 
+      if search
         DB::PackageRecord.count(:extant => true, :silo_record => silo_record, :name.like => "%#{search}%")
       else
         DB::PackageRecord.count(:extant => true, :silo_record => silo_record)
@@ -160,16 +160,16 @@ module Store
     def package_names_by_page page, number_per_page, search = nil
       if search
         names = DB::PackageRecord.list(silo_record, 
-                                       :order     => [ :name.asc ],
+                                       :order     => [ :initial_timestamp.desc ],
                                        :name.like => "%#{search}%",
-                                       :extant    => true, 
-                                       :limit     => number_per_page, 
+                                       :extant    => true,
+                                       :limit     => number_per_page,
                                        :offset    => number_per_page * (page - 1))
       else
         names = DB::PackageRecord.list(silo_record, 
-                                       :order     => [ :name.asc ],
-                                       :extant => true, 
-                                       :limit  => number_per_page, 
+                                       :order     => [ :initial_timestamp.desc ],
+                                       :extant => true,
+                                       :limit  => number_per_page,
                                        :offset => number_per_page * (page - 1))
       end
       names.map{ |rec| rec.name }

@@ -178,10 +178,13 @@ helpers do
   #
   # pretty print the free disk size for a silo, returning as a string.
 
-  def pretty_free silo    
-    pretty_size StoreUtils.disk_free(silo.filesystem)
+  def pretty_free silo
+    if File.exists?(silo.filesystem) and File.directory?(silo.filesystem) and File.readable?(silo.filesystem)
+      pretty_size(StoreUtils.disk_free(silo.filesystem))
+    else
+      'n/a'
+    end
   end
-
 
   # pretty_size size
   #
