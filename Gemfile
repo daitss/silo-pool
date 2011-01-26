@@ -16,7 +16,7 @@ gem 'dm-mysql-adapter',     '>= 1.0.0'
 #   gem 'dm-postgres-adapter',  '>= 1.0.2'
 # end
 
-gem 'dm-postgres-adapter',  '>= 1.0.2'
+# gem 'dm-postgres-adapter',  '>= 1.0.2'
  
 gem 'builder',              '>= 2.1.0'
 gem 'log4r',                '>= 1.1.5'
