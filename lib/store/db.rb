@@ -258,6 +258,11 @@ module Store
         initial_timestamp
       end
 
+      def url scheme = 'http', port = 80      
+        port_str = port == 80 ? '' : ":#{port}"
+        scheme + '://' + silo_record.hostname + port_str + '/' + silo_record.filesystem.split('/').pop + '/data/' + name
+      end
+      
       # PackageRecord.create always is performed by HistoryRecord.put
       # when a PUT has been perfomed to this silo.
 
@@ -329,6 +334,8 @@ module Store
         sql  = "SELECT id, name, extant, size, type, initial_sha1, initial_md5, initial_timestamp, latest_sha1, latest_md5, latest_timestamp FROM packages "
         sql += " WHERE #{clauses.join(' AND ')}" unless clauses.empty?
         sql += " ORDER BY name"
+
+        ## TODO: this isn't flexible enough - find actual repository we belong to - just repository enough?
 
         repository(:default).adapter.select(sql)
       end

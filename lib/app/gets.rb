@@ -6,6 +6,7 @@ require 'store/utils'
 require 'time'
 require 'builder'
 
+# TODO: document the site URL structure.
 # TODO: recent sinatra fixed relative-redirection problem, check to see if we can remove 'absolutely'
 
 PACKAGES_PER_PAGE = 40 # should be even
@@ -174,16 +175,16 @@ get '/:partition/fixity/' do |partition|
 
   lines.push '<silocheck silo="'  + StoreUtils.xml_escape(fixity.filesystem)   + '" ' +
                         'host="'  + StoreUtils.xml_escape(fixity.hostname)     + '" ' +
-          'fixity_check_count="'  + fixity.fixity_check_count.to_s  + '" ' +
-          'first_fixity_check="'  + fixity.first_fixity_check.to_s  + '" ' +
-           'last_fixity_check="'  + fixity.last_fixity_check.to_s   + '">'
+          'fixity_check_count="'  + fixity.fixity_check_count.to_s             + '" ' +
+          'first_fixity_check="'  + fixity.first_fixity_check.to_s             + '" ' +
+           'last_fixity_check="'  + fixity.last_fixity_check.to_s              + '">'
 
   fixity.fixity_records.each do |r|
     lines.push '  <fixity name="'   + StoreUtils.xml_escape(r[:name]) + '" ' +
-                         'sha1="'   + r[:sha1]             + '" ' +
-                          'md5="'   + r[:md5]              + '" ' +
-                         'time="'   + r[:time].to_s        + '" ' +
-                       'status="'   + r[:status].to_s      + '"/>'
+                         'sha1="'   + r[:sha1]                        + '" ' +
+                          'md5="'   + r[:md5]                         + '" ' +
+                         'time="'   + r[:time].to_s                   + '" ' +
+                       'status="'   + r[:status].to_s                 + '"/>'
   end
   
   lines.push "</silocheck>\n"
@@ -206,9 +207,9 @@ get '/:partition/fixity/:name' do |partition, name|
   lines.push '<history   silo="'  + StoreUtils.xml_escape(fixity.filesystem)   + '" ' +
                         'ieid="'  + StoreUtils.xml_escape(name)                + '" ' +
                         'host="'  + StoreUtils.xml_escape(fixity.hostname)     + '" ' +
-          'fixity_check_count="'  + fixity.fixity_check_count.to_s  + '" ' +
-          'first_fixity_check="'  + fixity.first_fixity_check.to_s  + '" ' +
-           'last_fixity_check="'  + fixity.last_fixity_check.to_s   + '">'
+          'fixity_check_count="'  + fixity.fixity_check_count.to_s             + '" ' +
+          'first_fixity_check="'  + fixity.first_fixity_check.to_s             + '" ' +
+           'last_fixity_check="'  + fixity.last_fixity_check.to_s              + '">'
   
   # From package level reports we only get information since the last PUT - so there
   # is never a delete record shown this way.
