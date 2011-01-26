@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Module: Store</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (S)</a> &raquo; 
+    
+    
+    <span class="title">Store</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Module: Store
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb<span class="defines">,<br />
+  /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silo.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silotape.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/tarreader.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/exceptions.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/tsmexecutor.rb,<br /> /Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/poolreservation.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Basic usage:
+</p>
+<pre class="code">
+ <span class='tsm identifier id'>tsm</span> <span class='assign token'>=</span> <span class='TsmExecutor constant id'>TsmExecutor</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'ADSM_TEST'</span><span class='rparen token'>)</span>        <span class='semicolon token'>;</span> <span class='test identifier id'>test</span> <span class='tapes identifier id'>tapes</span> <span class='for for kw'>for</span> <span class='us identifier id'>us</span>
+
+ <span class='tsm identifier id'>tsm</span> <span class='assign token'>=</span> <span class='TsmExecutor constant id'>TsmExecutor</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'BERNARD_SERVER'</span><span class='rparen token'>)</span>   <span class='semicolon token'>;</span> <span class='production identifier id'>production</span> <span class='tapes identifier id'>tapes</span> <span class='for for kw'>for</span> <span class='DAITSS constant id'>DAITSS</span>
+ <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='my identifier id'>my</span><span class='minus op'>-</span><span class='path identifier id'>path</span>
+ <span class='if if kw'>if</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='neq op'>!=</span> <span class='integer val'>0</span> <span class='dot3 op'>...</span><span class='dot token'>.</span>
+</pre>
+<p>
+No expected exceptions should be raised out of this class.  Instead, look
+at the status attribute, a fixnum:
+</p>
+<pre class="code">
+ <span class='mult op'>*</span>   <span class='integer val'>0</span> <span class='Success constant id'>Success</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span>   <span class='integer val'>4</span> <span class='General constant id'>General</span> <span class='success identifier id'>success</span><span class='comma token'>,</span> <span class='but identifier id'>but</span> <span class='some identifier id'>some</span> <span class='files identifier id'>files</span> <span class='were identifier id'>were</span> <span class='not not kw'>not</span> <span class='processed identifier id'>processed</span>
+ <span class='mult op'>*</span>   <span class='integer val'>8</span> <span class='There constant id'>There</span> <span class='were identifier id'>were</span> <span class='some identifier id'>some</span> <span class='warnings identifier id'>warnings</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span>  <span class='integer val'>12</span> <span class='General constant id'>General</span> <span class='failure identifier id'>failure</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='integer val'>253</span> <span class='Can constant id'>Can</span><span class='string val'>'t happen.
+ * 254 Failure in popen.
+ * 255 Timeout for dsmc.
+</span></pre>
+<p>
+Use Tsm#output and Tsm#errors to investigate, and if necessary, log the
+situation.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+   
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Store/AllowedMethods.html" title="Store::AllowedMethods (module)">AllowedMethods</a></span>, <span class='object_link'><a href="Store/DB.html" title="Store::DB (module)">DB</a></span>, <span class='object_link'><a href="Store/Fixity.html" title="Store::Fixity (module)">Fixity</a></span>
+    
+   
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Store/ConfigurationError.html" title="Store::ConfigurationError (class)">ConfigurationError</a></span>, <span class='object_link'><a href="Store/CouldNotLockPool.html" title="Store::CouldNotLockPool (class)">CouldNotLockPool</a></span>, <span class='object_link'><a href="Store/DataBaseError.html" title="Store::DataBaseError (class)">DataBaseError</a></span>, <span class='object_link'><a href="Store/DataBaseTransactionError.html" title="Store::DataBaseTransactionError (class)">DataBaseTransactionError</a></span>, <span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">FatalFixityError</a></span>, <span class='object_link'><a href="Store/FixityDbError.html" title="Store::FixityDbError (class)">FixityDbError</a></span>, <span class='object_link'><a href="Store/Http400.html" title="Store::Http400 (class)">Http400</a></span>, <span class='object_link'><a href="Store/Http400Error.html" title="Store::Http400Error (class)">Http400Error</a></span>, <span class='object_link'><a href="Store/Http401.html" title="Store::Http401 (class)">Http401</a></span>, <span class='object_link'><a href="Store/Http403.html" title="Store::Http403 (class)">Http403</a></span>, <span class='object_link'><a href="Store/Http404.html" title="Store::Http404 (class)">Http404</a></span>, <span class='object_link'><a href="Store/Http405.html" title="Store::Http405 (class)">Http405</a></span>, <span class='object_link'><a href="Store/Http406.html" title="Store::Http406 (class)">Http406</a></span>, <span class='object_link'><a href="Store/Http408.html" title="Store::Http408 (class)">Http408</a></span>, <span class='object_link'><a href="Store/Http409.html" title="Store::Http409 (class)">Http409</a></span>, <span class='object_link'><a href="Store/Http410.html" title="Store::Http410 (class)">Http410</a></span>, <span class='object_link'><a href="Store/Http411.html" title="Store::Http411 (class)">Http411</a></span>, <span class='object_link'><a href="Store/Http412.html" title="Store::Http412 (class)">Http412</a></span>, <span class='object_link'><a href="Store/Http413.html" title="Store::Http413 (class)">Http413</a></span>, <span class='object_link'><a href="Store/Http414.html" title="Store::Http414 (class)">Http414</a></span>, <span class='object_link'><a href="Store/Http415.html" title="Store::Http415 (class)">Http415</a></span>, <span class='object_link'><a href="Store/Http500.html" title="Store::Http500 (class)">Http500</a></span>, <span class='object_link'><a href="Store/Http500Error.html" title="Store::Http500Error (class)">Http500Error</a></span>, <span class='object_link'><a href="Store/Http501.html" title="Store::Http501 (class)">Http501</a></span>, <span class='object_link'><a href="Store/Http503.html" title="Store::Http503 (class)">Http503</a></span>, <span class='object_link'><a href="Store/Http505.html" title="Store::Http505 (class)">Http505</a></span>, <span class='object_link'><a href="Store/HttpError.html" title="Store::HttpError (class)">HttpError</a></span>, <span class='object_link'><a href="Store/MD5Mismatch.html" title="Store::MD5Mismatch (class)">MD5Mismatch</a></span>, <span class='object_link'><a href="Store/MissingMD5.html" title="Store::MissingMD5 (class)">MissingMD5</a></span>, <span class='object_link'><a href="Store/MissingTar.html" title="Store::MissingTar (class)">MissingTar</a></span>, <span class='object_link'><a href="Store/NoSilosAvailable.html" title="Store::NoSilosAvailable (class)">NoSilosAvailable</a></span>, <span class='object_link'><a href="Store/NoSilosLargeEnough.html" title="Store::NoSilosLargeEnough (class)">NoSilosLargeEnough</a></span>, <span class='object_link'><a href="Store/PoolFixity.html" title="Store::PoolFixity (class)">PoolFixity</a></span>, <span class='object_link'><a href="Store/PoolFixityCsvReport.html" title="Store::PoolFixityCsvReport (class)">PoolFixityCsvReport</a></span>, <span class='object_link'><a href="Store/PoolFixityXmlReport.html" title="Store::PoolFixityXmlReport (class)">PoolFixityXmlReport</a></span>, <span class='object_link'><a href="Store/PoolReservation.html" title="Store::PoolReservation (class)">PoolReservation</a></span>, <span class='object_link'><a href="Store/Silo.html" title="Store::Silo (class)">Silo</a></span>, <span class='object_link'><a href="Store/SiloBadName.html" title="Store::SiloBadName (class)">SiloBadName</a></span>, <span class='object_link'><a href="Store/SiloDB.html" title="Store::SiloDB (class)">SiloDB</a></span>, <span class='object_link'><a href="Store/SiloError.html" title="Store::SiloError (class)">SiloError</a></span>, <span class='object_link'><a href="Store/SiloResourceExists.html" title="Store::SiloResourceExists (class)">SiloResourceExists</a></span>, <span class='object_link'><a href="Store/SiloTape.html" title="Store::SiloTape (class)">SiloTape</a></span>, <span class='object_link'><a href="Store/StateChangeError.html" title="Store::StateChangeError (class)">StateChangeError</a></span>, <span class='object_link'><a href="Store/StorageError.html" title="Store::StorageError (class)">StorageError</a></span>, <span class='object_link'><a href="Store/TapeDaemonError.html" title="Store::TapeDaemonError (class)">TapeDaemonError</a></span>, <span class='object_link'><a href="Store/TapeDaemonPackageProblem.html" title="Store::TapeDaemonPackageProblem (class)">TapeDaemonPackageProblem</a></span>, <span class='object_link'><a href="Store/TapeDbError.html" title="Store::TapeDbError (class)">TapeDbError</a></span>, <span class='object_link'><a href="Store/TapeDbFailure.html" title="Store::TapeDbFailure (class)">TapeDbFailure</a></span>, <span class='object_link'><a href="Store/TapeDbInconsistency.html" title="Store::TapeDbInconsistency (class)">TapeDbInconsistency</a></span>, <span class='object_link'><a href="Store/TarIO.html" title="Store::TarIO (class)">TarIO</a></span>, <span class='object_link'><a href="Store/TarReader.html" title="Store::TarReader (class)">TarReader</a></span>, <span class='object_link'><a href="Store/TarReaderError.html" title="Store::TarReaderError (class)">TarReaderError</a></span>, <span class='object_link'><a href="Store/TsmError.html" title="Store::TsmError (class)">TsmError</a></span>, <span class='object_link'><a href="Store/TsmExecutor.html" title="Store::TsmExecutor (class)">TsmExecutor</a></span>, <span class='object_link'><a href="Store/TsmTimeout.html" title="Store::TsmTimeout (class)">TsmTimeout</a></span>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="REVISION-constant" class="">REVISION =
+          
+        </dt>
+        <dd><pre class="code"><span class='get_capistrano_git_revision identifier id'>get_capistrano_git_revision</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+</pre></dd>
+      
+        <dt id="RELEASE-constant" class="">RELEASE =
+          
+        </dt>
+        <dd><pre class="code"><span class='get_capistrano_release identifier id'>get_capistrano_release</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+</pre></dd>
+      
+        <dt id="VERSION-constant" class="">VERSION =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'0.2.1'</span>
+</pre></dd>
+      
+        <dt id="NAME-constant" class="">NAME =
+          
+        </dt>
+        <dd><pre class="code"><span class='string val'>'Silo Service'</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#version-class_method" title="version (class method)">+ (Object) <strong>version</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="version-class_method">
+  
+    + (<tt>Object</tt>) <strong>version</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store.rb', line 38</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='version identifier id'>version</span>
+  <span class='os identifier id'>os</span> <span class='assign token'>=</span> <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>&quot;rev&quot;</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}&quot;</span><span class='comma token'>,</span>
+                      <span class='string val'>&quot;uri&quot;</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='dstring node'>&quot;info:fcla/daitss/silo/#{VERSION}&quot;</span><span class='rparen token'>)</span>
+  <span class='def def kw'>def</span> <span class='os identifier id'>os</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='rev identifier id'>rev</span>
+  <span class='end end kw'>end</span>
+  <span class='os identifier id'>os</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Jan 26 13:30:57 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

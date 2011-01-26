@@ -40,7 +40,6 @@ rescue LoadError
   end
 end
 
-
 module Tags
   RUBY_FILES = FileList['**/*.rb', '**/*.ru'].exclude("pkg")
 end
@@ -54,13 +53,11 @@ end
 
 task :tags => ["tags:emacs"]
 
-
 HOME    = File.expand_path(File.dirname(__FILE__))
 LIBDIR  = File.join(HOME, 'lib')
 TMPDIR  = File.join(HOME, 'tmp')
 FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
 DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
-
 
 # Rebuild bundler vendor files for local development (capistrano invokes bundler remotely).
 # This will rebuild the Gemfile.lock, which we check in, but place the gems under the local
@@ -116,14 +113,5 @@ task :restart do
     File.open(restart, 'w') { |f| f.write "" }
   end  
 end
-
-desc "Create a marker file in the sinatra tmp directory that turns on profiling - restart to turn off"
-task :profile do
-  mkdir TMPDIR unless File.directory? TMPDIR
-  profile = File.join(TMPDIR, 'profile.txt')     
-  File.open(profile, 'w') { |f| f.write "" }
-end
-
-
 
 task :default => [:restart, :tags]

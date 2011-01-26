@@ -1,0 +1,545 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: ComparisonStream</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (C)</a> &raquo; 
+    
+    
+    <span class="title">ComparisonStream</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: ComparisonStream
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">ComparisonStream</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+Class ComparisonStream is initialized with two streams - each stream should
+be thought of as a list of two-element arrays.  The first element is key (a
+string), and the second element is the value for that key (any object). A
+key is unique within a list. Each list is sorted on its keys.
+</p>
+<p>
+This class provides a block method that compares two such streams. It works
+by a merge-like operation on the unique keys of the lists, yielding at each
+merged record three elements.  The first element is the unique key,
+followed by its corresponding value from the first stream and the value
+from the second stream.  If a stream has no corresponding value for a key,
+nil is returned. At most one element will be nil, of course.
+</p>
+<p>
+This can give us a convienent way to determine, in one very quick pass,
+both missing packages and orphaned packages, as well as comparing the
+expected and actual checksums.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="KEY-constant" class="">KEY =
+          
+        </dt>
+        <dd><pre class="code"><span class='integer val'>0</span>
+</pre></dd>
+      
+        <dt id="VALUE-constant" class="">VALUE =
+          
+        </dt>
+        <dd><pre class="code"><span class='integer val'>1</span>
+</pre></dd>
+      
+    </dl>
+  
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#close-instance_method" title="#close (instance method)">- (Object) <strong>close</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#get-instance_method" title="#get (instance method)">- (Object) <strong>get</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#get_lhs-instance_method" title="#get_lhs (instance method)">- (Object) <strong>get_lhs</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="private ">
+  <span class="summary_signature">
+    
+      <a href="#get_rhs-instance_method" title="#get_rhs (instance method)">- (Object) <strong>get_rhs</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  <span class="note title private">private</span>
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (ComparisonStream) <strong>initialize</strong>(stream1, stream2) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+A new instance of ComparisonStream.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#rewind-instance_method" title="#rewind (instance method)">- (Object) <strong>rewind</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="ComparisonStream (class)">ComparisonStream</a></span></tt>) <strong>initialize</strong>(stream1, stream2) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+A new instance of ComparisonStream
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+158
+159
+160
+161</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 158</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='stream1 identifier id'>stream1</span><span class='comma token'>,</span> <span class='stream2 identifier id'>stream2</span>
+  <span class='@stream1 ivar id'>@stream1</span> <span class='assign token'>=</span> <span class='stream1 identifier id'>stream1</span>
+  <span class='@stream2 ivar id'>@stream2</span> <span class='assign token'>=</span> <span class='stream2 identifier id'>stream2</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="close-instance_method">
+  
+    - (<tt>Object</tt>) <strong>close</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+168
+169
+170
+171</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 168</span>
+
+<span class='def def kw'>def</span> <span class='close identifier id'>close</span>
+  <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='close identifier id'>close</span> <span class='if if_mod kw'>if</span> <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span> <span class='symbol val'>:close</span>
+  <span class='@stream2 ivar id'>@stream2</span><span class='dot token'>.</span><span class='close identifier id'>close</span> <span class='if if_mod kw'>if</span> <span class='@stream2 ivar id'>@stream2</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span> <span class='symbol val'>:close</span>    
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="get-instance_method">
+  
+    - (<tt>Object</tt>) <strong>get</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 177</span>
+
+<span class='def def kw'>def</span> <span class='get identifier id'>get</span>
+  <span class='left_hand identifier id'>left_hand</span>  <span class='assign token'>=</span> <span class='get_lhs identifier id'>get_lhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='right_hand identifier id'>right_hand</span> <span class='assign token'>=</span> <span class='get_rhs identifier id'>get_rhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+
+  <span class='while while kw'>while</span> <span class='left_hand identifier id'>left_hand</span> <span class='or or kw'>or</span> <span class='right_hand identifier id'>right_hand</span>
+
+    <span class='if if kw'>if</span> <span class='left_hand identifier id'>left_hand</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+      <span class='yield yield kw'>yield</span> <span class='right_hand identifier id'>right_hand</span><span class='lbrack token'>[</span><span class='KEY constant id'>KEY</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='right_hand identifier id'>right_hand</span><span class='lbrack token'>[</span><span class='VALUE constant id'>VALUE</span><span class='rbrack token'>]</span>
+      <span class='right_hand identifier id'>right_hand</span> <span class='assign token'>=</span> <span class='get_rhs identifier id'>get_rhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+
+    <span class='elsif elsif kw'>elsif</span> <span class='right_hand identifier id'>right_hand</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
+      <span class='yield yield kw'>yield</span> <span class='left_hand identifier id'>left_hand</span><span class='lbrack token'>[</span><span class='KEY constant id'>KEY</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='left_hand identifier id'>left_hand</span><span class='lbrack token'>[</span><span class='VALUE constant id'>VALUE</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span>
+      <span class='left_hand identifier id'>left_hand</span> <span class='assign token'>=</span> <span class='get_lhs identifier id'>get_lhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+
+    <span class='else else kw'>else</span>
+      <span class='case case kw'>case</span> <span class='left_hand identifier id'>left_hand</span><span class='lbrack token'>[</span><span class='KEY constant id'>KEY</span><span class='rbrack token'>]</span> <span class='cmp op'>&lt;=&gt;</span> <span class='right_hand identifier id'>right_hand</span><span class='lbrack token'>[</span><span class='KEY constant id'>KEY</span><span class='rbrack token'>]</span>
+
+      <span class='when when kw'>when</span> <span class='integer val'>-1</span>
+        <span class='yield yield kw'>yield</span> <span class='left_hand identifier id'>left_hand</span><span class='lbrack token'>[</span><span class='KEY constant id'>KEY</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='left_hand identifier id'>left_hand</span><span class='lbrack token'>[</span><span class='VALUE constant id'>VALUE</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span>
+        <span class='left_hand identifier id'>left_hand</span> <span class='assign token'>=</span> <span class='get_lhs identifier id'>get_lhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+
+      <span class='when when kw'>when</span> <span class='integer val'>0</span>
+        <span class='yield yield kw'>yield</span> <span class='left_hand identifier id'>left_hand</span><span class='lbrack token'>[</span><span class='KEY constant id'>KEY</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='left_hand identifier id'>left_hand</span><span class='lbrack token'>[</span><span class='VALUE constant id'>VALUE</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='right_hand identifier id'>right_hand</span><span class='lbrack token'>[</span><span class='VALUE constant id'>VALUE</span><span class='rbrack token'>]</span>
+        <span class='left_hand identifier id'>left_hand</span>  <span class='assign token'>=</span> <span class='get_lhs identifier id'>get_lhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+        <span class='right_hand identifier id'>right_hand</span> <span class='assign token'>=</span> <span class='get_rhs identifier id'>get_rhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+
+      <span class='when when kw'>when</span> <span class='integer val'>1</span>
+        <span class='yield yield kw'>yield</span> <span class='right_hand identifier id'>right_hand</span><span class='lbrack token'>[</span><span class='KEY constant id'>KEY</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='right_hand identifier id'>right_hand</span><span class='lbrack token'>[</span><span class='VALUE constant id'>VALUE</span><span class='rbrack token'>]</span>
+        <span class='right_hand identifier id'>right_hand</span> <span class='assign token'>=</span> <span class='get_rhs identifier id'>get_rhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="get_lhs-instance_method">
+  
+    - (<tt>Object</tt>) <strong>get_lhs</strong>  <span class="extras">(private)</span>
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+213
+214
+215</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 213</span>
+
+<span class='def def kw'>def</span> <span class='get_lhs identifier id'>get_lhs</span>
+  <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='integer val'>? </span><span class='nil nil kw'>nil</span> <span class='colon op'>:</span> <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="get_rhs-instance_method">
+  
+    - (<tt>Object</tt>) <strong>get_rhs</strong>  <span class="extras">(private)</span>
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+217
+218
+219</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 217</span>
+
+<span class='def def kw'>def</span> <span class='get_rhs identifier id'>get_rhs</span>
+  <span class='@stream2 ivar id'>@stream2</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='integer val'>? </span><span class='nil nil kw'>nil</span> <span class='colon op'>:</span> <span class='@stream2 ivar id'>@stream2</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="rewind-instance_method">
+  
+    - (<tt>Object</tt>) <strong>rewind</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+163
+164
+165
+166</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 163</span>
+
+<span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
+  <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
+  <span class='@stream2 ivar id'>@stream2</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Jan 26 13:30:53 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

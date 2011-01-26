@@ -1,0 +1,313 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Store::DB::ReservedDiskSpace</title>
+<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '../..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../../_index.html">Index (R)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../../Store.html" title="Store (module)">Store</a></span></span> &raquo; <span class='title'><span class='object_link'><a href="../DB.html" title="Store::DB (module)">DB</a></span></span>
+     &raquo; 
+    <span class="title">ReservedDiskSpace</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Store::DB::ReservedDiskSpace
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Store::DB::ReservedDiskSpace</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2">DataMapper::Resource</dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+  
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#cleanout_stale_reservations-class_method" title="cleanout_stale_reservations (class method)">+ (Object) <strong>cleanout_stale_reservations</strong>(max_reservation) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+remove all records from the database older than <tt>max_reservation</tt>.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#distinct_partitions-class_method" title="distinct_partitions (class method)">+ (Object) <strong>distinct_partitions</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#partition_reservations-class_method" title="partition_reservations (class method)">+ (Object) <strong>partition_reservations</strong>(max_reservation) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+return hash of partitions and sizes: { partition_name => space, &#8230; }
+it automatically removes records older than max_reservation days.
+</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="cleanout_stale_reservations-class_method">
+  
+    + (<tt>Object</tt>) <strong>cleanout_stale_reservations</strong>(max_reservation) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+remove all records from the database older than <tt>max_reservation</tt>.
+<tt>max_reservation</tt> is expressed in days - typically this is a few
+hours at most
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+468
+469
+470</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 468</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='cleanout_stale_reservations identifier id'>cleanout_stale_reservations</span> <span class='max_reservation identifier id'>max_reservation</span>
+  <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:timestamp</span><span class='dot token'>.</span><span class='lt identifier id'>lt</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="distinct_partitions-class_method">
+  
+    + (<tt>Object</tt>) <strong>distinct_partitions</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+472
+473
+474</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 472</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='distinct_partitions identifier id'>distinct_partitions</span>
+  <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='partition identifier id'>partition</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="partition_reservations-class_method">
+  
+    + (<tt>Object</tt>) <strong>partition_reservations</strong>(max_reservation) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+return hash of partitions and sizes: { partition_name => space, &#8230; }
+it automatically removes records older than max_reservation days.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+479
+480
+481
+482
+483
+484
+485
+486
+487</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 479</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='partition_reservations identifier id'>partition_reservations</span><span class='lparen token'>(</span><span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span>
+  <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='cleanout_stale_reservations identifier id'>cleanout_stale_reservations</span><span class='lparen token'>(</span><span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span>
+  <span class='reservations identifier id'>reservations</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  
+  <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='distinct_partitions identifier id'>distinct_partitions</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='partition identifier id'>partition</span><span class='bitor op'>|</span>
+    <span class='reservations identifier id'>reservations</span><span class='lbrack token'>[</span><span class='partition identifier id'>partition</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='sum identifier id'>sum</span><span class='lparen token'>(</span><span class='symbol val'>:size</span><span class='comma token'>,</span> <span class='symbol val'>:partition</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='partition identifier id'>partition</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+  <span class='reservations identifier id'>reservations</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Jan 26 13:30:46 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

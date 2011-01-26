@@ -1,0 +1,1195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta name="Content-Type" content="text/html; charset=utf-8" />
+<title>Class: Store::SiloDB</title>
+<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  relpath = '..';
+  if (relpath != '') relpath += '/';
+</script>
+<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  </head>
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+    
+    <div id="header">
+      <div id="menu">
+  
+    <a href="../_index.html">Index (S)</a> &raquo; 
+    <span class='title'><span class='object_link'><a href="../Store.html" title="Store (module)">Store</a></span></span>
+     &raquo; 
+    <span class="title">SiloDB</span>
+  
+  
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  <a id="class_list_link" href="#">Class List</a>
+  <a id="method_list_link" href="#">Method List</a>
+  <a id ="file_list_link" href="#">File List</a>
+</div>
+
+      <div class="clear"></div>
+    </div>
+    
+    <iframe id="search_frame"></iframe>
+    
+    <div id="content"><h1>Class: Store::SiloDB
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName"><span class='object_link'><a href="Silo.html" title="Store::Silo (class)">Silo</a></span></span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next"><span class='object_link'><a href="Silo.html" title="Store::Silo (class)">Silo</a></span></li>
+          
+            <li class="next">Store::SiloDB</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+      <dt class="r2">Includes:</dt>
+      <dd class="r2"><span class='object_link'><a href="AllowedMethods.html" title="Store::AllowedMethods (module)">AllowedMethods</a></span>, <span class='object_link'><a href="Fixity.html" title="Store::Fixity (module)">Fixity</a></span></dd>
+      
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+  <h2>Constant Summary</h2>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Constants inherited from <span class='object_link'><a href="Silo.html" title="Store::Silo (class)">Silo</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Silo.html#HEADROOM-constant" title="Store::Silo::HEADROOM (constant)">HEADROOM</a></span>, <span class='object_link'><a href="Silo.html#IO_BUFFER_SIZE-constant" title="Store::Silo::IO_BUFFER_SIZE (constant)">IO_BUFFER_SIZE</a></span>, <span class='object_link'><a href="Silo.html#LOCKFILE_GRAB_TIMEOUT-constant" title="Store::Silo::LOCKFILE_GRAB_TIMEOUT (constant)">LOCKFILE_GRAB_TIMEOUT</a></span>, <span class='object_link'><a href="Silo.html#LOCK_FILENAME-constant" title="Store::Silo::LOCK_FILENAME (constant)">LOCK_FILENAME</a></span>, <span class='object_link'><a href="Silo.html#MAX_NAME_LENGTH-constant" title="Store::Silo::MAX_NAME_LENGTH (constant)">MAX_NAME_LENGTH</a></span>, <span class='object_link'><a href="Silo.html#PERMISSIVE_DIRECTORY_PERMISSIONS-constant" title="Store::Silo::PERMISSIVE_DIRECTORY_PERMISSIONS (constant)">PERMISSIVE_DIRECTORY_PERMISSIONS</a></span>, <span class='object_link'><a href="Silo.html#RESTRICTIVE_DIRECTORY_PERMISSIONS-constant" title="Store::Silo::RESTRICTIVE_DIRECTORY_PERMISSIONS (constant)">RESTRICTIVE_DIRECTORY_PERMISSIONS</a></span>, <span class='object_link'><a href="Silo.html#RESTRICTIVE_FILE_PERMISSIONS-constant" title="Store::Silo::RESTRICTIVE_FILE_PERMISSIONS (constant)">RESTRICTIVE_FILE_PERMISSIONS</a></span></p>
+
+  
+  <h2>Instance Attribute Summary <small>(<a href="#" class="summary_toggle">collapse</a>)</small></h2>
+  <ul class="summary">
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#filesystem-instance_method" title="#filesystem (instance method)">- (Object) <strong>filesystem</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute filesystem.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#hostname-instance_method" title="#hostname (instance method)">- (Object) <strong>hostname</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute hostname.
+</p>
+</div></span>
+  
+</li>
+
+    
+      <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#silo_record-instance_method" title="#silo_record (instance method)">- (Object) <strong>silo_record</strong> </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title readonly">readonly</span>
+    
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+Returns the value of attribute silo_record.
+</p>
+</div></span>
+  
+</li>
+
+    
+  </ul>
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#create-class_method" title="create (class method)">+ (Object) <strong>create</strong>(hostname, filesystem) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#hosts-class_method" title="hosts (class method)">+ (Object) <strong>hosts</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setup-class_method" title="setup (class method)">+ (Object) <strong>setup</strong>(config_file, key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#silos-class_method" title="silos (class method)">+ (Object) <strong>silos</strong>(hostname) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#available_space-instance_method" title="#available_space (instance method)">- (Object) <strong>available_space</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#delete-instance_method" title="#delete (instance method)">- (Object) <strong>delete</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#each-instance_method" title="#each (instance method)">- (Object) <strong>each</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+TODO, perhaps:.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#exists%3F-instance_method" title="#exists? (instance method)">- (Boolean) <strong>exists?</strong>(name) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fixity-instance_method" title="#fixity (instance method)">- (Object) <strong>fixity</strong>(name, options) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#fixity_report-instance_method" title="#fixity_report (instance method)">- (Object) <strong>fixity_report</strong>(name = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+see silomixins.rb for *_fixity_report methods.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (SiloDB) <strong>initialize</strong>(hostname, filesystem) </a>
+    
+
+    
+  </span>
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+TODO:  this returns all silos, including tape-based ones.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#put-instance_method" title="#put (instance method)">- (Object) <strong>put</strong>(name, data, type = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+TODO: bug here.
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#to_s-instance_method" title="#to_s (instance method)">- (Object) <strong>to_s</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="AllowedMethods.html" title="Store::AllowedMethods (module)">AllowedMethods</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="AllowedMethods.html#allow-instance_method" title="Store::AllowedMethods#allow (method)">#allow</a></span>, <span class='object_link'><a href="AllowedMethods.html#allowed_methods-instance_method" title="Store::AllowedMethods#allowed_methods (method)">#allowed_methods</a></span>, <span class='object_link'><a href="AllowedMethods.html#allowed_states-instance_method" title="Store::AllowedMethods#allowed_states (method)">#allowed_states</a></span>, <span class='object_link'><a href="AllowedMethods.html#delete_ok%3F-instance_method" title="Store::AllowedMethods#delete_ok? (method)">#delete_ok?</a></span>, <span class='object_link'><a href="AllowedMethods.html#forbid-instance_method" title="Store::AllowedMethods#forbid (method)">#forbid</a></span>, <span class='object_link'><a href="AllowedMethods.html#get_ok%3F-instance_method" title="Store::AllowedMethods#get_ok? (method)">#get_ok?</a></span>, <span class='object_link'><a href="AllowedMethods.html#idle-instance_method" title="Store::AllowedMethods#idle (method)">#idle</a></span>, <span class='object_link'><a href="AllowedMethods.html#media-instance_method" title="Store::AllowedMethods#media (method)">#media</a></span>, <span class='object_link'><a href="AllowedMethods.html#name-instance_method" title="Store::AllowedMethods#name (method)">#name</a></span>, <span class='object_link'><a href="AllowedMethods.html#possible_methods-instance_method" title="Store::AllowedMethods#possible_methods (method)">#possible_methods</a></span>, <span class='object_link'><a href="AllowedMethods.html#post_ok%3F-instance_method" title="Store::AllowedMethods#post_ok? (method)">#post_ok?</a></span>, <span class='object_link'><a href="AllowedMethods.html#put_ok%3F-instance_method" title="Store::AllowedMethods#put_ok? (method)">#put_ok?</a></span>, <span class='object_link'><a href="AllowedMethods.html#silo_directory%3F-instance_method" title="Store::AllowedMethods#silo_directory? (method)">#silo_directory?</a></span>, <span class='object_link'><a href="AllowedMethods.html#state-instance_method" title="Store::AllowedMethods#state (method)">#state</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods included from <span class='object_link'><a href="Fixity.html" title="Store::Fixity (module)">Fixity</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Fixity.html#oldest_fixity-instance_method" title="Store::Fixity#oldest_fixity (method)">#oldest_fixity</a></span>, <span class='object_link'><a href="Fixity.html#package_count-instance_method" title="Store::Fixity#package_count (method)">#package_count</a></span>, <span class='object_link'><a href="Fixity.html#package_fixity_report-instance_method" title="Store::Fixity#package_fixity_report (method)">#package_fixity_report</a></span>, <span class='object_link'><a href="Fixity.html#package_names-instance_method" title="Store::Fixity#package_names (method)">#package_names</a></span>, <span class='object_link'><a href="Fixity.html#package_names_by_page-instance_method" title="Store::Fixity#package_names_by_page (method)">#package_names_by_page</a></span>, <span class='object_link'><a href="Fixity.html#silo_fixity_report-instance_method" title="Store::Fixity#silo_fixity_report (method)">#silo_fixity_report</a></span></p>
+
+  
+  
+  
+  
+  
+  
+  
+  <h3 class="inherited">Methods inherited from <span class='object_link'><a href="Silo.html" title="Store::Silo (class)">Silo</a></span></h3>
+  <p class="inherited"><span class='object_link'><a href="Silo.html#copy_to_silo-instance_method" title="Store::Silo#copy_to_silo (method)">#copy_to_silo</a></span>, <span class='object_link'><a href="Silo.html#data_path-instance_method" title="Store::Silo#data_path (method)">#data_path</a></span>, <span class='object_link'><a href="Silo.html#datetime-instance_method" title="Store::Silo#datetime (method)">#datetime</a></span>, <span class='object_link'><a href="Silo.html#datetime_path-instance_method" title="Store::Silo#datetime_path (method)">#datetime_path</a></span>, <span class='object_link'><a href="Silo.html#describe-instance_method" title="Store::Silo#describe (method)">#describe</a></span>, <span class='object_link'><a href="Silo.html#etag-instance_method" title="Store::Silo#etag (method)">#etag</a></span>, <span class='object_link'><a href="Silo.html#get-instance_method" title="Store::Silo#get (method)">#get</a></span>, <span class='object_link'><a href="Silo.html#invalid_name%3F-instance_method" title="Store::Silo#invalid_name? (method)">#invalid_name?</a></span>, <span class='object_link'><a href="Silo.html#last_access-instance_method" title="Store::Silo#last_access (method)">#last_access</a></span>, <span class='object_link'><a href="Silo.html#md5-instance_method" title="Store::Silo#md5 (method)">#md5</a></span>, <span class='object_link'><a href="Silo.html#md5_path-instance_method" title="Store::Silo#md5_path (method)">#md5_path</a></span>, <span class='object_link'><a href="Silo.html#move_to_silo-instance_method" title="Store::Silo#move_to_silo (method)">#move_to_silo</a></span>, <span class='object_link'><a href="Silo.html#move_to_silo_with_copy-instance_method" title="Store::Silo#move_to_silo_with_copy (method)">#move_to_silo_with_copy</a></span>, <span class='object_link'><a href="Silo.html#move_to_silo_with_rename-instance_method" title="Store::Silo#move_to_silo_with_rename (method)">#move_to_silo_with_rename</a></span>, <span class='object_link'><a href="Silo.html#name_path-instance_method" title="Store::Silo#name_path (method)">#name_path</a></span>, <span class='object_link'><a href="Silo.html#parent_path-instance_method" title="Store::Silo#parent_path (method)">#parent_path</a></span>, <span class='object_link'><a href="Silo.html#path-instance_method" title="Store::Silo#path (method)">#path</a></span>, <span class='object_link'><a href="Silo.html#read_lock-instance_method" title="Store::Silo#read_lock (method)">#read_lock</a></span>, <span class='object_link'><a href="Silo.html#sha1-instance_method" title="Store::Silo#sha1 (method)">#sha1</a></span>, <span class='object_link'><a href="Silo.html#sha1_path-instance_method" title="Store::Silo#sha1_path (method)">#sha1_path</a></span>, <span class='object_link'><a href="Silo.html#size-instance_method" title="Store::Silo#size (method)">#size</a></span>, <span class='object_link'><a href="Silo.html#type-instance_method" title="Store::Silo#type (method)">#type</a></span>, <span class='object_link'><a href="Silo.html#type_path-instance_method" title="Store::Silo#type_path (method)">#type_path</a></span>, <span class='object_link'><a href="Silo.html#write_lock-instance_method" title="Store::Silo#write_lock (method)">#write_lock</a></span></p>
+
+  <div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <p class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Store::SiloDB (class)">SiloDB</a></span></tt>) <strong>initialize</strong>(hostname, filesystem) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+TODO:  this returns all silos, including tape-based ones.  That&#8217;s
+just dumb.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+39
+40
+41
+42
+43
+44</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 39</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span>
+  <span class='@hostname ivar id'>@hostname</span>    <span class='assign token'>=</span> <span class='hostname identifier id'>hostname</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span>
+  <span class='@filesystem ivar id'>@filesystem</span>  <span class='assign token'>=</span> <span class='filesystem identifier id'>filesystem</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>%r{/+$}</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span>
+  <span class='@silo_record ivar id'>@silo_record</span> <span class='assign token'>=</span> <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span> <span class='comment val'>### or DB::SiloRecord.create(hostname, filesystem)</span>
+  <span class='super super kw'>super</span> <span class='filesystem identifier id'>filesystem</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+  <div id="instance_attr_details" class="attr_details">
+    <h2>Instance Attribute Details</h2>
+    
+      
+      <span id=""></span>
+      <span id="filesystem-instance_method"></span>
+      <div class="method_details first">
+  <p class="signature first" id="filesystem-instance_method">
+  
+    - (<tt>Object</tt>) <strong>filesystem</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute filesystem
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+16
+17
+18</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 16</span>
+
+<span class='def def kw'>def</span> <span class='filesystem identifier id'>filesystem</span>
+  <span class='@filesystem ivar id'>@filesystem</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="hostname-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="hostname-instance_method">
+  
+    - (<tt>Object</tt>) <strong>hostname</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute hostname
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+16
+17
+18</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 16</span>
+
+<span class='def def kw'>def</span> <span class='hostname identifier id'>hostname</span>
+  <span class='@hostname ivar id'>@hostname</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      
+      <span id=""></span>
+      <span id="silo_record-instance_method"></span>
+      <div class="method_details ">
+  <p class="signature " id="silo_record-instance_method">
+  
+    - (<tt>Object</tt>) <strong>silo_record</strong>  <span class="extras">(readonly)</span>
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+Returns the value of attribute silo_record
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+16
+17
+18</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 16</span>
+
+<span class='def def kw'>def</span> <span class='silo_record identifier id'>silo_record</span>
+  <span class='@silo_record ivar id'>@silo_record</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="create-class_method">
+  
+    + (<tt>Object</tt>) <strong>create</strong>(hostname, filesystem) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+22
+23
+24
+25</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 22</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span><span class='lparen token'>(</span><span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Silo create: filesystem #{filesystem} does not exist&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='directory? fid id'>directory?</span> <span class='filesystem identifier id'>filesystem</span>
+  <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="hosts-class_method">
+  
+    + (<tt>Object</tt>) <strong>hosts</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+31
+32
+33
+34
+35</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 31</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='hosts identifier id'>hosts</span>
+  <span class='list identifier id'>list</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+  <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='list identifier id'>list</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='list identifier id'>list</span><span class='lbrack token'>[</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='hostname identifier id'>hostname</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='true true kw'>true</span> <span class='rbrace token'>}</span>
+  <span class='list identifier id'>list</span><span class='dot token'>.</span><span class='keys identifier id'>keys</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="setup-class_method">
+  
+    + (<tt>Object</tt>) <strong>setup</strong>(config_file, key) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+18
+19
+20</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 18</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='config_file identifier id'>config_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span><span class='rparen token'>)</span>
+  <span class='DB constant id'>DB</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='config_file identifier id'>config_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="silos-class_method">
+  
+    + (<tt>Object</tt>) <strong>silos</strong>(hostname) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+27
+28
+29</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 27</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='silos identifier id'>silos</span> <span class='hostname identifier id'>hostname</span>
+  <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='list identifier id'>list</span> <span class='hostname identifier id'>hostname</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+    
+    
+      <div class="method_details first">
+  <p class="signature first" id="available_space-instance_method">
+  
+    - (<tt>Object</tt>) <strong>available_space</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+46
+47
+48
+49</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 46</span>
+
+<span class='def def kw'>def</span> <span class='available_space identifier id'>available_space</span>
+  <span class='return return kw'>return</span> <span class='integer val'>0</span> <span class='unless unless_mod kw'>unless</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='exists? fid id'>exists?</span> <span class='filesystem identifier id'>filesystem</span>
+  <span class='return return kw'>return</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_free identifier id'>disk_free</span> <span class='filesystem identifier id'>filesystem</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="delete-instance_method">
+  
+    - (<tt>Object</tt>) <strong>delete</strong>(name) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+68
+69
+70
+71</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 68</span>
+
+<span class='def def kw'>def</span> <span class='delete identifier id'>delete</span> <span class='name identifier id'>name</span>      
+  <span class='super super kw'>super</span> <span class='name identifier id'>name</span>
+  <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="each-instance_method">
+  
+    - (<tt>Object</tt>) <strong>each</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+TODO, perhaps:
+</p>
+<p>
+Change to raise error if silo doesn&#8217;t exist &#8212; you have to be
+prepared for it when using.
+</p>
+<p>
+silodb.each do |name| 
+</p>
+<pre class="code">
+  <span class='begin begin kw'>begin</span>
+    <span class='lt op'>&lt;</span><span class='do do kw'>do</span> <span class='something identifier id'>something</span> <span class='with identifier id'>with</span> <span class='name identifier id'>name</span><span class='dot3 op'>...</span><span class='gt op'>&gt;</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>                     <span class='comment val'># we should have 'missing data' exception</span>
+    <span class='lt op'>&lt;</span><span class='recover identifier id'>recover</span> <span class='nicely identifier id'>nicely</span><span class='gt op'>&gt;</span>
+  <span class='end end kw'>end</span>
+</pre>
+<p>
+end
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+97
+98
+99</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 97</span>
+
+<span class='def def kw'>def</span> <span class='each identifier id'>each</span>
+  <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='list identifier id'>list</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='yield yield kw'>yield</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="exists?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>exists?</strong>(name) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  <h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+77
+78
+79
+80
+81
+82
+83</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 77</span>
+
+<span class='def def kw'>def</span> <span class='exists? fid id'>exists?</span> <span class='name identifier id'>name</span>
+  <span class='on_disk identifier id'>on_disk</span> <span class='assign token'>=</span> <span class='super super kw'>super</span> <span class='name identifier id'>name</span>
+  <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>
+  <span class='in_db identifier id'>in_db</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='integer val'>? </span><span class='false false kw'>false</span> <span class='colon op'>:</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='extant identifier id'>extant</span><span class='rparen token'>)</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;database/disk inconsistency on #{hostname}:#{filesystem} discovered when running exists?(#{name}): it is #{on_disk ? 'on' : 'not on'} disk, but database says it #{in_db ? 'should' : 'should not'} be.&quot;</span> <span class='if if_mod kw'>if</span> <span class='in_db identifier id'>in_db</span> <span class='neq op'>!=</span> <span class='on_disk identifier id'>on_disk</span>
+  <span class='on_disk identifier id'>on_disk</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="fixity-instance_method">
+  
+    - (<tt>Object</tt>) <strong>fixity</strong>(name, options) 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+73
+74
+75</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 73</span>
+
+<span class='def def kw'>def</span> <span class='fixity identifier id'>fixity</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span>
+  <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='fixity identifier id'>fixity</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="fixity_report-instance_method">
+  
+    - (<tt>Object</tt>) <strong>fixity_report</strong>(name = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+see silomixins.rb for *_fixity_report methods
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+103
+104
+105
+106
+107
+108
+109</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 103</span>
+
+<span class='def def kw'>def</span> <span class='fixity_report identifier id'>fixity_report</span> <span class='name identifier id'>name</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
+  <span class='if if kw'>if</span> <span class='name identifier id'>name</span>
+    <span class='package_fixity_report identifier id'>package_fixity_report</span> <span class='name identifier id'>name</span>
+  <span class='else else kw'>else</span>
+    <span class='silo_fixity_report identifier id'>silo_fixity_report</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="put-instance_method">
+  
+    - (<tt>Object</tt>) <strong>put</strong>(name, data, type = nil) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+TODO: bug here. Need to unsnarl puts on failed DB
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+60
+61
+62
+63
+64
+65
+66</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 60</span>
+
+<span class='def def kw'>def</span> <span class='put identifier id'>put</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='comma token'>,</span> <span class='type identifier id'>type</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span>
+  <span class='type identifier id'>type</span> <span class='opasgn op'>||=</span> <span class='string val'>'application/octet-stream'</span>
+  <span class='super super kw'>super</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='data identifier id'>data</span><span class='comma token'>,</span> <span class='type identifier id'>type</span>
+  <span class='rec identifier id'>rec</span> <span class='assign token'>=</span>  <span class='lbrace token'>{</span> <span class='symbol val'>:md5</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='md5 identifier id'>md5</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='symbol val'>:sha1</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='sha1 identifier id'>sha1</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='symbol val'>:type</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='type identifier id'>type</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='symbol val'>:timestamp</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='datetime identifier id'>datetime</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='symbol val'>:size</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='size identifier id'>size</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+  <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='put identifier id'>put</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='rec identifier id'>rec</span><span class='rparen token'>)</span>
+
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="to_s-instance_method">
+  
+    - (<tt>Object</tt>) <strong>to_s</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+52
+53
+54</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silodb.rb', line 52</span>
+
+<span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
+  <span class='dstring node'>&quot;#&lt;SiloDB: #{self.hostname}:#{self.filesystem}&gt;&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+    
+    <div id="footer">
+  Generated on Wed Jan 26 13:30:53 2011 by 
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.6.0 (ruby-1.8.7).
+</div>
+
+  </body>
+</html>

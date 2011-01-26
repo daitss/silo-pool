@@ -55,24 +55,16 @@ namespace :deploy do
   desc "Create the directory hierarchy, as necessary, on the target host"
   task :layout, :roles => :app do
 
-    # TODO: make docs on development server, and check into git
 
-    # we don't maintain a git entry for a public directory; however, phusion requires it
-    # and we dynamically build the documentation materials in it.
-    
-    pathname = File.join(current_path, 'public')
-    run "mkdir -p #{pathname}"       
-    run "chmod -R ug+rwX #{pathname}" 
+    # documentation directories - deprecated - check out docs from git
 
-    # documentation directories 
+    # pathname = File.join(current_path, 'public', 'internals')
+    # run "mkdir -p #{pathname}"       
+    # run "chmod -R ug+rwX #{pathname}" 
 
-    pathname = File.join(current_path, 'public', 'internals')
-    run "mkdir -p #{pathname}"       
-    run "chmod -R ug+rwX #{pathname}" 
-
-    # make everything group ownership daitss, for easy maintenance.
+    # make everything group ownership daitss, for easy maintenance. - should not be necessary
    
-    run "find #{shared_path} #{release_path} -print0 | xargs -0 chgrp #{group}"   if group
+    # run "find #{shared_path} #{release_path} -print0 | xargs -0 chgrp #{group}"   if group
 
     # install local gems
 
