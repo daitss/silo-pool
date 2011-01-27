@@ -1,5 +1,9 @@
 require 'store/exceptions'
 
+
+# TODO: don't need OpenStruct here, go to plain old struct
+
+
 module Store
   module AllowedMethods   ## TODO name of module no longer appropriate.  Maybe KitchenSink?
 

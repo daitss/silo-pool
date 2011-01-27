@@ -20,6 +20,8 @@ ENV['SILO_TEMP']            ||= '/tmp'                # Filesystems restored fro
 ENV['BASIC_AUTH_USERNAME']  ||= nil                   # Requirements to connect to the silo system
 ENV['BASIC_AUTH_PASSWORD']  ||= nil                   # using basic authentication; nil USERNAME means no authentication
 
+ENV['VIRTUAL_HOSTNAME']     ||= Socket.gethostname    # Used for logging; wish there was a better way of getting this automatically
+
 if ENV['BASIC_AUTH_USERNAME'] or ENV['BASIC_AUTH_PASSWORD']
   use Rack::Auth::Basic, "DAITSS 2.0 Silo" do |username, password|
     username == ENV['BASIC_AUTH_USERNAME'] 

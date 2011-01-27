@@ -331,13 +331,14 @@ module Store
         end
         clauses.push "silo_record_id = #{silo_record['id']}" if silo_record
 
-        sql  = "SELECT id, name, extant, size, type, initial_sha1, initial_md5, initial_timestamp, latest_sha1, latest_md5, latest_timestamp FROM packages "
-        sql += " WHERE #{clauses.join(' AND ')}" unless clauses.empty?
-        sql += " ORDER BY name"
+        sql  =    "SELECT id, name, extant, size, type, initial_sha1, initial_md5, initial_timestamp, latest_sha1, latest_md5, latest_timestamp "
+        sql +=      "FROM packages "
+        sql +=     "WHERE #{clauses.join(' AND ')} " unless clauses.empty?
+        sql +=  "ORDER BY name"
 
         ## TODO: this isn't flexible enough - find actual repository we belong to - just repository enough?
 
-        repository(:default).adapter.select(sql)
+        repository(repository).adapter.select(sql)
       end
 
     end # of class PackageRecord

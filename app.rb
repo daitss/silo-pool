@@ -11,8 +11,8 @@ require 'store/logger'
 #
 #   DATABASE_CONFIG_FILE   a yaml configuration file that contains database information (see SiloDB)
 #   DATABASE_CONFIG_KEY    a key into a hash provided by the above file
-#   DATABASE_LOGGING       if set, do verbose datamapper logging
-#   LOG_FACILITY           if set, use as the syslog facility code;  otherwise stderr (see Logger)
+#   DATABASE_LOGGING       if set to any value, do verbose datamapper logging
+#   LOG_FACILITY           if set, use that value as the syslog facility code;  otherwise stderr (see Logger)
 #   LOG_TAG                optional, used to add information to our logging, usually the virtual host name (see Logger)
 #   SILO_TEMP              a temporary directory for us to write mini-silos to from tape (see SiloTape).
 #   TIVOLI                 the name of the tape robot (see SiloTape and TsmExecutor).
@@ -30,14 +30,13 @@ configure do
   set :tivoli_server, ENV['TIVOLI_SERVER']
   set :silo_temp,     ENV['SILO_TEMP']       
 
-  Logger.setup('SiloPool')  # TODO: add vhost second arg
+  Logger.setup('SiloPool', ENV['VIRTUAL_HOSTNAME'])
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
   use Rack::CommonLogger, Logger.new
 
-  Logger.info "Starting #{Store.version.rev}."
-  Logger.info "Initializing with data directory #{ENV['SILO_ROOT']}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
+  Logger.info "Starting #{Store.version.rev}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATABASE_LOGGING']
@@ -60,4 +59,3 @@ load 'lib/app/gets.rb'
 load 'lib/app/puts.rb'
 load 'lib/app/posts.rb'
 load 'lib/app/deletes.rb'
-
