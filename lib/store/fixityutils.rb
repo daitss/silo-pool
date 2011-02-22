@@ -1,4 +1,3 @@
-
 require 'store/exceptions'
 
 # check_package_fixities CONF
@@ -17,6 +16,8 @@ def check_package_fixities web_server, silo_name, filesystem
   silo.each do |package|
     begin
 
+      ### TODO: check for nil return here? (e.g. may have bogus packages on disk)
+
       package_record = Store::DB::PackageRecord.lookup(silo_record, package) 
       md5  = Digest::MD5.new
       sha1 = Digest::SHA1.new
@@ -30,6 +31,8 @@ def check_package_fixities web_server, silo_name, filesystem
       Logger.err "Fixity failure for package #{package} on #{filesytem}: #{e.message}."
       success = false
     else
+
+      ### TODO: we've seen a failure here with non-silo package left on disk..., protect..
 
       Store::DB::HistoryRecord.fixity(silo_record, package, :md5 => md5, :sha1 => sha1)   
       errors = []
@@ -188,8 +191,11 @@ def restore_to_scratch_disk tape_server, silo, destination_directory
   tsm = Store::TsmExecutor.new(tape_server)
   tsm.restore(silo, destination_directory, 16 * 60 * 60)   # Sixteen hours to restore - twice the expected time
 
-  if tsm.status > 4
-    Logger.err "Command '#{tsm.command}', exited with status #{tsm.status}"
+  # list is sorted by tsm.list; status of 0 or 4 is OK; 8 may
+  # be. 12 definitely isn't.
+
+  if tsm.status > 8
+    Logger.err "Command '#{tsm.command}', exited with status #{tsm.status}. This is a fatal error and processing will be stopped."
     if not tsm.errors.empty?
       Logger.err "Tivoli error log follows:"
       tsm.errors.each { |line| Logger.err line.chomp }
@@ -198,12 +204,21 @@ def restore_to_scratch_disk tape_server, silo, destination_directory
       Logger.err "Tivoli output log follows:"
       tsm.output.each { |line| Logger.err line.chomp }
     end
-    raise "fatal tivloi error"
+    Logger.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
+    raise FatalFixityError, "Can't continue - Tivloi reported errors"
+
+  elsif tsm.status > 4
+    Logger.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
+    if not tsm.errors.empty?
+      Logger.warn "Tivoli error log follows:"
+      tsm.errors.each { |line| Logger.warn line.chomp }
+    end
+    if not tsm.output.empty?
+      Logger.warn "Tivoli output log follows:"
+      tsm.output.each { |line| Logger.warn line.chomp }
+    end
   end
-  
+
 rescue => e
   raise FatalFixityError, "Restore failure: #{e}"
 end
-
-
-

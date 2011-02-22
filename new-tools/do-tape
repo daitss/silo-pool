@@ -440,8 +440,10 @@ def do_tape_master_fixity_check silo, options, logfile
     raise FatalFixityError, "The file listing for the on-disk silo #{silo} doesn't match the listing provided by Tivoli."
   end
 
-  # At this point we know the Tivoli file list matches the on-disk silo for names, modification dates, and sizes.
-  # Before we do any restoring, let's check that the on-disk data is consistent with our database (takes a few minutes).
+  # At this point we know the Tivoli file list matches the on-disk
+  # silo for names, modification dates, and sizes.  Before we do any
+  # restoring, let's check that the on-disk data is consistent with
+  # our database (takes a few minutes).
 
   info = check_for_missing(options.web_server, silo, silo)
 
