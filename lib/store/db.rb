@@ -41,11 +41,14 @@ module Store
       raise ConfigurationError, "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'hostname'
       raise ConfigurationError, "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'username'
 
-      # Example string: 'mysql://root:topsecret@localhost/silos'
+      # Example string: 'postgres://root:topsecret@localhost:5432/silos'
 
-      connection_string = dbinfo['vendor'] + '://' + dbinfo['username'] +
-                         (dbinfo['password'] ? ':' + dbinfo['password'] : '') +
-                         '@' + dbinfo['hostname'] + '/' + dbinfo['database']
+      connection_string = dbinfo['vendor'] + '://' +
+                          dbinfo['username'] +
+                         (dbinfo['password'] ? ':' + dbinfo['password'] : '') + '@' +
+                          dbinfo['hostname'] +
+                         (dbinfo['port'] ? ':' + dbinfo['port'].to_s : '') + '/' +
+                          dbinfo['database']
       begin
         dm = DM.setup connection_string        
         dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
