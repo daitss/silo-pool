@@ -347,6 +347,11 @@ module Store
     end # of class PackageRecord
 
 
+    ### TODO: we want to populate the size field as well, need to add a size here, and 
+    ### perhaps a latest_size on package record.  For now, we're just using the size info
+    ### from package to ensure we're getting the functional interface correct - see the silo
+    ### mixins for that....
+
     class HistoryRecord
       def self.actions
         [ :put, :fixity, :delete ]    # implicity ordering historical workflow here.

@@ -84,6 +84,12 @@ task :tarchive do
   sh "cap deploy -S target=tarchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
 end
 
+desc "Deploy to ripple's test storemaster"
+task :ripple do
+ sh "cap deploy -S target=ripple:/opt/web-services/sites/silos -S who=silo:daitss"
+end
+
+
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
 

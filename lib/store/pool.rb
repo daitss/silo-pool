@@ -16,7 +16,7 @@ module Store
   class PoolFixity
 
     Struct.new('FixityHeader', :hostname, :count, :earliest, :latest)
-    Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :time)
+    Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :time, :size)
 
     include Enumerable
 
@@ -42,7 +42,9 @@ module Store
                                        (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) ? :ok : :fail,
                                        pkg.latest_md5, 
                                        pkg.latest_sha1, 
-                                       pkg.latest_timestamp)
+                                       pkg.latest_timestamp,
+                                       pkg.size
+                                       )
       end
     end
   end # of class PoolFixity
@@ -75,6 +77,7 @@ module Store
                      'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +                         
                          'sha1="'   + fix.sha1                            + '" '  +
                           'md5="'   + fix.md5                             + '" '  +
+                         'size="'   + fix.size.to_s                       + '" '  +
                          'time="'   + fix.time.to_s                       + '" '  +
                        'status="'   + fix.status.to_s                     + '"/>' + "\n"
       end
@@ -97,9 +100,9 @@ module Store
     end
 
     def each
-      yield '"name","location","sha1","md5","time","status"' + "\n"
+      yield '"name","location","sha1","md5","size","time","status"' + "\n"
       @pool_fixity.each do |r|
-        yield [r.name, r.location, r.sha1, r.md5, r.time.to_s, r.status.to_s].map{ |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
+        yield [r.name, r.location, r.sha1, r.md5, r.size.to_s, r.time.to_s, r.status.to_s].map{ |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
       end
     end
 

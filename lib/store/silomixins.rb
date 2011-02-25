@@ -182,6 +182,10 @@ module Store
     
     def package_fixity_report name
 
+      ### TODO: we're going to extend history records to include sizes, and change package records
+      ### to have initial_size and latest_size.  Step one of the refactoring is to use the 'size'
+      ### record from the host
+
       return unless pkg = DB::PackageRecord.lookup(silo_record, name)
 
       fixity_records  = []
@@ -190,7 +194,7 @@ module Store
       count           = 0 
       max_time        = DateTime.parse('1970-01-01')
       min_time        = DateTime.now
-      history_records = DB::HistoryRecord.list(silo_record, name)  ### TODO: list raw here...
+      history_records = DB::HistoryRecord.list(silo_record, name)  ### TODO: list raw here, perhaps, for speedup
 
       history_records.each do |rec|        
         case rec.action
@@ -200,6 +204,7 @@ module Store
           fixity_records.push({ :action => rec.action,
                                 :md5    => rec.md5, 
                                 :sha1   => rec.sha1, 
+                                :size   => pkg.size,            # see TODO above
                                 :time   => rec.timestamp })
         when :fixity
           count += 1
@@ -207,6 +212,7 @@ module Store
                                 :md5    => rec.md5, 
                                 :sha1   => rec.sha1, 
                                 :time   => rec.timestamp,
+                                :size   => pkg.size,            # see TODO above
                                 :status => (rec.md5 == pkg.initial_md5 and rec.sha1 == pkg.initial_sha1) ? :ok : :fail })
         when :delete
           count = 0
@@ -247,6 +253,7 @@ module Store
                               :status => (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1) ? :ok : :fail,
                               :md5    => rec.latest_md5, 
                               :sha1   => rec.latest_sha1, 
+                              :size   => rec.size,                  # see TODO above about renaming these fields to intial_ and latest_ size
                               :time   => rec.latest_timestamp })
 
         max_time = rec.latest_timestamp > max_time ? rec.latest_timestamp : max_time

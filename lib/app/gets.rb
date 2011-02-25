@@ -183,6 +183,7 @@ get '/:partition/fixity/' do |partition|
     lines.push '  <fixity name="'   + StoreUtils.xml_escape(r[:name]) + '" ' +
                          'sha1="'   + r[:sha1]                        + '" ' +
                           'md5="'   + r[:md5]                         + '" ' +
+                         'size="'   + r[:size].to_s                   + '" ' +
                          'time="'   + r[:time].to_s                   + '" ' +
                        'status="'   + r[:status].to_s                 + '"/>'
   end
@@ -217,9 +218,9 @@ get '/:partition/fixity/:name' do |partition, name|
   fixity.fixity_records.each do |rec|
     case rec[:action]
     when :fixity
-      lines.push "<fixity md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" time=\"#{rec[:time].to_s}\" status=\"#{rec[:status].to_s}\"/>"
+      lines.push "<fixity md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" size=\"#{rec[:size]}\" time=\"#{rec[:time].to_s}\" status=\"#{rec[:status].to_s}\"/>"
     when :put
-      lines.push "<put md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" time=\"#{rec[:time].to_s}\"/>"
+      lines.push "<put md5=\"#{rec[:md5]}\" sha1=\"#{rec[:sha1]}\" size=\"#{rec[:size]}\" time=\"#{rec[:time].to_s}\"/>"
     end
   end
   lines.push  "</history>\n"
