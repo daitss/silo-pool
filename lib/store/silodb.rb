@@ -98,6 +98,12 @@ module Store
       DB::PackageRecord.list(silo_record, :extant => true).each { |rec| yield rec.name }
     end
 
+    # TODO: refactor so above does below:
+
+    def each_package_record
+      DB::PackageRecord.list(silo_record, :extant => true).each { |rec| yield rec }
+    end
+
     # see silomixins.rb for *_fixity_report methods
 
     def fixity_report name = nil
