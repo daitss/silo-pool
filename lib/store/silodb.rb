@@ -15,6 +15,15 @@ module Store
 
     attr_reader :silo_record, :hostname, :filesystem
 
+    ## TODO:  this returns all silos, including tape-based ones.  That's just dumb.
+    
+    def initialize(hostname, filesystem)
+      @hostname    = hostname.downcase
+      @filesystem  = filesystem.gsub(%r{/+$}, '')
+      @silo_record = DB::SiloRecord.lookup(hostname, filesystem) ### or DB::SiloRecord.create(hostname, filesystem)
+      super filesystem
+    end
+
     def self.setup(config_file, key)
       DB.setup(config_file, key)
     end
@@ -32,15 +41,6 @@ module Store
       list = {}
       DB::SiloRecord.list.each { |rec| list[rec.hostname] = true }
       list.keys.sort
-    end
-
-    ## TODO:  this returns all silos, including tape-based ones.  That's just dumb.
-    
-    def initialize(hostname, filesystem)
-      @hostname    = hostname.downcase
-      @filesystem  = filesystem.gsub(%r{/+$}, '')
-      @silo_record = DB::SiloRecord.lookup(hostname, filesystem) ### or DB::SiloRecord.create(hostname, filesystem)
-      super filesystem
     end
 
     def available_space
