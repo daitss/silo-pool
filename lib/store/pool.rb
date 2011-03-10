@@ -35,16 +35,38 @@ module Store
                                Store::DB::PackageRecord.max(:latest_timestamp, :extant => true, :silo_record => @silos))
     end
 
+    # There's too much data to get all of the packages at once;
+    # chunking it in sizes of 2000 records is an order of magnitude
+    # faster (but it's still pretty slow due to datamapper's casting
+    # of the timestamps to DateTime, which we really don't need - a
+    # string straight out of the database would be better for our
+    # needs).
+
+    # TODO: try doing tests with different sizes to determine the
+    # sweet spot. Currently we have 1/4 million records, so 2000 gives
+    # us 125 or so separate database hits.
+
+    def package_chunks
+      size   = 2000
+      offset = 0
+      while (records = Store::DB::PackageRecord.all(:order => [ :name.asc ], :extant => true, :silo_record => @silos).slice(offset, size)).length > 0  do
+        offset += size
+        yield records
+      end
+    end
+
     def each
-      Store::DB::PackageRecord.all(:order => [ :name.asc ], :extant => true, :silo_record => @silos).each do |pkg|
-        yield Struct::FixityRecord.new(pkg.name,
-                                       pkg.url, 
-                                       (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) ? :ok : :fail,
-                                       pkg.latest_md5, 
-                                       pkg.latest_sha1, 
-                                       pkg.latest_timestamp,
-                                       pkg.size
-                                       )
+      package_chunks do |packages|
+        packages.each do |pkg|
+          yield Struct::FixityRecord.new(pkg.name,
+                                         pkg.url,
+                                         (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) ? :ok : :fail,
+                                         pkg.latest_md5,
+                                         pkg.latest_sha1,
+                                         pkg.latest_timestamp,
+                                         pkg.size
+                                         )
+        end
       end
     end
   end # of class PoolFixity
@@ -74,7 +96,7 @@ module Store
 
       @pool_fixity.each do |fix|
         yield  '  <fixity name="'   + StoreUtils.xml_escape(fix.name)     + '" '  +
-                     'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +                         
+                     'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +
                          'sha1="'   + fix.sha1                            + '" '  +
                           'md5="'   + fix.md5                             + '" '  +
                          'size="'   + fix.size.to_s                       + '" '  +

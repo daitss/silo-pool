@@ -52,6 +52,7 @@ module Store
       begin
         dm = DM.setup connection_string        
         dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
+        dm
       rescue => e
         raise ConfigurationError,
               "Failure setting up the #{dbinfo['vendor']} #{dbinfo['database']} database for #{dbinfo['username']} on #{dbinfo['hostname']} (#{dbinfo['password'] ? 'password supplied' : 'no password'}) - used the configuration file #{yaml_file}: #{e.message}"
@@ -99,7 +100,24 @@ module Store
         PackageRecord.auto_migrate!
         HistoryRecord.auto_migrate!
         ReservedDiskSpace.auto_migrate!
+        self.patch_tables
       end
+
+      def self.patch_tables
+        db = repository(:default).adapter
+        postgres_commands = [ 
+                             'alter table histories alter timestamp type timestamp with time zone',
+                             'alter table packages alter initial_timestamp type timestamp with time zone',
+                             'alter table packages alter latest_timestamp type timestamp with time zone',
+                             'alter table reserved_disk_spaces alter timestamp type timestamp with time zone'
+                            ]
+
+        if db.methods.include? 'postgres_version'
+          postgres_commands.each { |sql| db.execute sql }
+        end
+      end
+
+
     end
 
     class SiloRecord
