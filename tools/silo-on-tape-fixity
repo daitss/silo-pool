@@ -12,14 +12,15 @@ require 'time'
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
 
+require 'datyl/streams'
 require 'store/db'
 require 'store/logger'
 require 'store/silo'
 require 'store/silotape'
 require 'store/silodb'
-require 'store/streams'
 require 'store/tsmexecutor'
 require 'store/fixityutils'
+require 'store/exceptions'
 
 TOO_MANY_LINES_FOR_MAIL = 1000
 
@@ -33,7 +34,7 @@ def get_options args
 
   # defaults:
 
-  conf.grace_period   = 30
+  conf.grace_period   = 45
   conf.db_config_file = '/opt/fda/etc/db.yml'
   conf.db_config_key  = 'silo_test'
   conf.tape_server    = 'BERNARD_SERVER'
@@ -180,12 +181,13 @@ class TsmStream < ArrayBasedStream
       end
     end
   end
-
 end
+
+# TODO: remove this and use more general state changes listed in silomixin
 
 def set_to_tape_master hostname, silo
   rec = Store::DB::SiloRecord.lookup(hostname, silo)
-  raise FatalFixityError, "Can't get DB entry for #{hostname}:#{silo}." if rec.nil?
+  raise Store::FatalFixityError, "Can't get DB entry for #{hostname}:#{silo}." if rec.nil?
   rec.make_tape_master
 end
 
@@ -200,13 +202,13 @@ def do_sanity_checks  options
 
   me = Etc.getpwuid(Process.uid).name
   if me != options.user
-    raise FatalFixityError, "This program must be run as the #{options.user} user, but is being run as #{me}."
+    raise Store::FatalFixityError, "This program must be run as the #{options.user} user, but is being run as #{me}."
   end
 
   Store::DB.setup(options.db_config_file, options.db_config_key)
 
   if not File.directory? options.fixity_disk
-    # raise FatalFixityError, "The #{options.user} user doesn't have write priviledge to the fixity disk #{options.fixity_disk}."
+    # raise Store::FatalFixityError, "The #{options.user} user doesn't have write priviledge to the fixity disk #{options.fixity_disk}."
   end
 
   # File.readable?  File.writable?
@@ -215,7 +217,7 @@ def do_sanity_checks  options
   # StoreUtils.disk_size(options.fixity_disk)
 
 rescue => e
-  raise FatalFixityError, e.message
+  raise Store::FatalFixityError, e.message
 end
 
 
@@ -293,6 +295,8 @@ end
 
 def setup_logging options
 
+  Logger.setup('TapeFixity', options.web_server)
+
   tempfile = Tempfile.new('tape-silo-maintainance-', '/tmp')
   Logger.filename = tempfile.path
 
@@ -357,6 +361,12 @@ def select_silo host, tape_server, grace_period
 end
 
 # Tivoli will give us only those active files; The original disk parition for the silo is still mounted at this point.
+#
+# Note:  tivoli will change the time format in its reports based on localization environment. This will
+# bite you running from a crontab.  Be sure to set something like:
+#
+#  export LANG=en_US.UTF-8
+#  
 
 def check_tivoli_file_list  web_server, tape_server, silo
 
@@ -427,13 +437,13 @@ def do_tape_silo_fixity_check silo, options, logfile
   restore_to_scratch_disk(options.tape_server, silo, options.fixity_disk)
 
   if not check_package_fixities(options.web_server, silo, options.fixity_disk)
-    raise FatalFixityError, "Fixity failure: can't continue with fixity check for silo #{silo} on filesystem #{options.fixity_disk}."
+    raise Store::FatalFixityError, "Fixity failure: can't continue with fixity check for silo #{silo} on filesystem #{options.fixity_disk}."
   end
 
   info = check_for_missing(options.web_server, silo, options.fixity_disk)
 
   if info.missing > 0
-    raise FatalFixityError, "Missing packages during tape-based fixity check for silo #{silo}, data was restored to filesystem #{options.fixity_disk}."
+    raise Store::FatalFixityError, "Missing packages during tape-based fixity check for silo #{silo}, data was restored to filesystem #{options.fixity_disk}."
   end
 end
 
@@ -442,18 +452,20 @@ end
 def do_tape_master_fixity_check silo, options, logfile
 
   if not check_tivoli_file_list(options.web_server, options.tape_server, silo)
-    raise FatalFixityError, "The file listing for the on-disk silo #{silo} doesn't match the listing provided by Tivoli."
+    raise Store::FatalFixityError, "The file listing for the on-disk silo #{silo} doesn't match the listing provided by Tivoli."
   end
 
-  # At this point we know the Tivoli file list matches the on-disk silo for names, modification dates, and sizes.
-  # Before we do any restoring, let's check that the on-disk data is consistent with our database (takes a few minutes).
+  # At this point we know the Tivoli file list matches the on-disk
+  # silo for names, modification dates, and sizes.  Before we do any
+  # restoring, let's check that the on-disk data is consistent with
+  # our database (takes a few minutes).
 
   info = check_for_missing(options.web_server, silo, silo)
 
   if (info.ghosts > 0) or (info.missing > 0) or (info.aliens > 0)
     Logger.err "The on-disk silo #{silo} has #{info.ghosts} #{pluralize_maybe(info.ghosts, 'package')} on disk that the database indicates should have been deleted."     if info.ghosts  > 0
     Logger.err "The on-disk silo #{silo} has #{info.aliens} #{pluralize_maybe(info.aliens, 'package')} that there is no record of in the database."                       if info.aliens  > 0
-    Logger.err "The on-disk silo #{silo} has #{info.missing} #{pluralize_maybe(info.missing, 'package')} missing from disk that the database indicated should be there."  if info.missing > 0
+    Logger.err "The on-disk silo #{silo} has #{info.missing} #{pluralize_maybe(info.missing, 'package')} missing from disk that the database indicates should be there."  if info.missing > 0
     raise "The on-disk silo #{silo} is inconsistent (see log); we can't proceed with tape-mastering until these issues are resolved."
   end
 
@@ -475,13 +487,13 @@ def do_tape_master_fixity_check silo, options, logfile
 
   if info.missing > 0
     Logger.err "The restored silo #{silo} on filesystem #{options.fixity_disk} has #{info.missing} missing #{pluralize_maybe(info.missing, 'package')}."
-    raise FatalFixityError, "While tape-mastering, the restored silo #{silo} on filesystem #{options.fixity_disk} was inconsistent (see log); cannot proceed with until issues are resolved."
+    raise Store::FatalFixityError, "While tape-mastering, the restored silo #{silo} on filesystem #{options.fixity_disk} was inconsistent (see log); cannot proceed with until issues are resolved."
   end
 
   # Fixity check the packages on the restored silo; if successful, we're done.
 
   if not check_package_fixities(options.web_server, silo, options.fixity_disk)
-    raise FatalFixityError, "While tape-mastering, one or more of the packages for #{silo} restored to #{options.fixity_disk} failed the fixity check (see log for details)."
+    raise Store::FatalFixityError, "While tape-mastering, one or more of the packages for #{silo} restored to #{options.fixity_disk} failed the fixity check (see log for details)."
   end
 
   # Looks great; we're done
@@ -509,16 +521,16 @@ begin
     Logger.info "Selected #{silodata.filesystem} for doing a routine fixity check, server #{options.web_server}."
     do_tape_silo_fixity_check silodata.filesystem, options, logfile
   else
-    raise FatalFixityError, "Unexpected silo state encountered while selected a silo to process: #{silodata}."
+    raise Store::FatalFixityError, "Unexpected silo state encountered while selected a silo to process: #{silodata}."
   end
 
-rescue FatalFixityError => e
+rescue Store::FatalFixityError => e
   Logger.err "Fatal error: #{e}"
 rescue => e
   Logger.err "Fatal error: #{e}, back trace follows:"
   e.backtrace.each { |line| Logger.err line.chomp }
 else
-  Logger.info "Finished checking."
+  Logger.info "Finished checking silo #{silodata.filesystem}."
 ensure
   case silodata
   when nil
