@@ -6,15 +6,7 @@ gem 'mime-types', :require => 'mime/types'
 gem 'data_mapper',          '>= 1.0.0'
 gem 'dm-mysql-adapter',     '>= 1.0.0'
 
-# Crock of shit. bundle under capistrano attempts to rebuild the un-compilable postgres regardless of the following.
-# Katz is a smart guy I guess, but bundler just adds too much friction to be worth it.
-#
-# case RUBY_PLATFORM
-# when /darwin/
-#   gem 'dm-postgres-adapter', :path => '/Library/Ruby/Gems/1.8/gems/dm-postgres-adapter-1.0.2'
-# else
-#   gem 'dm-postgres-adapter',  '>= 1.0.2'
-# end
+gem 'nokogiri',    '>= 1.4.1'
 
 gem 'dm-postgres-adapter',  '>= 1.0.2'
  

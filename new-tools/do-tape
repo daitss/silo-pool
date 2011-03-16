@@ -12,12 +12,12 @@ require 'time'
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
 
+require 'datyl/streams'
 require 'store/db'
 require 'store/logger'
 require 'store/silo'
 require 'store/silotape'
 require 'store/silodb'
-require 'store/streams'
 require 'store/tsmexecutor'
 require 'store/fixityutils'
 
