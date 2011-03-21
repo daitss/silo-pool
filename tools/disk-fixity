@@ -15,6 +15,17 @@ require 'optparse'
 require 'store/silodb'
 require 'store/utils'
 
+# Get options from the command line; here's what we're shooting for:
+#
+# Usage: disk-fixity [ --options ] [ /silo/001 .. ]
+#        without an explicit list of disk silos, do checks on all of them.
+#         --hostname HOST              Required, the name of the host this silo is associated with (usually a virtual host)
+#         --fresh-enough DAYS          If a fixity check has been done in less than the supplied DAYS, don't do another (defaults to 7)
+#         --pid-directory PATH         Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon
+#         --db-config-file PATH        A database yaml configuration file, defaults to /opt/fda/etc/db.yml
+#         --db-config-key KEY          The key for the database information in the database yaml configuration file /opt/fda/etc/db.yml
+#         --syslog-facility FACILITY   The facility in syslog to log to, otherwise log to STDERR
+
 def get_options args
   conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_config_key => nil, :db_config_file => '/opt/fda/etc/db.yml', :fresh_enough => 7, :pid_directory => nil)
 
@@ -59,6 +70,9 @@ else
   return conf
 end
 
+
+# setup(config) initializes logging and reporting, connects to the database, sets up signal handlers, and writes a process id to a run-file, if so configured.
+
 def setup config
   Kernel.trap('INT')  { Process.exit! 1 }
 
@@ -74,7 +88,7 @@ def setup config
 
   if config.pid_directory
     pid_path = StoreUtils.pid_file(config.pid_directory)
-    raise "PID file #{pid_path} exists. This indicates another copy of this script is running or has previously crashed; exiting"   if File.exists? pid_path
+    raise "PID file #{pid_path} exists. This indicates another copy of this program is running or has previously crashed; exiting"   if File.exists? pid_path
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
@@ -90,6 +104,7 @@ def setup config
   Kernel.trap('PIPE') { exit }
 end
 
+# teardown(config) will clear our run-file.
 
 def teardown config
   if config.pid_directory
@@ -98,8 +113,7 @@ def teardown config
   end
 end
 
-
-# order the disk silos by oldest complete fixity time, latest first; if silos have been specified on the command line, restrict our list to those
+# Order the disk silos by oldest completed fixity time, latest first; if silos have been specified on the command line, restrict our list to just those.
 
 def select_silos config, reporter
   silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master }.map{ |rec| Store::SiloDB.new(rec.hostname, rec.filesystem) }
@@ -110,13 +124,14 @@ def select_silos config, reporter
   silos = silos.select{ |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
 
   return silos
+
 rescue => e
   reporter.error "Failed selecting the list of silos to process:"
   reporter.error "#{e.class} #{e.message}, backtrace follows:"
   e.backtrace.each { |line| reporter.error "  #{line}" }
   
   reporter.write
-  exit
+  exit                 # leave pid file so xymon will squawk
 end
 
 class Counter
@@ -141,7 +156,7 @@ if silos.empty?                                                   # TODO: pretti
 else
   reporter.info "Checking the following silos:" 
   silos.each { |silo| reporter.info "  #{silo}" }
-  reporter.info "Will skip packages checked in the last #{config.fresh_enough} days" if config.fresh_enough > 0   # TODO plural check, commify
+  reporter.info "Will skip packages if checked within #{config.fresh_enough} days" if config.fresh_enough > 0   # TODO plural check, commify
 end
 
 
@@ -189,5 +204,8 @@ silos.each do |silo|
   reporter.info 
 end
 
-
+reporter.info DateTime.now.strftime('Completed %A, %B %d, %Y at %r')
 reporter.write
+
+
+teardown(config)
