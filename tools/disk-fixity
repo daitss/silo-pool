@@ -46,8 +46,8 @@ def get_options args
   end
   opts.parse!(args) 
   raise "No hostname provided"  unless conf.hostname
-  raise "No key into the DB configuration file (#{conf.db_configuration_file}) provided" unless conf.db_configuration_key
-  raise "Default yaml file #{conf.db_configuration_file} not found" unless File.exists? conf.db_configuration_file
+  raise "No key into the DB configuration file (#{conf.db_config_file}) provided" unless conf.db_config_key
+  raise "Default yaml file #{conf.db_config_file} not found" unless File.exists? conf.db_config_file
   
 rescue => e
   STDERR.puts e, opts
@@ -110,9 +110,9 @@ end
 silos.each do |silo|
   Logger.info "Beginning bulk fixity update for silo #{silo}"
   silo.each_package_record do |package|
+    puts "Want to check #{silo} - #{package}"
     next if (DateTime.now - package.latest_timestamp) <  config.fresh_enough
     ##############
-    puts "Want to check #{silo} - #{package}"
     next
     ##############
     begin
@@ -120,7 +120,7 @@ silos.each do |silo|
       sha1 = Digest::SHA1.new
       silo.get(package.name) do |buff|
         md5  << buff
-        {        sha1 << buff
+        sha1 << buff
       end
       md5   = md5.hexdigest
       sha1  = sha1.hexdigest
