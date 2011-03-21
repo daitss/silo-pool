@@ -46,7 +46,7 @@ require 'syslog'
 #
 #  require 'logger'
 #
-#  Logger.logname  = 'xmlresolution.example.com'
+#  Logger.setup('XmlResolutionService', 'xmlresolution.example.com')
 #  Logger.filename = '/tmp/myfile.log'
 #  Logger.facility = :LOG_LOCAL2
 #
@@ -54,7 +54,7 @@ require 'syslog'
 #  DataMapper::Logger.new(Logger.new, :debug)
 #
 # Note a gotcha in DataMapper logging: you must call it before any
-# DataMapper iniatizations take effect.
+# DataMapper initializations take effect.
 
 
 class Logger
@@ -145,6 +145,7 @@ class Logger
 
   def Logger.facility= facility
     return unless (@@virtual_hostname and @@service_name)
+    facility = 'LOG_' + facility unless facility =~ /^LOG_/
     Log4r::Logger[@@virtual_hostname].add Log4r::SyslogOutputter.new(@@service_name, 'facility' => eval("Syslog::#{facility.to_s.upcase}"))
     facility
   end

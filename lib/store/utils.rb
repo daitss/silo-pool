@@ -207,4 +207,10 @@ module StoreUtils
     num.to_s.gsub(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
   end
 
+  # Given a directory, return a path to a PID file in it, naming based on the currently running process name
+
+  def StoreUtils.pid_file dir
+    File.join(dir, $0.split(File::SEPARATOR).pop + '.pid')
+  end
+
 end # of Module StoreUtils

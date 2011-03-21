@@ -32,15 +32,11 @@ module Store
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '0.2.3'
+  VERSION  = '0.3.0'
   NAME     = 'Silo Service'
 
   def self.version
-    os = OpenStruct.new("rev"    => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}",
+    os = OpenStruct.new("name"   => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}",
                         "uri"    => "info:fcla/daitss/silo/#{VERSION}")
-    def os.to_s
-      self.rev
-    end
-    os
   end
 end

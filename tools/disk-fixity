@@ -7,32 +7,37 @@ $LOAD_PATH.unshift      File.expand_path(File.join(File.dirname(__FILE__), '..',
 #### TODO: extend DB to allow recording current size, as well
 #### TODO: allow individual packages to be checked.
 
-require 'store/silodb'
-require 'store/logger'
-require 'store/utils'
+require 'datyl/logger'
+require 'datyl/reporter'
 require 'digest/md5'
 require 'digest/sha1'
 require 'optparse'
+require 'store/silodb'
+require 'store/utils'
 
 def get_options args
-  conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_configuration_key => nil, :db_configuration_file => '/opt/fda/etc/db.yml', :fresh_enough => 2)
+  conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_config_key => nil, :db_config_file => '/opt/fda/etc/db.yml', :fresh_enough => 7, :pid_directory => nil)
 
   opts = OptionParser.new do |opts|
 
-        opts.on("--hostname HOST",   String, "Required, the name of the host this silo is associated with (usually a virtual host)") do |hostname|
+    opts.on("--hostname HOST",   String, "Required, the name of the host this silo is associated with (usually a virtual host)") do |hostname|
       conf.hostname = hostname.downcase
     end
 
     opts.on("--fresh-enough DAYS",  Integer, "If a fixity check has been done in less than the supplied DAYS, don't do another (defaults to #{conf.fresh_enough})") do |days|
       conf.fresh_enough = days
     end
-    
-    opts.on("--db-file PATH",  String, "A database yaml configuration file, defaults to #{conf.db_configuration_file}") do |path|
-      conf.db_configuration_file = path
+
+    opts.on("--pid-directory PATH", String, "Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon") do |path|
+      conf.pid_directory = path
     end
     
-    opts.on("--db-key KEY",  String, "The key for the database information in the database yaml configuration file #{conf.db_configuration_file}") do |key|
-      conf.db_configuration_key = key
+    opts.on("--db-config-file PATH",  String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
+      conf.db_config_file = path
+    end
+    
+    opts.on("--db-config-key KEY",  String, "The key for the database information in the database yaml configuration file #{conf.db_config_file}") do |key|
+      conf.db_config_key = key
     end
 
     opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to, otherwise log to STDERR") do |facility|
@@ -46,34 +51,55 @@ def get_options args
   
 rescue => e
   STDERR.puts e, opts
-  return nil
+  exit 1
 else
   return conf
 end
 
-# TODO: remove silly restriction that the silo directories must be writable in silo.rb - move lock 
-# files off or just use write locks for updating the silo filesystem...
+def setup config
 
-exit unless conf = get_options(ARGV)
+  $0 = 'disk-fixity'
 
-Logger.setup('SiloDiskFixity', conf.hostname)
+  Logger.setup('DiskFixity', config.hostname)
 
-if conf.syslog_facility
-  Logger.facility  = conf.syslog_facility 
-else
-  Logger.stderr   
+  if config.syslog_facility
+    Logger.facility  = config.syslog_facility 
+  else
+    Logger.stderr   
+  end
+
+  if config.pid_directory
+    pid_path = StoreUtils.pid_file(config.pid_directory)
+    raise "PID file #{pid_path} exists. This indicates another copy of this script is running or has previously crashed; exiting"   if File.exists? pid_path
+    File.open(pid_path, 'w') { |file|  file.puts $$ }
+  end
+
+  Reporter.max_lines_to_write = 100    # each report will have at most these lines, though everything will go to syslog
+
+  begin
+    Store::SiloDB.setup config.db_config_file, config.db_config_key
+  rescue => e
+    Logger.err e.message
+    exit
+  end
 end
 
-begin
-  Store::SiloDB.setup conf.db_configuration_file, conf.db_configuration_key
-rescue => e
-  Logger.err e.message
-  exit
+
+def teardown config
+  if config.pid_directory
+    pid_path = StoreUtils.pid_file(config.pid_directory)
+    File.delete pid_path if File.exists? pid_path and File.writable? pid_path
+  end
 end
+
+
+
+config = get_options(ARGV)
+setup(config)
 
 begin
   silos = []
-  Store::DB::SiloRecord.list(conf.hostname).select{ |s| s.state == :disk_master and s.hostname == conf.hostname }.each do |rec|
+  Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master and s.hostname == config.hostname }.each do |rec|
      silos.push Store::SiloDB.new(rec.hostname, rec.filesystem)
   end
 rescue => e
@@ -84,13 +110,17 @@ end
 silos.each do |silo|
   Logger.info "Beginning bulk fixity update for silo #{silo}"
   silo.each_package_record do |package|
-    next if (DateTime.now - package.latest_timestamp) <  conf.fresh_enough
+    next if (DateTime.now - package.latest_timestamp) <  config.fresh_enough
+    ##############
+    puts "Want to check #{silo} - #{package}"
+    next
+    ##############
     begin
       md5  = Digest::MD5.new
       sha1 = Digest::SHA1.new
       silo.get(package.name) do |buff|
         md5  << buff
-        sha1 << buff
+        {        sha1 << buff
       end
       md5   = md5.hexdigest
       sha1  = sha1.hexdigest

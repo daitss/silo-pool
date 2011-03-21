@@ -1,9 +1,8 @@
+require 'datyl/logger'
 require 'store'
 require 'store/silodb'
 require 'store/silotape'
-require 'store/logger'
 
-# TODO: use LOG_TAG maybe
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
 
 # configure expects some environment variables (typically set up in config.ru, which sets development
@@ -13,7 +12,6 @@ require 'store/logger'
 #   DATABASE_CONFIG_KEY    a key into a hash provided by the above file
 #   DATABASE_LOGGING       if set to any value, do verbose datamapper logging
 #   LOG_FACILITY           if set, use that value as the syslog facility code;  otherwise stderr (see Logger)
-#   LOG_TAG                optional, used to add information to our logging, usually the virtual host name (see Logger)
 #   SILO_TEMP              a temporary directory for us to write mini-silos to from tape (see SiloTape).
 #   TIVOLI                 the name of the tape robot (see SiloTape and TsmExecutor).
 
@@ -34,10 +32,14 @@ configure do
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
-  use Rack::CommonLogger, Logger.new
+  use Rack::CommonLogger, Logger.new(:info, 'Rack:')
 
-  Logger.info "Starting #{Store.version.rev}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
+  Logger.info "Starting #{Store.version.name}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
+
+  (ENV.keys - ['TIVOLI_SERVER', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
+    Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
+  end
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATABASE_LOGGING']
 

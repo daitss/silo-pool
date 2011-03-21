@@ -1,33 +1,25 @@
-TO DO  - some of these scripts  are a little outdated and need
-to be modified to work in a bundler environment. (see silo-on-disk-fixity)
-
-
 Some of these tools are for migrating our old silo data:
 
- * create-sha1-and-update-types
-   writes sha1 metadata and type files to all the packages hashpaths in the specified silo.
-   this is to update incomplete information before things are migrated to tape.
-
- * silo-prime-db (deprecated?)
-   walks a silo filesystem, entering the packages into the new silo database - creates an entry
-   for the silo, the package entry, and places a PUT event into the histories database.
-
  * silo-on-disk-fixity
-   walks an on-disk silo and performs checksums on all of the packages it finds there, entering
-   new historical fixitiy records - md5, sha1 - with implicit time.  The checksums are added to
-   the histories and packages tables in the database. 
+   
+   Walks an on-disk silo and performs checksums on all of the packages
+   it finds there, entering new historical fixitiy records - md5, sha1
+   checksums - with implicit time.  The checksums are added to the
+   histories and packages tables in the database.
 
- * misc-sql
-   for snippets of useful SQL - only one now
+ * silo-on-tape-fixity
 
- * ddl.mysql.transitional - current db schema
+   First checks to see if there is a silo marked as 'disk-idling', and
+   checks that the tivoli listing is consistent with what's currently
+   on disk; then does fixity check - if all pass, mark as
+   'tape-master'.  If there are no 'disk-idling' silos, selects the
+   silo that has the oldest complete fixity check; it is extracted
+   from tivoli and written to a scratch disk.
 
- * ddl.mysql  - proposed new db schema - breaks out forbidden flag into separate booleans.
+ * favicon/  
  
- * ddl.psql  - proposed new db schema, postgres
+   Favicon hacks; we are actually using one produced by Tenille.
 
-
- * favicon/  -  favicon hacks - needs lots of work.
 
 
 
