@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
+
 $LOAD_PATH.unshift      File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
-# This program trundles through a disk-based silo and does md5 and sha1 checksums,
-# adding them to a SiloDB/SiloTape  database.
+# This program trundles through one or more disk-based silos and does md5 and sha1 checksums,
+# adding them to thea SiloDB/SiloTape  database.
 
-#### TODO: extend DB to allow recording current size, as well
-#### TODO: allow individual packages to be checked.
+# TODO: extend DB to allow recording current size, as well
 
 require 'datyl/logger'
 require 'datyl/reporter'
@@ -19,6 +19,9 @@ def get_options args
   conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_config_key => nil, :db_config_file => '/opt/fda/etc/db.yml', :fresh_enough => 7, :pid_directory => nil)
 
   opts = OptionParser.new do |opts|
+
+    opts.banner = "Usage: #{$0.sub(%r{.*/}, '')} [ --options ] [ /silo/001 .. ]\n" +
+                  "       without an explicit list of disk silos, do checks on all of them."
 
     opts.on("--hostname HOST",   String, "Required, the name of the host this silo is associated with (usually a virtual host)") do |hostname|
       conf.hostname = hostname.downcase
@@ -57,6 +60,7 @@ else
 end
 
 def setup config
+  Kernel.trap('INT')  { Process.exit! 1 }
 
   $0 = 'disk-fixity'
 
@@ -82,6 +86,8 @@ def setup config
     Logger.err e.message
     exit
   end
+
+  Kernel.trap('PIPE') { exit }
 end
 
 
@@ -92,29 +98,37 @@ def teardown config
   end
 end
 
+def select_silos config
+
+  # order the disk silos by oldest complete fixity time, latest first
+
+  silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master }.sort{ |a,b| b.oldest_fixity <=> a.oldest_fixity }
+
+  # if filesystems have been listed on the command line, sub select from the above complete list
+
+  candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
+
+  if candidates
+    silos = silos.select { |s| candidates.include? s.filesystem }
+  end
+
+rescue => e
+   Logger.err e.message  # add backtrace
+   exit
+end
 
 
 config = get_options(ARGV)
 setup(config)
 
-begin
-  silos = []
-  Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master and s.hostname == config.hostname }.each do |rec|
-     silos.push Store::SiloDB.new(rec.hostname, rec.filesystem)
-  end
-rescue => e
-   Logger.err e.message
-   exit
-end
+# report = Reporter.new('Fixity Disk Checks', DateTime.now.strftime('Starting %A, %B %d, %Y at %r')
+
+silos = select_silos(config)
 
 silos.each do |silo|
   Logger.info "Beginning bulk fixity update for silo #{silo}"
   silo.each_package_record do |package|
-    puts "Want to check #{silo} - #{package}"
     next if (DateTime.now - package.latest_timestamp) <  config.fresh_enough
-    ##############
-    next
-    ##############
     begin
       md5  = Digest::MD5.new
       sha1 = Digest::SHA1.new
