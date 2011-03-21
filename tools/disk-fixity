@@ -98,35 +98,47 @@ def teardown config
   end
 end
 
-def select_silos config
 
-  # order the disk silos by oldest complete fixity time, latest first
+# order the disk silos by oldest complete fixity time, latest first; if silos have been specified on the command line, restrict our list to those
 
-  silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master }.sort{ |a,b| b.oldest_fixity <=> a.oldest_fixity }
-
-  # if filesystems have been listed on the command line, sub select from the above complete list
+def select_silos config, reporter
+  silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master }.map{ |rec| Store::SiloDB.new(rec.hostname, rec.filesystem) }
 
   candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
 
-  if candidates
-    silos = silos.select { |s| candidates.include? s.filesystem }
-  end
+  silos = silos.select { |s| candidates.include? s.filesystem } unless candidates.empty?
+  silos = silos.select{ |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
 
+  return silos
 rescue => e
-   Logger.err e.message  # add backtrace
-   exit
+  reporter.error "Failed selecting the list of silos to process:"
+  reporter.error "#{e.class} #{e.message}, backtrace follows:"
+  e.backtrace.each { |line| reporter.error "   #{lin}" }
+  
+  reporter.write
+  exit
 end
+
 
 
 config = get_options(ARGV)
 setup(config)
 
-# report = Reporter.new('Fixity Disk Checks', DateTime.now.strftime('Starting %A, %B %d, %Y at %r')
+reporter = Reporter.new('Fixity Disk Checks')
+silos    = select_silos(config, reporter)
 
-silos = select_silos(config)
+if silos.empty?                                                   # TODO: prettier output here
+  reporter.warn "There were no silos available to process"
+  reporter.warn "Configuration options: #{config.inspect}"
+  reporter.warn "Silos specified on the command line: #{ARGV * ', '}" unless ARGV.empty?
+end
+  
 
 silos.each do |silo|
-  Logger.info "Beginning bulk fixity update for silo #{silo}"
+
+  reporter.info 
+  reporter.info "Beginning bulk fixity update for silo #{silo} " + DateTime.now.strftime('Starting %A, %B %d, %Y at %r')
+
   silo.each_package_record do |package|
     next if (DateTime.now - package.latest_timestamp) <  config.fresh_enough
     begin
@@ -139,13 +151,19 @@ silos.each do |silo|
       md5   = md5.hexdigest
       sha1  = sha1.hexdigest
     rescue => e    
-      Logger.err "Unexpected error in fixity checking on silo #{silo} (on package #{package}): #{e.message}."
+      reporter.err "Unexpected during fixity checking on silo #{silo} (on package #{package}): #{e.message}."
     else
       silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
       errors = []
       errors.push "md5 mismatch - expected #{silo.md5(package.name)} but got #{md5}"    if (md5  != silo.md5(package.name))
       errors.push "sha1 mismatch - expected #{silo.sha1(package.name)} but got #{sha1}" if (sha1 != silo.sha1(package.name))
-      Logger.err "Fixity failure for package #{package.name} on silo #{silo}: #{errors.join('; ')}."  unless errors.empty?
+
+      if not errors.empty?
+        reporter.err "Fixity failure for package #{package.name} on silo #{silo}:"
+        errors.each { |line|  reporter.err "   #{line}" }
+      end
     end
-  end
+  end  
 end
+
+reporter.write
