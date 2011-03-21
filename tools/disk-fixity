@@ -151,7 +151,7 @@ silos.each do |silo|
       md5   = md5.hexdigest
       sha1  = sha1.hexdigest
     rescue => e    
-      reporter.err "Unexpected error fixity checking #{package}:"
+      reporter.err "Unexpected error checking #{package.name} on silo #{silo}:"
       reporter.err "  #{e.class}: #{e.message}"
     else
       silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
@@ -160,7 +160,7 @@ silos.each do |silo|
       errors.push "sha1 mismatch - expected #{silo.sha1(package.name)} but got #{sha1}" if (sha1 != silo.sha1(package.name))
 
       if not errors.empty?
-        reporter.err "Fixity failure for package #{package.name} on silo #{silo}:"
+        reporter.err "Fixity failure for #{package.name} on silo #{silo}:"
         errors.each { |line|  reporter.err "   #{line}" }
       end
     end
