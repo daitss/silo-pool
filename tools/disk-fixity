@@ -140,17 +140,16 @@ if silos.empty?                                                   # TODO: pretti
   reporter.warn "Silos specified on the command line: #{ARGV * ', '}" unless ARGV.empty?
 else
   reporter.info "Checking the following silos:" 
-  silos.each { reporter.info "  #{silo}" }
-  reporter.info
-  reporter.info "Will skip packages checked in the last #{config.fresh_enough} days"   # TODO plural check, commify
+  silos.each { |silo| reporter.info "  #{silo}" }
+  reporter.info "Will skip packages checked in the last #{config.fresh_enough} days" if config.fresh_enough > 0   # TODO plural check, commify
 end
 
-counter = Counter.new  
 
 silos.each do |silo|
 
-  reporter.info 
-  reporter.info "Beginning bulk fixity update for silo #{silo} " + DateTime.now.strftime('Starting %A, %B %d, %Y at %r')
+  reporter.info "Beginning bulk fixity update for silo #{silo} "
+  reporter.info DateTime.now.strftime('Starting %A, %B %d, %Y at %r')
+  counter = Counter.new  
 
   silo.each_package_record do |package|
     counter.total += 1
@@ -186,10 +185,9 @@ silos.each do |silo|
       end
     end
   end  
+  reporter.info "#{counter.total} total packages, #{counter.skipped} skipped, #{counter.ok} succeeded, #{counter.errors} failed"  # TODO: commify
+  reporter.info 
 end
 
-
-reporter.info
-reporter.info "#{counter.total} total packages, #{counter.skipped} skipped, #{counter.ok} succeeded, #{counter.errors} failed"  # TODO: commify
 
 reporter.write
