@@ -151,8 +151,8 @@ silos.each do |silo|
       md5   = md5.hexdigest
       sha1  = sha1.hexdigest
     rescue => e    
-      reporter.err "Unexpected error during fixity checking  #{silo},  package #{package}:"
-      reporter.err "#{e.class}: #{e.message}"
+      reporter.err "Unexpected error fixity checking #{package}:"
+      reporter.err "  #{e.class}: #{e.message}"
     else
       silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
       errors = []
