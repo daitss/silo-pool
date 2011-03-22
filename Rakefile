@@ -86,7 +86,7 @@ end
 
 desc "deploy to tarchive's production silos"
 task :tarchive_production do
-  sh "cap deploy -S target=tarchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
+  sh "cap deploy -S target=tarchive:/opt/web-services/sites/silos -S who=silo:daitss"
 end
 
 desc "deploy to tarchive's betasilos"
@@ -95,7 +95,7 @@ task :tarchive_beta do
 end
 
 desc "deploy to tarchive's gammasilos"
-task :gamma_gamma do
+task :tarchive_gamma do
   sh "cap deploy -S target=tarchive:/opt/web-services/sites/gammasilos -S who=silo:daitss"
 end
 
