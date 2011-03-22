@@ -9,33 +9,6 @@ require 'yaml'
 
 module StoreUtils
 
-
-  # mysql_config (KEY, [filename]) returns an object with hostname,
-  # password, username and database methods, all of which return a
-  # string or nil. This is used for  MySQL connection information
-  # and is gleaned from a yaml file (default /opt/fda/etc/db.yml).
-  #
-  # So, say our YAML file has the following contents:
-  #
-  #   TEST: { hostname: localhost, database: silo, username: root, password:  }
-  #   PROD: { hostname: localhost, database: daitss, username: daitss_dba, password: topsecret }
-  # 
-  # Then StoreUtils.mysql_config('TEST') returns an object Ob such
-  # that Ob.username is "root" and Ob.password is nil.
-  # 
-  # On error, the nil object is returned.
-
-
-  #### TODO:  default pathname should be required - also, error messages here on missing
-  #### yaml, etc
-
-  def StoreUtils.mysql_config key, pathname = "/opt/fda/etc/db.yml"
-    hash = YAML::load(File.open(pathname))[key]
-    OpenStruct.new('database' => hash['database'], 'hostname' => hash['hostname'], 'password' => hash['password'], 'username' => hash['username'])
-  rescue
-    return nil
-  end
-
   def StoreUtils.disk_id(path)
     File.stat(path).dev
   end

@@ -73,19 +73,29 @@ end
 # assumes git pushed out
 
 desc "deploy to darchive's betasilos"
-task :darchive do
+task :darchive_beta do
     sh "cap deploy -S target=darchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
+end
+
+desc "deploy to darchive's production silos"
+task :darchive_production do
+    sh "cap deploy -S target=darchive:/opt/web-services/sites/silos -S who=silo:daitss"
 end
 
 # assumes git pushed out
 
+desc "deploy to tarchive's production silos"
+task :tarchive_production do
+  sh "cap deploy -S target=tarchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
+end
+
 desc "deploy to tarchive's betasilos"
-task :tarchive do
+task :tarchive_beta do
   sh "cap deploy -S target=tarchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
 end
 
 desc "deploy to tarchive's gammasilos"
-task :gamma do
+task :gamma_gamma do
   sh "cap deploy -S target=tarchive:/opt/web-services/sites/gammasilos -S who=silo:daitss"
 end
 
