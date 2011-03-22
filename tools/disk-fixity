@@ -176,6 +176,7 @@ silos.each do |silo|
     rescue => e    
       reporter.err "Unexpected error checking #{package.name} on silo #{silo.filesystem}:"
       reporter.err "  #{e.class}: #{e.message}"
+      counter.errors += 1
     else
       silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
       errors = []
