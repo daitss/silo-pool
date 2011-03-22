@@ -117,26 +117,20 @@ end
 
 def select_silos config, reporter
   silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master }.map{ |rec| Store::SiloDB.new(rec.hostname, rec.filesystem) }
-
   candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
-
   silos = silos.select { |s| candidates.include? s.filesystem } unless candidates.empty?
   silos = silos.select{ |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
-
   return silos
-
 rescue => e
   reporter.error "Failed selecting the list of silos to process:"
   reporter.error "#{e.class} #{e.message}, backtrace follows:"
   e.backtrace.each { |line| reporter.error "  #{line}" }
-  
   reporter.write
-  exit                 # leave pid file so xymon will squawk
+  exit                 # skip teardown so we leave pid file - makes sure xymon will squawk
 end
 
 class Counter
   attr_accessor  :skipped, :errors, :ok, :total
-
   def initialize
     @skipped = @errors = @ok = @total = 0
   end
@@ -159,9 +153,8 @@ else
   reporter.info "Will skip packages if checked within #{config.fresh_enough} days" if config.fresh_enough > 0   # TODO plural check, commify
 end
 
-
+reporter.info
 silos.each do |silo|
-
   reporter.info "Beginning bulk fixity update for silo #{silo} "
   reporter.info DateTime.now.strftime('Starting %A, %B %d, %Y at %r')
   counter = Counter.new  
@@ -185,12 +178,10 @@ silos.each do |silo|
       reporter.err "Unexpected error checking #{package.name} on silo #{silo}:"
       reporter.err "  #{e.class}: #{e.message}"
     else
-      
       silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
       errors = []
       errors.push "md5 mismatch - expected #{silo.md5(package.name)} but got #{md5}"    if (md5  != silo.md5(package.name))
       errors.push "sha1 mismatch - expected #{silo.sha1(package.name)} but got #{sha1}" if (sha1 != silo.sha1(package.name))
-
       if errors.empty?
         counter.ok += 1
       else
@@ -203,9 +194,6 @@ silos.each do |silo|
   reporter.info "#{counter.total} total packages, #{counter.skipped} skipped, #{counter.ok} succeeded, #{counter.errors} failed"  # TODO: commify
   reporter.info 
 end
-
 reporter.info DateTime.now.strftime('Completed %A, %B %d, %Y at %r')
 reporter.write
-
-
 teardown(config)
