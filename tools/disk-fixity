@@ -136,7 +136,6 @@ class Counter
   end
 end
   
-
 config = get_options(ARGV)
 setup(config)
 
@@ -144,24 +143,24 @@ reporter = Reporter.new('Fixity Disk Checks')
 silos    = select_silos(config, reporter)
 
 if silos.empty?                                                   # TODO: prettier output here
-  reporter.warn "There were no silos available to process"
-  reporter.warn "Configuration options: #{config.inspect}"
-  reporter.warn "Silos specified on the command line: #{ARGV * ', '}" unless ARGV.empty?
+  reporter.warn "There were no silos available to process for #{config.hostname}."
+  reporter.warn "Configuration options: #{config.inspect}."
+  reporter.warn "Silos specified on the command line: #{ARGV * ', '}." unless ARGV.empty?
 else
-  reporter.info "Checking the following silos:" 
-  silos.each { |silo| reporter.info "  #{silo}" }
-  reporter.info "Will skip packages if checked within #{config.fresh_enough} days" if config.fresh_enough > 0   # TODO plural check, commify
+  reporter.info "Checking the following silos for #{config.hostname} by last fixity check date:" 
+  silos.each { |silo| reporter.info "  * #{silo.filesystem} - #{silo.oldest_fixity.strftime('%A, %B %d, %Y at %r')}" }
+  reporter.info "Will skip packages if checked within #{config.fresh_enough} days." if config.fresh_enough > 0   # TODO plural check, commify
 end
 
-reporter.info
 silos.each do |silo|
-  reporter.info "Beginning bulk fixity update for silo #{silo} "
-  reporter.info DateTime.now.strftime('Starting %A, %B %d, %Y at %r')
+  reporter.info
+  reporter.info "Beginning bulk fixity update for silo #{silo.filesystem}"
+  reporter.info DateTime.now.strftime("Starting silo  #{silo.filesystem} on %A, %B %d, %Y at %r")
   counter = Counter.new  
 
   silo.each_package_record do |package|
     counter.total += 1
-    if (DateTime.now - package.latest_timestamp) <  config.fresh_enough
+    if (package.initial_timestamp != package.latest_timestamp) and (DateTime.now - package.latest_timestamp) <  config.fresh_enough 
       counter.skipped += 1
       next
     end
@@ -175,7 +174,7 @@ silos.each do |silo|
       md5   = md5.hexdigest
       sha1  = sha1.hexdigest
     rescue => e    
-      reporter.err "Unexpected error checking #{package.name} on silo #{silo}:"
+      reporter.err "Unexpected error checking #{package.name} on silo #{silo.filesystem}:"
       reporter.err "  #{e.class}: #{e.message}"
     else
       silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
@@ -186,14 +185,15 @@ silos.each do |silo|
         counter.ok += 1
       else
         counter.errors += 1
-        reporter.err "Fixity failure for #{package.name} on silo #{silo}:"
+        reporter.err "Fixity failure for #{package.name} on silo #{silo.fileystem}:"
         errors.each { |line|  reporter.err "  #{line}" }
       end
     end
   end  
-  reporter.info "#{counter.total} total packages, #{counter.skipped} skipped, #{counter.ok} succeeded, #{counter.errors} failed"  # TODO: commify
+  reporter.info DateTime.now.strftime("Completed silo #{silo.filesystem} on %A, %B %d, %Y at %r")
+  reporter.info "Total of #{counter.total} packages: #{counter.skipped} skipped, #{counter.ok} succeeded, #{counter.errors} failed"  # TODO: commify, pluralize
   reporter.info 
 end
-reporter.info DateTime.now.strftime('Completed %A, %B %d, %Y at %r')
+
 reporter.write
 teardown(config)
