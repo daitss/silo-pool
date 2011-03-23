@@ -1,13 +1,13 @@
 Some of these tools are for migrating our old silo data:
 
- * silo-on-disk-fixity
+ * disk-fixity
    
    Walks an on-disk silo and performs checksums on all of the packages
    it finds there, entering new historical fixitiy records - md5, sha1
    checksums - with implicit time.  The checksums are added to the
    histories and packages tables in the database.
 
- * silo-on-tape-fixity
+ * tape-fixity
 
    First checks to see if there is a silo marked as 'disk-idling', and
    checks that the tivoli listing is consistent with what's currently
@@ -16,10 +16,19 @@ Some of these tools are for migrating our old silo data:
    silo that has the oldest complete fixity check; it is extracted
    from tivoli and written to a scratch disk.
 
+ * tivolis-ls
+
+   Give it a silo, e.g. /daitssfs/001, and it will list it out - but
+   only for the files you owned when the last backup was made.  Uses
+   options appropriate to our archive/backup strategy.
+
+  * md5-base64
+
+    Given a filename on the commandline, print the MD5 hash in base 64
+    notation.  Useful backquoted in scripts using curl, e.g.
+
+    curl -sv -X PUT -H "Content-MD5: `md5-base64 filename`" --upload-file filename http://silos.com/001/data/E19561201_ABCXYZ
+
  * favicon/  
  
    Favicon hacks; we are actually using one produced by Tenille.
-
-
-
-
