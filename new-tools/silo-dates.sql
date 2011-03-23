@@ -1,3 +1,0 @@
-#!/bin/sh
-
-echo "select  concat(silos.hostname, ':', silos.filesystem) as Silo, count(name) as 'No. of Packages', min(latest_timestamp) as 'Oldest Package Fixity',     min(initial_timestamp) as 'First Package', max(initial_timestamp) as 'Last Package' from packages, silos where packages.silo_record_id = silos.id  and packages.extant = 1 group by silo_record_id order by silos.filesystem" | my silo_test

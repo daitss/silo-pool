@@ -25,9 +25,9 @@ require 'store/utils'
 #         --db-config-file PATH        A database yaml configuration file, defaults to /opt/fda/etc/db.yml
 #         --db-config-key KEY          The key for the database information in the database yaml configuration file /opt/fda/etc/db.yml
 #         --syslog-facility FACILITY   The facility in syslog to log to, otherwise log to STDERR
-
+#         --randomize                  Randomize the order of silos checked. Normally silos are sorted by the time of the last completed fixity check
 def get_options args
-  conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_config_key => nil, :db_config_file => '/opt/fda/etc/db.yml', :fresh_enough => 7, :pid_directory => nil)
+  conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_config_key => nil, :db_config_file => '/opt/fda/etc/db.yml', :fresh_enough => 7, :pid_directory => nil, :randomize => false)
 
   opts = OptionParser.new do |opts|
 
@@ -57,6 +57,10 @@ def get_options args
     opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to, otherwise log to STDERR") do |facility|
       conf.syslog_facility = facility
     end
+
+    opts.on("--randomize",  "Randomize the order of silos checked. Normally silos are sorted by the time of the last completed fixity check") do |r|
+      conf.randomize = r
+    end
   end
   opts.parse!(args) 
   raise "No hostname provided"  unless conf.hostname
@@ -84,7 +88,6 @@ def setup config
   else
     Logger.stderr   
   end
-
 
   if config.pid_directory
     pid_path = StoreUtils.pid_file(config.pid_directory)
@@ -123,6 +126,7 @@ def select_silos config, reporter
   candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
   silos = silos.select { |s| candidates.include? s.filesystem } unless candidates.empty?
   silos = silos.select{ |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
+  return silos.sort { rand } if config.randomize
   return silos
 rescue => e
   reporter.error "Failed selecting the list of silos to process:"

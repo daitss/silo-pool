@@ -3,6 +3,7 @@ $LOAD_PATH.unshift  File.dirname(__FILE__)
 require 'helpers'
 
 Before  do
+  # @@active_silo = 'http://silos.darchive.fcla.edu/040/data/' 
   @@active_silo = 'http://storage.local/a/data/'
 end
 

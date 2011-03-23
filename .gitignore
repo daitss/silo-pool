@@ -13,13 +13,6 @@ test-data
 pre-existing-code
 coverage
 .bundle
-# currently, we're using a capistrano rule that 
-# uses the Gemfile.lock to download the explicit
-# set generated under development. The rule
-# places the material under the long-term shared 
-# directory.  It has to be built the first time
-# through, but it's a good system.  We need git to
-# keep off our local development version though.
 vendor/bundle
 spec/dm-postgres.log
 spec/dm-mysql.log

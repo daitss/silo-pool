@@ -34,7 +34,7 @@ def get_options args
 
   # defaults for FCLA:
 
-  conf.tape_server  = case Socket.gethostname
+  conf.tape_server  = case Socket.gethostname.downcase
                       when 'fclnx30.fcla.edu'
                         'BERNARD_SERVER'
                       when 'fclnx31.fcla.edu'
