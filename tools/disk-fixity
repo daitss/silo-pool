@@ -26,6 +26,7 @@ require 'store/utils'
 #         --db-config-key KEY          The key for the database information in the database yaml configuration file /opt/fda/etc/db.yml
 #         --syslog-facility FACILITY   The facility in syslog to log to, otherwise log to STDERR
 #         --randomize                  Randomize the order of silos checked. Normally silos are sorted by the time of the last completed fixity check
+
 def get_options args
   conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_config_key => nil, :db_config_file => '/opt/fda/etc/db.yml', :fresh_enough => 7, :pid_directory => nil, :randomize => false)
 
@@ -58,14 +59,15 @@ def get_options args
       conf.syslog_facility = facility
     end
 
-    opts.on("--randomize",  "Randomize the order of silos checked. Normally silos are sorted by the time of the last completed fixity check") do |r|
-      conf.randomize = r
+    opts.on("--randomize",  "Randomize the order of silos checked. Normally silos are sorted by the time of the last completed fixity check") do |rnd|
+      conf.randomize = rnd
     end
   end
   opts.parse!(args) 
   raise "No hostname provided"  unless conf.hostname
   raise "No key into the DB configuration file (#{conf.db_config_file}) provided" unless conf.db_config_key
-  raise "Default yaml file #{conf.db_config_file} not found" unless File.exists? conf.db_config_file
+  raise "Default yaml file #{conf.db_config_file} not found" unless File.exists?   conf.db_config_file
+  raise "Default yaml file #{conf.db_config_file} not readable" unless File.readable? conf.db_config_file
   
 rescue => e
   STDERR.puts e, opts
@@ -95,8 +97,6 @@ def setup config
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
-  Reporter.max_lines_to_write = 100    # each report will have at most these lines, though everything will go to syslog
-
   begin
     Store::SiloDB.setup config.db_config_file, config.db_config_key
   rescue => e
@@ -104,13 +104,15 @@ def setup config
     exit
   end
 
-  Kernel.trap('INT')  { Logger.warn "Interrupted"  ; exit }  # leaves the pid file, if one is being used
+  Kernel.trap('INT')  { Logger.err "Interrupted"  ; exit }  # leaves the pid file, if one is being used
   Kernel.trap('HUP')  { teardown(config); exit }             # do a clean shutdown with these:
-  Kernel.trap('QUIT') { teardown(config); exit }
   Kernel.trap('PIPE') { teardown(config); exit } 
+
+  Reporter.max_lines_to_write = 100    # each report will have at most these lines, though everything will go to syslog
+  return Reporter.new('Disk Fixity Checks')
 end
 
-# teardown(config) will clear our run-file.
+# teardown will clear the run-file that xymon checks.  If we crash, xymon will let us know.
 
 def teardown config
   if config.pid_directory
@@ -125,7 +127,7 @@ def select_silos config, reporter
   silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master }.map{ |rec| Store::SiloDB.new(rec.hostname, rec.filesystem) }
   candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
   silos = silos.select { |s| candidates.include? s.filesystem } unless candidates.empty?
-  silos = silos.select{ |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
+  silos = silos.select { |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
   return silos.sort { rand } if config.randomize
   return silos
 rescue => e
@@ -143,10 +145,10 @@ class Counter
   end
 end
   
-config = get_options(ARGV)
-setup(config)
+config   = get_options(ARGV)
+reporter = setup(config)
 
-reporter = Reporter.new('Fixity Disk Checks')
+
 silos    = select_silos(config, reporter)
 
 if silos.empty?                                                   # TODO: prettier output here
