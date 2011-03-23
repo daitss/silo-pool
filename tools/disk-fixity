@@ -74,7 +74,6 @@ end
 # setup(config) initializes logging and reporting, connects to the database, sets up signal handlers, and writes a process id to a run-file, if so configured.
 
 def setup config
-  Kernel.trap('INT')  { Process.exit! 1 }
 
   $0 = 'disk-fixity'
 
@@ -85,6 +84,7 @@ def setup config
   else
     Logger.stderr   
   end
+
 
   if config.pid_directory
     pid_path = StoreUtils.pid_file(config.pid_directory)
@@ -101,7 +101,10 @@ def setup config
     exit
   end
 
-  Kernel.trap('PIPE') { exit }
+  Kernel.trap('INT')  { Logger.warn "Interrupted"  ; exit }  # leaves the pid file, if one is being used
+  Kernel.trap('HUP')  { teardown(config); exit }             # do a clean shutdown with these:
+  Kernel.trap('QUIT') { teardown(config); exit }
+  Kernel.trap('PIPE') { teardown(config); exit } 
 end
 
 # teardown(config) will clear our run-file.
