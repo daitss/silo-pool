@@ -1,14 +1,17 @@
 require 'store/exceptions'
 
+# TODO: This is used entirely by tape-fixity,  and could be refactored with disk-fixity stuff.
+
 # check_package_fixities CONF
 #
 # Recompute all checksums and record into a database.  Log error if we get
 # a mismatch with a previous checksum.
+#
 
-def check_package_fixities web_server, silo_name, filesystem
+def check_package_fixities web_server, silo_name, filesystem, reporter
   success = true
 
-  Logger.info "Checking package fixities from the database records for silo #{silo_name} against the filesystem #{filesystem}."
+  reporter.info "Checking package fixities from the database records for silo #{silo_name} against the filesystem #{filesystem}."
 
   silo_record = Store::DB::SiloRecord.lookup(web_server, silo_name)
   silo        = Store::Silo.new(filesystem)
@@ -28,7 +31,7 @@ def check_package_fixities web_server, silo_name, filesystem
       md5  = md5.hexdigest
       sha1 = sha1.hexdigest
     rescue => e              # We attempt to continue from a single package error
-      Logger.err "Fixity failure for package #{package} on #{filesytem}: #{e.message}."
+      reporter.err "Fixity failure for package #{package} on #{filesytem}: #{e.message}."
       success = false
     else
 
@@ -41,7 +44,7 @@ def check_package_fixities web_server, silo_name, filesystem
       errors.push "database sha1 mismatch - expected #{package_record.initial_sha1} but got #{sha1}"     if (sha1 != package_record.initial_sha1)
       errors.push "filesystem sha1 mismatch - expected #{silo.sha1(package)} but got #{sha1}"            if (sha1 != silo.sha1(package))
       if errors.count > 0
-         Logger.err  "Fixity failure for package #{package} belonging to silo #{silo_name} (checked at #{filesystem}): #{errors.join('; ')}."
+         reporter.err  "Fixity failure for package #{package} belonging to silo #{silo_name} (checked at #{filesystem}): #{errors.join('; ')}."
          success = false
       end
     end
@@ -103,10 +106,10 @@ end
 
 Struct.new('FileIssues', :ghosts, :missing, :aliens)
 
-def check_for_missing web_server, silo, filesystem   ## TODO: rename to database_check
+def check_for_missing web_server, silo, filesystem, reporter    ## TODO: rename to database_check
   info = Struct::FileIssues.new(0, 0, 0)
 
-  Logger.info "Database check for missing, ghost and alien packages for the silo #{silo} on filesystem #{filesystem}."
+  reporter.info "Database check for missing, ghost and alien packages for the silo #{silo} on filesystem #{filesystem}."
 
   silo_stream = SiloStream.new(filesystem)
   db_stream   = DbStream.new(web_server, silo)
@@ -130,20 +133,20 @@ def check_for_missing web_server, silo, filesystem   ## TODO: rename to database
 
   if not ghosts.empty?
     info.ghosts = ghosts.count
-    Logger.info "The filesystem #{filesystem} has #{info.ghosts} #{pluralize_maybe(ghosts.count, 'package')} that the database indicates have been deleted from #{silo}: package names follow:"
-    ghosts.each_slice(5) { |slice| Logger.info slice.join(' ') }
+    reporter.info "The filesystem #{filesystem} has #{info.ghosts} #{pluralize_maybe(ghosts.count, 'package')} that the database indicates have been deleted from #{silo}: package names follow:"
+    ghosts.each_slice(5) { |slice| reporter.info slice.join(' ') }
   end
   
   if not aliens.empty?
     info.aliens = aliens.count
-    Logger.info "The filesystem #{filesystem} has #{info.aliens} #{pluralize_maybe(aliens.count, 'package')} that the database for #{silo} has no record of, package names follow:"
-    aliens.each_slice(5) { |slice| Logger.warn slice.join(' ') }
+    reporter.info "The filesystem #{filesystem} has #{info.aliens} #{pluralize_maybe(aliens.count, 'package')} that the database for #{silo} has no record of, package names follow:"
+    aliens.each_slice(5) { |slice| reporter.warn slice.join(' ') }
   end
 
   if not missing.empty?
     info.missing = missing.count
-    Logger.err "The filesystem #{filesystem} is missing #{info.missing} #{pluralize_maybe(missing.count, 'package')} that the database for #{silo} indicates should be there, package names follow:"
-    missing.each_slice(5) { |slice| Logger.err slice.join(' ') }
+    reporter.err "The filesystem #{filesystem} is missing #{info.missing} #{pluralize_maybe(missing.count, 'package')} that the database for #{silo} indicates should be there, package names follow:"
+    missing.each_slice(5) { |slice| reporter.err slice.join(' ') }
   end
 
   return info
@@ -156,9 +159,9 @@ end
 #
 # Attempt to remove all silo directories from the scratch disk.
 
-def clean_up_scratch_disk filesystem
+def clean_up_scratch_disk filesystem, reporter
 
-  Logger.info "Cleaning scratch disk #{filesystem}."
+  reporter.info "Cleaning scratch disk #{filesystem}."
 
   targets = []
   Dir.open filesystem do |root|
@@ -181,12 +184,12 @@ end
 #
 # restore the daitssfs silo from Tivoli to the scratch disk.
 
-def restore_to_scratch_disk tape_server, silo, destination_directory
+def restore_to_scratch_disk tape_server, silo, destination_directory, reporter
 
   silo = silo.gsub(%r{/+$}, '') + '/'
   destination_directory = destination_directory.gsub(%r{/+$}, '') + '/'
 
-  Logger.info "Restoring silo #{silo} from tape to scratch disk #{destination_directory}."
+  reporter.info "Restoring silo #{silo} from tape to scratch disk #{destination_directory}."
 
   tsm = Store::TsmExecutor.new(tape_server)
   tsm.restore(silo, destination_directory, 16 * 60 * 60)   # Sixteen hours to restore - twice the expected time
@@ -195,27 +198,27 @@ def restore_to_scratch_disk tape_server, silo, destination_directory
   # be. 12 definitely isn't.
 
   if tsm.status > 8
-    Logger.err "Command '#{tsm.command}', exited with status #{tsm.status}. This is a fatal error and processing will be stopped."
+    reporter.err "Command '#{tsm.command}', exited with status #{tsm.status}. This is a fatal error and processing will be stopped."
     if not tsm.errors.empty?
-      Logger.err "Tivoli error log follows:"
-      tsm.errors.each { |line| Logger.err line.chomp }
+      reporter.err "Tivoli error log follows:"
+      tsm.errors.each { |line| reporter.err line.chomp }
     end
     if not tsm.output.empty?
-      Logger.err "Tivoli output log follows:"
-      tsm.output.each { |line| Logger.err line.chomp }
+      reporter.err "Tivoli output log follows:"
+      tsm.output.each { |line| reporter.err line.chomp }
     end
-    Logger.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
+    reporter.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
     raise FatalFixityError, "Can't continue - Tivloi reported errors"
 
   elsif tsm.status > 4
-    Logger.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
+    reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
     if not tsm.errors.empty?
-      Logger.warn "Tivoli error log follows:"
-      tsm.errors.each { |line| Logger.warn line.chomp }
+      reporter.warn "Tivoli error log follows:"
+      tsm.errors.each { |line| reporter.warn line.chomp }
     end
     if not tsm.output.empty?
-      Logger.warn "Tivoli output log follows:"
-      tsm.output.each { |line| Logger.warn line.chomp }
+      reporter.warn "Tivoli output log follows:"
+      tsm.output.each { |line| reporter.warn line.chomp }
     end
   end
 

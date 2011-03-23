@@ -16,3 +16,4 @@ coverage
 vendor/bundle
 spec/dm-postgres.log
 spec/dm-mysql.log
+spec/lib/silos/

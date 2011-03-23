@@ -1,5 +1,16 @@
 #!/usr/bin/env ruby
 
+# TODO: add randomize option, like disk-fixity
+#
+
+# Store::FatalFixityError is used when we encounter an issue that we
+# can give a reasonable diagnostic; otherwise we'll produce a
+# backtrace
+
+# TODO: when doing the major refactoring, use the more recently
+# written stream module written for StoreMaster; these are yield based
+# and easier on resident memeory.
+
 require 'digest/md5'
 require 'digest/sha1'
 require 'enumerator'
@@ -7,24 +18,23 @@ require 'fileutils'
 require 'find'
 require 'net/smtp'
 require 'optparse'
+require 'socket'
 require 'tempfile'
 require 'time'
 
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
 
+require 'datyl/reporter'
 require 'datyl/streams'
 require 'store/db'
-require 'store/logger'
-require 'store/silo'
-require 'store/silotape'
-require 'store/silodb'
-require 'store/tsmexecutor'
-require 'store/fixityutils'
 require 'store/exceptions'
+require 'store/fixityutils'
+require 'store/silo'
+require 'store/silodb'
+require 'store/silotape'
+require 'store/tsmexecutor'
 
-TOO_MANY_LINES_FOR_MAIL = 1000
-
-Struct.new('Options', :fixity_disk, :db_config_file, :db_config_key, :web_server, :syslog_facility, :tape_server, :mail_to, :user, :grace_period)
+Struct.new('Options', :fixity_disk, :db_config_file, :db_config_key, :web_server, :syslog_facility, :tape_server, :user, :grace_period, :fresh_enough, :pid_directory)
 
 # The defaults defined here pretty good; you may want to specify the syslog.
 
@@ -34,13 +44,17 @@ def get_options args
 
   # defaults:
 
-  conf.grace_period   = 45
   conf.db_config_file = '/opt/fda/etc/db.yml'
-  conf.db_config_key  = 'silo_test'
-  conf.tape_server    = 'BERNARD_SERVER'
-  conf.mail_to        = 'silocron'
-  conf.user           = 'silo'
+  conf.db_config_key  = 'production_silo'
   conf.fixity_disk    = (DateTime.now.jd % 2 == 0) ? '/daitssfs/fixity/0/' : '/daitssfs/fixity/1/'
+  conf.fresh_enough   = 7
+  conf.grace_period   = 45
+  conf.user           = 'silo'
+  conf.pid_directory  = nil
+  conf.tape_server    = case Socket.gethostname.downcase
+                        when 'fclnx30.fcla.edu'; 'BERNARD_SERVER'
+                        when 'fclnx31.fcla.edu'; 'BIANCA_SERVER'
+                        end
   conf.web_server     = case Socket::gethostname.downcase
                         when 'fclnx30.fcla.edu'; 'silos.darchive.fcla.edu'
                         when 'fclnx31.fcla.edu'; 'silos.tarchive.fcla.edu'
@@ -76,8 +90,16 @@ def get_options args
       end
     end
 
+    opts.on("--pid-directory PATH", String, "Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon") do |path|
+      conf.pid_directory = path
+    end
+    
     opts.on("--db-config-key KEY", String, "The key into the file of database configuration data (defaults to #{conf.db_config_key}).") do |key|
       conf.db_config_key = key
+    end
+
+    opts.on("--fresh-enough DAYS",  Integer, "If a fixity check has been done in less than the supplied DAYS, don't do another (defaults to #{conf.fresh_enough})") do |days|
+      conf.fresh_enough = days
     end
 
     opts.on("--grace-period DAYS", String, "The number of days since the earliest fixity on a tape silo after which we'll recheck the fixities (defaults to #{conf.grace_period}).") do |days|
@@ -92,10 +114,6 @@ def get_options args
       conf.tape_server = name
     end
 
-    opts.on("--mail-to ADDRESS", String, "A mail address to send error reports to (defaults to #{conf.mail_to}).") do |address|
-      conf.mail_to = address
-    end
-
     opts.on("--user NAME", String, "The user this process must run as (defaults to #{conf.user}).") do |name|
       conf.user = name
     end
@@ -106,7 +124,7 @@ def get_options args
 
 rescue => e
   STDERR.puts e, opts
-  exit
+  exit 1
 else
   return conf
 end
@@ -143,7 +161,7 @@ class TsmStream < ArrayBasedStream
   # tsm.list returns an array of Structs, with accessors .path (String), .mtime (Time), .size (Fixnum) - sorted on .path
   # we just have to break out the path as key.
 
-  def initialize filesystem, tape_server
+  def initialize filesystem, tape_server, reporter
     @index = 0
     @list  = []
     filesystem = filesystem.gsub(%r{/+$}, '') + '/'
@@ -157,31 +175,32 @@ class TsmStream < ArrayBasedStream
     # be. 12 definitely isn't.
 
     if tsm.status > 8
-      Logger.err "Command '#{tsm.command}', exited with status #{tsm.status}. This is a fatal error and processing will be stopped."
+      reporter.err "Command '#{tsm.command}', exited with status #{tsm.status}. This is a fatal error and processing will be stopped."
       if not tsm.errors.empty?
-        Logger.err "Tivoli error log follows:"
-        tsm.errors.each { |line| Logger.err line.chomp }
+        reporter.err "Tivoli error log follows:"
+        tsm.errors.each { |line| reporter.err line.chomp }
       end
       if not tsm.output.empty?
-        Logger.err "Tivoli output log follows:"
-        tsm.output.each { |line| Logger.err line.chomp }
+        reporter.err "Tivoli output log follows:"
+        tsm.output.each { |line| reporter.err line.chomp }
       end
-      Logger.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
+      reporter.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
       raise FatalFixityError, "Can't continue - Tivloi reported errors"
 
     elsif tsm.status > 4
-      Logger.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
+      reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
       if not tsm.errors.empty?
-        Logger.warn "Tivoli error log follows:"
-        tsm.errors.each { |line| Logger.warn line.chomp }
+        reporter.warn "Tivoli error log follows:"
+        tsm.errors.each { |line| reporter.warn line.chomp }
       end
       if not tsm.output.empty?
-        Logger.warn "Tivoli output log follows:"
-        tsm.output.each { |line| Logger.warn line.chomp }
+        reporter.warn "Tivoli output log follows:"
+        tsm.output.each { |line| reporter.warn line.chomp }
       end
     end
   end
 end
+
 
 # TODO: remove this and use more general state changes listed in silomixin
 
@@ -191,132 +210,64 @@ def set_to_tape_master hostname, silo
   rec.make_tape_master
 end
 
-# TODO: also check if fixity partition mounted? if large enough? (we could use sys/filesystem to check that)
 
-# do_sanity_checks OPTIONS
-#
-# Check that the correct user is running this program; that we can connect to the
-# database (initializes the db as a side effect)
+# Set up everything, doing some basic sanity checks; returns a reporter object.
 
-def do_sanity_checks  options
+def setup config
+  $0 = 'tape-fixity'
 
-  me = Etc.getpwuid(Process.uid).name
-  if me != options.user
-    raise Store::FatalFixityError, "This program must be run as the #{options.user} user, but is being run as #{me}."
+  Logger.setup('TapeFixity', config.web_server)
+
+  if config.pid_directory
+    pid_path = StoreUtils.pid_file(config.pid_directory)
+    raise "PID file #{pid_path} exists. This indicates another copy of this program is running or has previously crashed; exiting"   if File.exists? pid_path
+    File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
-  Store::DB.setup(options.db_config_file, options.db_config_key)
-
-  if not File.directory? options.fixity_disk
-    # raise Store::FatalFixityError, "The #{options.user} user doesn't have write priviledge to the fixity disk #{options.fixity_disk}."
-  end
-
-  # File.readable?  File.writable?
-
-  # check for total room:
-  # StoreUtils.disk_size(options.fixity_disk)
-
-rescue => e
-  raise Store::FatalFixityError, e.message
-end
-
-
-def get_some logfile
-  logfile.open
-  message = ''
-  lines = 0
-  while line = logfile.gets and lines < TOO_MANY_LINES_FOR_MAIL
-    message += line
-    lines += 1
-  end
-  if lines >= TOO_MANY_LINES_FOR_MAIL
-    message += "\n\nThe report was too large and has been truncated.  See the system \nlogs in /var/logs/daitss/web-services/ for all information.\n"
-
-    ## TODO - add the last 100 or so lines with diaresis...
-
-
-  end
-  message
-ensure
-  logfile.open
-end
-
-
-def needs_report logfile
-  logfile.open
-  while line = logfile.gets
-    return true if line =~ /^\s*ERR|^\s*WARN/
-  end
-  return false
-ensure
-  logfile.open
-end
-
-# Send off a mail report if there were any errors  or warnings found.
-
-def mail_fixity_check_report_maybe silo, options, logfile
-
-  if needs_report(logfile)
-    message = <<EOF
-Subject: Issues encountered fixity-checking tape silo #{silo} for #{options.web_server}
-To: #{options.mail_to}
-From: #{options.mail_to}
-
-There were warnings and/or errors during the fixity check of
-the tape silo #{silo} for #{options.web_server}.
-
-The log follows:
-
-EOF
-    message += get_some(logfile)
-    Net::SMTP.start('localhost', 25) { |smtp|  smtp.send_message message, options.mail_to, options.mail_to }
-  end
-end
-
-
-
-def mail_tape_mastering_report silo, options, logfile
-
-    message = <<EOF
-Subject: Report on tape-mastering silo #{silo} for #{options.web_server}
-To: #{options.mail_to}
-From: #{options.mail_to}
-
-This is the log for the attempt to tape-master silo #{silo} for #{options.web_server}.
-
-EOF
-  message += get_some(logfile)
-  Net::SMTP.start('localhost', 25) { |smtp|  smtp.send_message message, options.mail_to, options.mail_to }
-end
-
-
-# Set up a disposable log we'll check at completion, and maybe mail to operations.
-# If we aren't required to log to syslog, log instead to stderr.
-
-def setup_logging options
-
-  Logger.setup('TapeFixity', options.web_server)
-
-  tempfile = Tempfile.new('tape-silo-maintainance-', '/tmp')
-  Logger.filename = tempfile.path
-
-  if options.syslog_facility
-    Logger.facility = options.syslog_facility
+  if config.syslog_facility
+    Logger.facility = config.syslog_facility
   else
     Logger.stderr
   end
 
-  Logger.info "Starting tape maintainance for #{options.web_server}, tape server #{options.tape_server}, using scratch disk #{options.fixity_disk}."
+  me = Etc.getpwuid(Process.uid).name
+  raise "This program must be run as the #{config.user} user, but is being run as #{me}." unless  me == config.user
 
-  return tempfile
+  Store::DB.setup(config.db_config_file, config.db_config_key)
+
+  raise "The specified fixity disk #{config.fixity_disk} doesn't exist."                unless File.directory? config.fixity_disk
+  raise "The #{config.user} user can't read the fixity disk #{config.fixity_disk}."     unless File.readable?  config.fixity_disk
+  raise "The #{config.user} user can't write to the fixity disk #{config.fixity_disk}." unless File.writeable? config.fixity_disk
+
+
+  Kernel.trap('INT')  { Logger.err "Interrupted"  ; exit }  # leaves the pid file, if one is being used
+  Kernel.trap('HUP')  { teardown(config); exit }             # do a clean shutdown with these:
+  Kernel.trap('PIPE') { teardown(config); exit } 
+
+  Reporter.max_lines_to_write = 100    # each report will have at most these lines, though everything will go to syslog
+  return Reporter.new('Tape Fixity Checks')
+
+rescue => e
+  raise Store::FatalFixityError, "#{e.class}: #{e.message}" 
+
 end
+
+# teardown(config) will clear our run-file.
+
+def teardown config
+  if config.pid_directory
+    pid_path = StoreUtils.pid_file(config.pid_directory)
+    File.delete pid_path if File.exists? pid_path and File.writable? pid_path
+  end
+end
+
 
 
 Struct.new('SiloInfo', :filesystem, :oldest_fixity, :state)
 
 # Select a silo to work on.  We'll
 
-def select_silo host, tape_server, grace_period
+def select_silo host, tape_server, grace_period, reporter
   info = []
 
   Store::SiloTape.silos(host).each do |rec|
@@ -335,26 +286,26 @@ def select_silo host, tape_server, grace_period
 
   if tape_masters.count > 0
     if tape_masters.count == 1
-      Logger.info "There is one tape master that hasn't been completely fixity-checked in #{grace_period} days:"
+      reporter.info "There is one tape master that hasn't been completely fixity-checked in #{grace_period} days:"
     else
-      Logger.info "There are #{tape_masters.count} tape masters that haven't been completely fixity-checked in #{grace_period} days:"
+      reporter.info "There are #{tape_masters.count} tape masters that haven't been completely fixity-checked in #{grace_period} days:"
     end
-    tape_masters.map { |si| si.filesystem }.sort.each_slice(4) { |slice| Logger.info slice.join(' ') }
+    tape_masters.map { |si| si.filesystem }.sort.each_slice(4) { |slice| reporter.info slice.join(' ') }
     silo_info = tape_masters[0]
   else
-    Logger.info "All tape masters for #{host} have been completely fixity-checked within the last #{grace_period} days."
+    reporter.info "All tape masters for #{host} have been completely fixity-checked within the last #{grace_period} days."
   end
 
   if disk_idlers.count > 0
     if disk_idlers.count == 1
-      Logger.info  "There is one disk silo ready for tape mastering:"
+      reporter.info  "There is one disk silo ready for tape mastering:"
     else
-      Logger.info  "There are #{disk_idlers.count} disk silos ready for tape mastering:"
+      reporter.info  "There are #{disk_idlers.count} disk silos ready for tape mastering:"
     end
-    disk_idlers.map { |si| si.filesystem }.sort.each_slice(4) { |slice| Logger.info slice.join(' ') }
+    disk_idlers.map { |si| si.filesystem }.sort.each_slice(4) { |slice| reporter.info slice.join(' ') }
     silo_info = disk_idlers[0]
   else
-    Logger.info  "There are no disk silos ready for tape mastering."
+    reporter.info  "There are no disk silos ready for tape mastering."
   end
 
   silo_info
@@ -368,9 +319,9 @@ end
 #  export LANG=en_US.UTF-8
 #  
 
-def check_tivoli_file_list  web_server, tape_server, silo
+def check_tivoli_file_list  web_server, tape_server, silo, reporter
 
-  Logger.info "Comparing file information (date, size, name) from disk #{silo} against the tivoli backup report."
+  reporter.info "Comparing file information (date, size, name) from disk #{silo} against the tivoli backup report."
 
   missing_from_tape = []
   missing_from_disk = []
@@ -379,7 +330,7 @@ def check_tivoli_file_list  web_server, tape_server, silo
   warning_count = 0
   total_count   = 0
 
-  on_tape = TsmStream.new(silo, tape_server)
+  on_tape = TsmStream.new(silo, tape_server, reporter)
   on_disk = FindStream.new(silo)
 
   ComparisonStream.new(on_tape, on_disk).get do |path, tape_record, disk_record|
@@ -397,12 +348,12 @@ def check_tivoli_file_list  web_server, tape_server, silo
       # setting, apparently) - we strip that off here.
 
       if disk_record.mtime.localtime.iso8601[0..18] !=  tape_record.mtime.localtime.iso8601[0..18]
-        Logger.err "The date for #{tape_record.path} on tape differs from disk -  #{tape_record.mtime}  on tape, #{disk_record.mtime} on disk."
+        reporter.err "The date for #{tape_record.path} on tape differs from disk -  #{tape_record.mtime}  on tape, #{disk_record.mtime} on disk."
         error_count += 1
       end
 
       if tape_record.size  != disk_record.size
-        Logger.err "The size for #{tape_record.path} on tape differs from disk - #{tape_record.size} on tape, #{disk_record.size} on disk."
+        reporter.err "The size for #{tape_record.path} on tape differs from disk - #{tape_record.size} on tape, #{disk_record.size} on disk."
         error_count += 1
       end
     end
@@ -411,47 +362,47 @@ def check_tivoli_file_list  web_server, tape_server, silo
   if not missing_from_tape.empty?
     count = missing_from_tape.count
     warning_count += count
-    Logger.warn "Had #{count} #{pluralize_maybe(count, 'file')} missing from tape - there should be none. List follows:"
-    missing_from_tape.each { |rec| Logger.warn rec.path }
+    reporter.warn "Had #{count} #{pluralize_maybe(count, 'file')} missing from tape - there should be none. List follows:"
+    missing_from_tape.each { |rec| reporter.warn rec.path }
   end
 
   if not missing_from_disk.empty?
     count = missing_from_disk.count
     warning_count += count
-    Logger.warn "Had #{count} #{pluralize_maybe(count, 'file')} missing from disk - there should be none. List follows:"
-    missing_from_disk.each { |rec| Logger.warn rec.path  }
+    reporter.warn "Had #{count} #{pluralize_maybe(count, 'file')} missing from disk - there should be none. List follows:"
+    missing_from_disk.each { |rec| reporter.warn rec.path  }
   end
 
   if (warning_count + error_count) > 0
-    Logger.warn "Silo #{silo} can't be processed, the tape backup isn't up to date. We'll try again tomorrow."
+    reporter.warn "Silo #{silo} can't be processed, the tape backup isn't up to date. We'll try again tomorrow."
     return false
   else
-    Logger.info "Tape backup for silo #{silo} appears to be up to date, #{total_count} files checked against the tivoli backup listing."
+    reporter.info "Tape backup for silo #{silo} appears to be up to date, #{total_count} files checked against the tivoli backup listing."
     return true
   end
 end
 
 
-def do_tape_silo_fixity_check silo, options, logfile
+def do_tape_silo_fixity_check silo, config, reporter
 
-  restore_to_scratch_disk(options.tape_server, silo, options.fixity_disk)
+  restore_to_scratch_disk(config.tape_server, silo, config.fixity_disk, reporter)
 
-  if not check_package_fixities(options.web_server, silo, options.fixity_disk)
-    raise Store::FatalFixityError, "Fixity failure: can't continue with fixity check for silo #{silo} on filesystem #{options.fixity_disk}."
+  if not check_package_fixities(config.web_server, silo, config.fixity_disk, reporter)
+    raise Store::FatalFixityError, "Fixity failure: can't continue with fixity check for silo #{silo} on filesystem #{config.fixity_disk}."
   end
 
-  info = check_for_missing(options.web_server, silo, options.fixity_disk)
+  info = check_for_missing(config.web_server, silo, config.fixity_disk, reporter)
 
   if info.missing > 0
-    raise Store::FatalFixityError, "Missing packages during tape-based fixity check for silo #{silo}, data was restored to filesystem #{options.fixity_disk}."
+    raise Store::FatalFixityError, "Missing packages during tape-based fixity check for silo #{silo}, data was restored to filesystem #{config.fixity_disk}."
   end
 end
 
-# silo: '/daitssfs/001', options: the config options, logfile: a tempfile object.
+# silo: '/daitssfs/001', config: the config config, reporter: logs and caches an abbreviated report
 
-def do_tape_master_fixity_check silo, options, logfile
+def do_tape_master_fixity_check silo, config, reporter
 
-  if not check_tivoli_file_list(options.web_server, options.tape_server, silo)
+  if not check_tivoli_file_list(config.web_server, config.tape_server, silo, reporter)
     raise Store::FatalFixityError, "The file listing for the on-disk silo #{silo} doesn't match the listing provided by Tivoli."
   end
 
@@ -460,16 +411,16 @@ def do_tape_master_fixity_check silo, options, logfile
   # restoring, let's check that the on-disk data is consistent with
   # our database (takes a few minutes).
 
-  info = check_for_missing(options.web_server, silo, silo)
+  info = check_for_missing(config.web_server, silo, silo, reporter)
 
   if (info.ghosts > 0) or (info.missing > 0) or (info.aliens > 0)
-    Logger.err "The on-disk silo #{silo} has #{info.ghosts} #{pluralize_maybe(info.ghosts, 'package')} on disk that the database indicates should have been deleted."     if info.ghosts  > 0
-    Logger.err "The on-disk silo #{silo} has #{info.aliens} #{pluralize_maybe(info.aliens, 'package')} that there is no record of in the database."                       if info.aliens  > 0
-    Logger.err "The on-disk silo #{silo} has #{info.missing} #{pluralize_maybe(info.missing, 'package')} missing from disk that the database indicates should be there."  if info.missing > 0
+    reporter.err "The on-disk silo #{silo} has #{info.ghosts} #{pluralize_maybe(info.ghosts, 'package')} on disk that the database indicates should have been deleted."     if info.ghosts  > 0
+    reporter.err "The on-disk silo #{silo} has #{info.aliens} #{pluralize_maybe(info.aliens, 'package')} that there is no record of in the database."                       if info.aliens  > 0
+    reporter.err "The on-disk silo #{silo} has #{info.missing} #{pluralize_maybe(info.missing, 'package')} missing from disk that the database indicates should be there."  if info.missing > 0
     raise "The on-disk silo #{silo} is inconsistent (see log); we can't proceed with tape-mastering until these issues are resolved."
   end
 
-  restore_to_scratch_disk(options.tape_server, silo, options.fixity_disk)
+  restore_to_scratch_disk(config.tape_server, silo, config.fixity_disk, reporter)
 
   # At this point Tivoli has restored from tape to scratch disk
   # without reporting errors.  We make sure the files on scratch disk
@@ -480,64 +431,55 @@ def do_tape_master_fixity_check silo, options, logfile
   # aliens and ghosts.  While aliens and ghosts should not be there
   # when we're mastering, we expect them to accumulate over time.)
 
-  info = check_for_missing(options.web_server, silo, options.fixity_disk)
+  info = check_for_missing(config.web_server, silo, config.fixity_disk, reporter)
 
-  Logger.warn "The restored silo #{silo} on filesystem #{options.fixity_disk} has #{info.ghosts} #{pluralize_maybe(info.ghosts, 'package')} that the database indicates should have been deleted."     if info.ghosts > 0
-  Logger.warn "The restored silo #{silo} on filesystem #{options.fixity_disk} has #{info.aliens} #{pluralize_maybe(info.aliens, 'package')} that there is no record of in the database."               if info.aliens > 0
+  reporter.warn "The restored silo #{silo} on filesystem #{config.fixity_disk} has #{info.ghosts} #{pluralize_maybe(info.ghosts, 'package')} that the database indicates should have been deleted."     if info.ghosts > 0
+  reporter.warn "The restored silo #{silo} on filesystem #{config.fixity_disk} has #{info.aliens} #{pluralize_maybe(info.aliens, 'package')} that there is no record of in the database."               if info.aliens > 0
 
   if info.missing > 0
-    Logger.err "The restored silo #{silo} on filesystem #{options.fixity_disk} has #{info.missing} missing #{pluralize_maybe(info.missing, 'package')}."
-    raise Store::FatalFixityError, "While tape-mastering, the restored silo #{silo} on filesystem #{options.fixity_disk} was inconsistent (see log); cannot proceed with until issues are resolved."
+    reporter.err "The restored silo #{silo} on filesystem #{config.fixity_disk} has #{info.missing} missing #{pluralize_maybe(info.missing, 'package')}."
+    raise Store::FatalFixityError, "While tape-mastering, the restored silo #{silo} on filesystem #{config.fixity_disk} was inconsistent (see log); cannot proceed with until issues are resolved."
   end
 
   # Fixity check the packages on the restored silo; if successful, we're done.
 
-  if not check_package_fixities(options.web_server, silo, options.fixity_disk)
-    raise Store::FatalFixityError, "While tape-mastering, one or more of the packages for #{silo} restored to #{options.fixity_disk} failed the fixity check (see log for details)."
+  if not check_package_fixities(config.web_server, silo, config.fixity_disk, reporter)
+    raise Store::FatalFixityError, "While tape-mastering, one or more of the packages for #{silo} restored to #{config.fixity_disk} failed the fixity check (see log for details)."
   end
 
   # Looks great; we're done
 
-  set_to_tape_master(options.web_server, silo)
-
+  set_to_tape_master(config.web_server, silo)
 end
 
 begin
-  options  = get_options ARGV
-  logfile  = setup_logging(options)
+  config   = get_options(ARGV)
+  reporter = setup(config)
   silodata = nil
 
-  do_sanity_checks(options)
-  clean_up_scratch_disk(options.fixity_disk)   # TODO: double check to make sure we've got close to 2TB free?
+  clean_up_scratch_disk(config.fixity_disk, reporter)
 
-  silodata = select_silo(options.web_server, options.tape_server, options.grace_period)
+  silodata = select_silo(config.web_server, config.tape_server, config.grace_period)
 
   if silodata.nil?
-    Logger.info "No silos need checking."
+    reporter.info "No silos need checking."
   elsif silodata.state == :disk_idling
-    Logger.info "Selected disk-idling silo #{silodata.filesystem} for conversion to tape master, server #{options.web_server}."
-    do_tape_master_fixity_check silodata.filesystem, options, logfile
+    reporter.info "Selected disk-idling silo #{silodata.filesystem} for conversion to tape master, server #{config.web_server}."
+    do_tape_master_fixity_check silodata.filesystem, config, reporter
   elsif silodata.state == :tape_master
-    Logger.info "Selected #{silodata.filesystem} for doing a routine fixity check, server #{options.web_server}."
-    do_tape_silo_fixity_check silodata.filesystem, options, logfile
+    reporter.info "Selected #{silodata.filesystem} for doing a routine fixity check, server #{config.web_server}."
+    do_tape_silo_fixity_check silodata.filesystem, config, reporter
   else
     raise Store::FatalFixityError, "Unexpected silo state encountered while selected a silo to process: #{silodata}."
   end
 
 rescue Store::FatalFixityError => e
-  Logger.err "Fatal error: #{e}"
+  reporter.err "Fatal error: #{e}"
 rescue => e
-  Logger.err "Fatal error: #{e}, back trace follows:"
-  e.backtrace.each { |line| Logger.err line.chomp }
+  reporter.err "Fatal error: #{e}, back trace follows:"
+  e.backtrace.each { |line| reporter.err line.chomp }
 else
-  Logger.info "Finished checking silo #{silodata.filesystem}."
-ensure
-  case silodata
-  when nil
-    # nothing needs checking
-  when :tape_master
-    mail_fixity_check_report_maybe silodata.filesystem, options, logfile
-  when :disk_idling
-    mail_tape_mastering_report silodata.filesystem, options, logfile
-  end
+  reporter.info "Finished checking silo #{silodata.filesystem}."
+  reporter.write
+  teardown(config)
 end
