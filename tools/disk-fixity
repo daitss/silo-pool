@@ -18,7 +18,7 @@ require 'store/utils'
 # Get options from the command line; here's what we're shooting for:
 #
 # Usage: disk-fixity [ --options ] [ /silo/001 .. ]
-#        without an explicit list of disk silos, do checks on all of them.
+#        without an explicit list of disk silos, do checks on all of them. Write a simple report of results when done.
 #         --hostname HOST              Required, the name of the host this silo is associated with (usually a virtual host)
 #         --fresh-enough DAYS          If a fixity check has been done in less than the supplied DAYS, don't do another (defaults to 7)
 #         --pid-directory PATH         Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon
