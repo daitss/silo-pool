@@ -13,8 +13,8 @@ require 'time'
 $LOAD_PATH.unshift File.expand_path(File.join(File.dirname(__FILE__), '../lib'))
 
 require 'datyl/streams'
+require 'datyl/logger'
 require 'store/db'
-require 'store/logger'
 require 'store/silo'
 require 'store/silotape'
 require 'store/silodb'
@@ -36,7 +36,7 @@ def get_options args
 
   conf.grace_period   = 45
   conf.db_config_file = '/opt/fda/etc/db.yml'
-  conf.db_config_key  = 'silo_test'
+  conf.db_config_key  = 'production_silo'
   conf.tape_server    = 'BERNARD_SERVER'
   conf.mail_to        = 'silocron'
   conf.user           = 'silo'
