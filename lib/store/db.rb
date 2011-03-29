@@ -109,7 +109,9 @@ module Store
                              'alter table histories alter timestamp type timestamp with time zone',
                              'alter table packages alter initial_timestamp type timestamp with time zone',
                              'alter table packages alter latest_timestamp type timestamp with time zone',
-                             'alter table reserved_disk_spaces alter timestamp type timestamp with time zone'
+                             'alter table reserved_disk_spaces alter timestamp type timestamp with time zone',
+                             'create index index_packages_initial_timestamp_silo_record_extant on packages(initial_timestamp, silo_record_id, extant)',
+                             'create index index_packages_latest_timestamp_silo_record_extant on packages(latest_timestamp, silo_record_id, extant)'
                             ]
 
         if db.methods.include? 'postgres_version'
@@ -161,6 +163,15 @@ module Store
       def self.lookup hostname, filesystem
         filesystem = File.expand_path(filesystem)  # strips trailing slash..
         SiloRecord.first( :filesystem => filesystem, :hostname => hostname.downcase )
+      end
+
+      # The web service names silos using abbreviated verision of the
+      # silo's filesystem - the last path component of the silo
+      # filesystem (so the last filesystem component has to be unique
+      # across all filesystem).
+
+      def self.lookup_by_partition hostname, partition
+        SiloRecord.first( :filesystem.like => '%' + partition, :hostname => hostname.downcase )
       end
 
       # list all of the silos known to us, restricted to a particular hostname if needed.

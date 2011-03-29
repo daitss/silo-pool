@@ -22,7 +22,7 @@ ENV['BASIC_AUTH_PASSWORD']  ||= nil                   # using basic authenticati
 ENV['VIRTUAL_HOSTNAME']     ||= Socket.gethostname    # Used for logging; wish there was a better way of getting this automatically
 
 if ENV['BASIC_AUTH_USERNAME'] or ENV['BASIC_AUTH_PASSWORD']
-  use Rack::Auth::Basic, "DAITSS 2.0 Silo" do |username, password|
+  use Rack::Auth::Basic, "DAITSS #{ENV['VIRTUAL_HOSTNAME']} Silo Pool" do |username, password|
     username == ENV['BASIC_AUTH_USERNAME'] 
     password == ENV['BASIC_AUTH_PASSWORD']
   end

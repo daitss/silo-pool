@@ -457,6 +457,8 @@ begin
   reporter = setup(config)
   silodata = nil
 
+  reporter.info "Starting tape fixity checks, using Tivoli server #{config.tape_server}, fixity disk #{config.fixity_disk}"
+
   clean_up_scratch_disk(config.fixity_disk, reporter)
 
   silodata = select_silo(config.web_server, config.tape_server, config.grace_period)

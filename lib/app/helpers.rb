@@ -96,8 +96,8 @@ helpers do
   # we may want to add another column in the silos table to account for the name.
  
   def filesystem_location silo_partition
-    list_silos.each { |silo| return silo.filesystem if silo.filesystem =~ /#{silo_partition}$/ }
-    nil
+    return unless rec = DB::SiloRecord.lookup_by_partition(hostname, silo_partition)
+    rec.filesystem
   end
 
   def methods_hash silo
