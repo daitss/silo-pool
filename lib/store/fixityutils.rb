@@ -1,6 +1,12 @@
+require 'datyl/reporter'
+require 'datyl/streams'
 require 'store/exceptions'
+require 'store/silo'
+require 'store/silodb'
+require 'store/silotape'
+require 'store/tsmexecutor'
 
-# TODO: This is used entirely by tape-fixity,  and could be refactored with disk-fixity stuff.
+# TODO: This is used entirely by tape-fixity,  and could be refactored to use the  disk-fixity stuff.
 
 # check_package_fixities CONF
 #
@@ -8,9 +14,9 @@ require 'store/exceptions'
 # a mismatch with a previous checksum.
 #
 
-def check_package_fixities web_server, silo_name, filesystem, reporter
+def check_package_fixities web_server, silo_name, filesystem, fresh_enough, reporter
   success = true
-
+  skipped = 0
   reporter.info "Checking package fixities from the database records for silo #{silo_name} against the filesystem #{filesystem}."
 
   silo_record = Store::DB::SiloRecord.lookup(web_server, silo_name)
@@ -19,9 +25,13 @@ def check_package_fixities web_server, silo_name, filesystem, reporter
   silo.each do |package|
     begin
 
-      ### TODO: check for nil return here? (e.g. may have bogus packages on disk)
-
       package_record = Store::DB::PackageRecord.lookup(silo_record, package) 
+
+      if (package_record.initial_timestamp != package_record.latest_timestamp) and (DateTime.now - package.latest_timestamp) <  fresh_enough
+        skipped += 1
+        next
+      end
+
       md5  = Digest::MD5.new
       sha1 = Digest::SHA1.new
       silo.get(package) do |buff|
@@ -225,3 +235,78 @@ def restore_to_scratch_disk tape_server, silo, destination_directory, reporter
 rescue => e
   raise FatalFixityError, "Restore failure: #{e}"
 end
+
+
+
+Struct.new('FindStreamRecord', :path, :size, :mtime)
+
+# List all of the files from a silo (except for .lock files). Data is returned as a list of arrays,
+# where the first element (key) is the path; and the second element (value) is a struct containing .path, a string; .mtime, a Time object;  and .size, a fixnum.
+#
+#   [ "/daitssfs/002/113/f0f4d29507f3049999b756bfb4215/data", #<struct  path="/daitssfs/002/113/f0f4d29507f3049999b756bfb4215/data", size=110023, mtime="Thu Jun 24 13:22:36 -0400 2010"> ],
+#   [ "/daitssfs/002/4e6/5e0f51a7f2c81cb4b5a6c3fa169c8/sha1", #<struct  path="/daitssfs/002/4e6/5e0f51a7f2c81cb4b5a6c3fa169c8/sha1", size=41,     mtime="Thu Jun 24 13:36:09 -0400 2010"> ],
+#   etc...
+#
+
+class FindStream < ArrayBasedStream
+
+  def initialize filesystem
+    @index = 0
+    @list  = []
+
+    Find.find(filesystem) do |path|
+      next if File.directory? path
+      next if path =~ /\.lock$/
+      stat = File.stat path
+      @list.push [ path, Struct::FindStreamRecord.new(path, stat.size, stat.mtime) ]
+    end
+    @list.sort! { |a, b|  a[0] <=> b[0] }
+  end
+end
+
+class TsmStream < ArrayBasedStream
+
+  # tsm.list returns an array of Structs, with accessors .path (String), .mtime (Time), .size (Fixnum) - sorted on .path
+  # we just have to break out the path as key.
+
+  def initialize filesystem, tape_server, reporter
+    @index = 0
+    @list  = []
+    filesystem = filesystem.gsub(%r{/+$}, '') + '/'
+
+    tsm = Store::TsmExecutor.new(tape_server, 120)
+    tsm.list(filesystem).each do |rec|
+      @list.push [ rec.path, rec ] unless rec.path =~ /\.lock$/
+    end
+
+    # list is sorted by tsm.list; status of 0 or 4 is OK; 8 may
+    # be. 12 definitely isn't.
+
+    if tsm.status > 8
+      reporter.err "Command '#{tsm.command}', exited with status #{tsm.status}. This is a fatal error and processing will be stopped."
+      if not tsm.errors.empty?
+        reporter.err "Tivoli error log follows:"
+        tsm.errors.each { |line| reporter.err line.chomp }
+      end
+      if not tsm.output.empty?
+        reporter.err "Tivoli output log follows:"
+        tsm.output.each { |line| reporter.err line.chomp }
+      end
+      reporter.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
+      raise FatalFixityError, "Can't continue - Tivloi reported errors"
+
+    elsif tsm.status > 4
+      reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
+      if not tsm.errors.empty?
+        reporter.warn "Tivoli error log follows:"
+        tsm.errors.each { |line| reporter.warn line.chomp }
+      end
+      if not tsm.output.empty?
+        reporter.warn "Tivoli output log follows:"
+        tsm.output.each { |line| reporter.warn line.chomp }
+      end
+    end
+  end
+end
+
+
