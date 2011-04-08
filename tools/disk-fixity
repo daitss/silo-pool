@@ -195,7 +195,7 @@ silos.each do |silo|
         counter.ok += 1
       else
         counter.errors += 1
-        reporter.err "Fixity failure for #{package.name} on silo #{silo.fileystem}:"
+        reporter.err "Fixity failure for #{package.name} on silo #{silo.filesystem}:"
         errors.each { |line|  reporter.err "  #{line}" }
       end
     end
