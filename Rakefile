@@ -74,39 +74,39 @@ end
 
 desc "deploy to darchive's betasilos"
 task :darchive_beta do
-    sh "cap deploy -S target=darchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
+    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/betasilos -S who=silo:daitss"
 end
 
 desc "deploy to darchive's production silos"
 task :darchive_production do
-    sh "cap deploy -S target=darchive:/opt/web-services/sites/silos -S who=silo:daitss"
+    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/silos -S who=silo:daitss"
 end
 
 # assumes git pushed out
 
 desc "deploy to tarchive's production silos"
 task :tarchive_production do
-  sh "cap deploy -S target=tarchive:/opt/web-services/sites/silos -S who=silo:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/silos -S who=silo:daitss"
 end
 
 desc "deploy to tarchive's betasilos"
 task :tarchive_beta do
-  sh "cap deploy -S target=tarchive:/opt/web-services/sites/betasilos -S who=silo:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/betasilos -S who=silo:daitss"
 end
 
 desc "deploy to tarchive's gammasilos"
 task :tarchive_gamma do
-  sh "cap deploy -S target=tarchive:/opt/web-services/sites/gammasilos -S who=silo:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/gammasilos -S who=silo:daitss"
 end
 
 desc "Deploy to ripple's test silos"
 task :ripple do
- sh "cap deploy -S target=ripple:/opt/web-services/sites/silos -S who=silo:daitss"
+ sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/silos -S who=silo:daitss"
 end
 
 desc "Deploy to franco's silos on ripple"
 task :francos do
-  sh "cap deploy -S target=ripple:/opt/web-services/sites/francos-silos -S who=daitss:daitss"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/francos-silos -S who=daitss:daitss"
 end
 
 
