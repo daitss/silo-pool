@@ -74,6 +74,10 @@ helpers do
     @env['SERVER_PORT'].to_s == "80" ? "" : ":#{@env['SERVER_PORT']}"
   end
 
+  def port
+    @env['SERVER_PORT'].to_s
+  end
+
   # HTTP_HOST can be borken - comes with port attached!
 
   def hostname

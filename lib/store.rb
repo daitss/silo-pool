@@ -32,7 +32,7 @@ module Store
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '0.3.0'
+  VERSION  = '1.0.0'
   NAME     = 'Silo Service'
 
   def self.version

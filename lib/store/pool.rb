@@ -22,9 +22,13 @@ module Store
 
     @hostname = nil
     @silos    = nil
+    @port     = nil
+    @scheme   = nil
 
-    def initialize hostname
+    def initialize hostname, port = 80, scheme = 'http'
       @hostname = hostname
+      @port     = port
+      @scheme   = scheme
       @silos = DB::SiloRecord.all(:hostname => hostname)
     end
 
@@ -58,8 +62,9 @@ module Store
     def each
       package_chunks do |packages|
         packages.each do |pkg|
+          # Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :time, :size)
           yield Struct::FixityRecord.new(pkg.name,
-                                         pkg.url,
+                                         pkg.url(@port, @scheme),
                                          (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) ? :ok : :fail,
                                          pkg.latest_md5,
                                          pkg.latest_sha1,
@@ -81,9 +86,10 @@ module Store
     @pool_fixity = nil
     @hostname    = nil
 
-    def initialize hostname
+    def initialize hostname, port = 80, scheme = 'http'
+
       @hostname    = hostname
-      @pool_fixity = PoolFixity.new(hostname)
+      @pool_fixity = PoolFixity.new(hostname, port, scheme)
     end
 
     def each
@@ -117,8 +123,8 @@ module Store
 
     @pool_fixity = nil
 
-    def initialize hostname
-      @pool_fixity = PoolFixity.new(hostname)
+    def initialize hostname, port = '80', scheme = 'http'
+      @pool_fixity = PoolFixity.new(hostname, port, scheme)
     end
 
     def each

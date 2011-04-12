@@ -150,11 +150,11 @@ get '/:partition/data/:name/*' do |partition, name, path|
 end
 
 get '/fixity.xml' do
-  [ 200, {'Content-Type'  => 'application/xml'}, Store::PoolFixityXmlReport.new(hostname) ]
+  [ 200, {'Content-Type'  => 'application/xml'}, Store::PoolFixityXmlReport.new(hostname, port) ]
 end
 
 get '/fixity.csv' do
-  [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname) ]
+  [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname, port) ]
 end
 
 # implement the above technique for pool/fixity for inidividual silos.

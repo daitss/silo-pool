@@ -290,8 +290,8 @@ module Store
         initial_timestamp
       end
 
-      def url scheme = 'http', port = 80      
-        port_str = port == 80 ? '' : ":#{port}"
+      def url port = 80, scheme = 'http'
+        port_str = port.to_i == 80 ? '' : ":#{port}"
         scheme + '://' + silo_record.hostname + port_str + '/' + silo_record.filesystem.split('/').pop + '/data/' + name
       end
       
