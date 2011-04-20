@@ -27,7 +27,7 @@ def check_package_fixities web_server, silo_name, filesystem, fresh_enough, repo
 
       package_record = Store::DB::PackageRecord.lookup(silo_record, package) 
 
-      if (package_record.initial_timestamp != package_record.latest_timestamp) and (DateTime.now - package.latest_timestamp) <  fresh_enough
+      if (package_record.initial_timestamp != package_record.latest_timestamp) and (DateTime.now - package_record.latest_timestamp) <  fresh_enough
         skipped += 1
         next
       end
@@ -41,7 +41,7 @@ def check_package_fixities web_server, silo_name, filesystem, fresh_enough, repo
       md5  = md5.hexdigest
       sha1 = sha1.hexdigest
     rescue => e              # We attempt to continue from a single package error
-      reporter.err "Fixity failure for package #{package} on #{filesytem}: #{e.message}."
+      reporter.err "Fixity failure for package #{package} on #{filesystem}: #{e.message}."
       success = false
     else
 
@@ -62,7 +62,7 @@ def check_package_fixities web_server, silo_name, filesystem, fresh_enough, repo
 
   return success
 rescue => e
-  raise FatalFixityError, "Fixity check failure, #{e}"
+  raise Store::FatalFixityError, "Fixity check failure, #{e}"
 end
 
 # Provide a stream of all of the package names found on the silo restored to the scratch disk.
@@ -161,7 +161,7 @@ def check_for_missing web_server, silo, filesystem, reporter    ## TODO: rename 
 
   return info
 rescue => e
-  raise FatalFixityError, "Error while doing database checking for missing, alien or ghost packages: #{e}"
+  raise Store::FatalFixityError, "Error while doing database checking for missing, alien or ghost packages: #{e}"
 end
 
 
@@ -186,7 +186,7 @@ def clean_up_scratch_disk filesystem, reporter
   FileUtils.rm_rf targets
 
 rescue => e
-  raise FatalFixityError, "Unable to remove directories from the scratch disk #{filesystem}: #{e.message}"
+  raise Store::FatalFixityError, "Unable to remove directories from the scratch disk #{filesystem}: #{e.message}"
 end
 
 
@@ -218,7 +218,7 @@ def restore_to_scratch_disk tape_server, silo, destination_directory, reporter
       tsm.output.each { |line| reporter.err line.chomp }
     end
     reporter.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
-    raise FatalFixityError, "Can't continue - Tivloi reported errors"
+    raise Store::FatalFixityError, "Can't continue - Tivloi reported errors"
 
   elsif tsm.status > 4
     reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
@@ -233,7 +233,7 @@ def restore_to_scratch_disk tape_server, silo, destination_directory, reporter
   end
 
 rescue => e
-  raise FatalFixityError, "Restore failure: #{e}"
+  raise Store::FatalFixityError, "Restore failure: #{e}"
 end
 
 
@@ -293,7 +293,7 @@ class TsmStream < ArrayBasedStream
         tsm.output.each { |line| reporter.err line.chomp }
       end
       reporter.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
-      raise FatalFixityError, "Can't continue - Tivloi reported errors"
+      raise Store::FatalFixityError, "Can't continue - Tivloi reported errors"
 
     elsif tsm.status > 4
       reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."

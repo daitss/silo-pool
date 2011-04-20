@@ -23,15 +23,18 @@ module Store
 
   class PoolReservation
 
+    ## TODO: we need better support for unqiue lockfiles, for multiple pool servers on one host.  Make
+    ## it optional part of constructor...
+
     @@lockfile_directory =  '/var/tmp/'
 
     MAX_RESERVATION = 3.0 / 24.0   # 3 hours expressed in days
     LOCK_TIMEOUT = 30              # seconds we'll wait to get at the DB ReservedDiskSpace table
-    HEADROOM  = 256 * 1024         # we'll add a fudge factor of this many KB (about four times that taken up by the containing directories with metadata files).
+    HEADROOM  = 256 * 1024         # 256 KB headroom required
 
     attr_reader :record_id
 
-    def initialize size
+    def initialize size   # size in bytes
       @record_id = nil      
       yield reservation_lock { best_fit_silo(size) }
     ensure
@@ -109,7 +112,10 @@ module Store
         reserved[partition] = reservation
       end
 
-      writable_silos.each do |silo|
+      candidates =  writable_silos()
+      raise NoSilosAvailable, "There are no writable silos in this pool"  if candidates.empty?
+
+      candidates.each do |silo|
 
         partition = StoreUtils.disk_mount_point(silo.filesystem)
         freespace = StoreUtils.disk_free(partition) - (reserved[partition] || 0) - size_needed - HEADROOM
@@ -122,7 +128,7 @@ module Store
         silos[partition] << silo
       end
 
-      raise NoSilosAvailable, "There are no free silos in this pool"  if available.empty?
+      raise NoSilosAvailable, "There are no writable silos in this pool with space for a package of size  #{StoreUtils.commify(sprintf("%5.2f", size_needed/1000.0))} KB"  if available.empty?
 
       # find the partition with the least free space...
         
