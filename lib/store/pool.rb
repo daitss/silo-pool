@@ -3,13 +3,14 @@ require 'store/exceptions'
 require 'store/silodb'
 require 'store/db'
 
+class DateTime
+  def to_utc
+    new_offset(0).to_s.sub(/\+00:00$/, 'Z')
+  end
+end
+
 module Store
 
-  class DateTime
-    def to_utc
-      new_offset(0).to_s.sub(/\+00:00$/, 'Z')
-    end
-  end
 
 
 # Class PoolFixity
