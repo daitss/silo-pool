@@ -65,9 +65,9 @@ DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...plac
 
 desc "Reset bundles"
 task :bundle do
-  sh "rm -rf #{HOME}/vendor/bundle"
-  sh "mkdir -p #{HOME}/vendor/bundle"
-  sh "cd #{HOME}; bundle install --path vendor/bundle"
+  sh "rm -rf #{HOME}/bundle"
+  sh "mkdir -p #{HOME}/bundle"
+  sh "cd #{HOME}; bundle install --path bundle"
 end
 
 # assumes git pushed out

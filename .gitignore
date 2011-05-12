@@ -13,7 +13,7 @@ test-data
 pre-existing-code
 coverage
 .bundle
-vendor/bundle
+bundle
 spec/dm-postgres.log
 spec/dm-mysql.log
 spec/lib/silos/

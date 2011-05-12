@@ -44,7 +44,7 @@ ARGV.each do |silo|
   end
 
   if not File.directory?(filesystem) 
-    STDERR.puts "Silo #{silo} isn't a directorty, skipping"
+    STDERR.puts "Silo #{silo} isn't a directory, skipping"
     next
   end
 
