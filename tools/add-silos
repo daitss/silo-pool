@@ -1,0 +1,61 @@
+#!/usr/bin/env ruby
+# -*- mode: ruby; -*-
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'optparse'
+require 'ostruct'
+require 'store/db'
+require 'store/pool'
+
+def parse_command_line args
+  conf = OpenStruct.new(:file => nil, :key => nil, :address => nil)
+  opts = OptionParser.new do |opts|
+    opts.on("--file DB_CONFIG_FILE",  String, "The database configuration filename for this service")        { |filename| conf.file = filename }
+    opts.on("--key DB_CONFIG_KEY",    String, "The key in the database configuration file for this service") { |key|      conf.key = key }
+    opts.on("--server-name HOSTNAME", String, "The hostname for this service")                               { |address|  conf.address = address }
+  end
+  opts.parse!(args)
+  raise "No filename for the DB configuration file provided"  unless conf.file
+  raise "Configuration yaml file #{conf.file} not found"      unless File.exists? conf.file
+  raise "Configuration yaml file #{conf.file} not readable"   unless File.readable? conf.file
+  raise "No key to the DB configuration file provided"        unless conf.key
+  raise "No server address provided"                          unless conf.address
+rescue => e
+  STDERR.puts e, opts
+  exit
+else
+  return conf
+end
+
+# To setup an instance of a silo-pool, create a new postgres database and enter 
+# the configuration information in a yaml file. 
+#
+# The yaml file consists of lines of account information similar to the following
+# (quote any datum with white space in it):
+#
+# your_new_db: { vendor: postgres, hostname: localhost, database: silo, username: dbuser, password: "top secret!" }
+
+
+include Store
+
+conf = parse_command_line ARGV
+DB.setup(conf.file, conf.key)
+
+
+ARGV.each do |silo|
+
+  filesystem = silo.gsub(%r{/+$}, '')
+
+  if not File.exists?(filesystem) 
+    STDERR.puts "Silo #{silo} doesn't exist, skipping"
+    next
+  end
+
+  if not File.directory?(filesystem) 
+    STDERR.puts "Silo #{silo} isn't a directorty, skipping"
+    next
+  end
+
+  DB::SiloRecord.create(conf.address, filesystem)
+end
