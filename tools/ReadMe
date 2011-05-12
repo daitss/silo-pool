@@ -14,9 +14,7 @@ Of general applicablity:
 
 
  
-
-
-Specific to the FDA:
+FDA specific, no warranties expressed or implied:
 
  * tape-fixity
 
@@ -47,8 +45,7 @@ Specific to the FDA:
 
   * put-to-silo
 
-    hacky test script that puts data to a silo-pool
-
+    hacky test script that puts data to a silo-pool using an old protocol
 
   * favicon/  
  

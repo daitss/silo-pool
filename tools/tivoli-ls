@@ -68,7 +68,7 @@ options  = get_options ARGV
 tsm      = Store::TsmExecutor.new(options.tape_server)
 
 ARGV.each do |filesystem| 
-  ls = tsm.list(filesystem.gsub(%r{/+$}, '') + '/')    # make sure has traiing /
+  ls = tsm.list(filesystem.gsub(%r{/+$}, '') + '/')    # make sure has trailing /
 
   max_size = 0
   filepath_column_length = 0
