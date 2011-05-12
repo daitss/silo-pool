@@ -37,9 +37,9 @@ configure do
   Logger.info "Starting #{Store.version.name}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
-  (ENV.keys - ['TIVOLI_SERVER', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
-    Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
-  end
+  # (ENV.keys - ['TIVOLI_SERVER', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
+  #   Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
+  # end
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATABASE_LOGGING']
 

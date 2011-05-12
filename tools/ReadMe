@@ -1,11 +1,22 @@
-Some of these tools are for migrating our old silo data:
+Some of these utlities are specific to the Florida Digital Archive,
+but are included as a starting point for your own DAITSS development.
+
+
+Of general applicablity:
+
 
  * disk-fixity
    
    Walks an on-disk silo and performs checksums on all of the packages
    it finds there, entering new historical fixitiy records - md5, sha1
    checksums - with implicit time.  The checksums are added to the
-   histories and packages tables in the database.
+   histories and packages tables in the database. Meant to be used from cron.
+
+
+ 
+
+
+Specific to the FDA:
 
  * tape-fixity
 
@@ -30,10 +41,15 @@ Some of these tools are for migrating our old silo data:
   * md5-base64
 
     Given a filename on the commandline, print the MD5 hash in base 64
-    notation.  Useful backquoted in scripts using curl, e.g.
+    notation.  Useful backquoted in testing scripts using curl, e.g.
 
     curl -sv -X PUT -H "Content-MD5: `md5-base64 filename`" --upload-file filename http://silos.com/001/data/E19561201_ABCXYZ
 
- * favicon/  
+  * put-to-silo
+
+    hacky test script that puts data to a silo-pool
+
+
+  * favicon/  
  
    Favicon hacks; we are actually using one produced by Tenille.

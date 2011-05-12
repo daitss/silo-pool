@@ -91,14 +91,20 @@ class Client
     end
   end
 
-  def get package
-    uri = URI.parse(File.join(location, package.name))
+  def get package = nil
+    if package
+      uri = URI.parse(File.join(location, package.name))
+    else
+      uri = URI.parse(location)
+    end
 
     Net::HTTP.start(uri.host, uri.port) do |http|
       http.read_timeout = 10
       return http.send_request('GET', uri.request_uri)
     end
   end
+
+
 
   private
 

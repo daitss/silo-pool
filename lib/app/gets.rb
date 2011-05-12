@@ -39,21 +39,6 @@ get '/services' do
 end
 
 
-# # Provide information about
-
-# get '/silos.xml'  do;
-#   text = '<?xml version="1.0" encoding="UTF-8"?>' + "\n"
-#   text += '<pool location="' + StoreUtils.xml_escape(this_resource) + '">'
-#   list_silos.each do |silo|
-#     text += "\n" + '<silo location="' + StoreUtils.xml_escape('http://' + hostname + '/' + silo.name) + '" ' +
-#       [:get, :put, :delete, :post].map { |sym| silo.allowed_methods.include?(sym) ? "#{sym}=\"true\"" : "#{sym}=\"false\""  }.join(' ') +
-#       " available=\"#{silo.available_space}\"/>"
-#   end
-#   text += "</pool>\n"
-#   content_type 'application/xml'
-#   text
-# end
-
 get '/:partition/knobs' do |partition|
   redirect absolutely("/#{partition}/knobs/"), 301
 end
@@ -100,11 +85,9 @@ get '/:partition/data/' do |partition|
 end
 
 
-# TODO: The send_file lets us set the content-length, but not
-# last-modified.  Just using our own class wrapped about a GET works
-# but doesn't let us set content-length - might be a chunked issue we
-# can work-around by calling proper methods.... or diskstore can set
-# the mtime as well on PUT?
+# TODO: The used send_file lets us set the content-length, but not
+# last-modified. There may be a patch to allow
+
 
 get '/:partition/data/:name' do |partition, name|
   silo = get_silo(partition, name)
@@ -112,7 +95,7 @@ get '/:partition/data/:name' do |partition, name|
 
   etag silo.etag(name)
   
-  headers  'Content-MD5' => StoreUtils.md5hex_to_base64(silo.md5 name), 'Content-Type' => silo.type(name)
+  headers  'Content-MD5' => StoreUtils.md5hex_to_base64(silo.md5 name), 'Content-Type' => silo.type(name), 'Last-Modified' => Time.parse(silo.datetime(name).to_s).http_date
   send_file silo.data_path(name), :filename => "#{name}.tar", :type => silo.type(name)
 end
 
@@ -135,7 +118,7 @@ end
 
 get '/:partition/data/:name/*' do |partition, name, path|
   silo = get_silo(partition, name)
-  silo.get_ok? or raise Http405                          ### TODO: doesn't seem to work if get disallowed!
+  silo.get_ok? or raise Http405
 
   body = filename = nil
   Store::TarReader.new(silo.data_path(name)).each do |tarpath, io|
@@ -157,7 +140,7 @@ get '/fixity.csv' do
   [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname, port) ]
 end
 
-# implement the above technique for pool/fixity for inidividual silos.
+# TODO:  refactor individual silos to use the above xml/csv report techniques.
 
 get '/:partition/fixity'  do |partition|
   redirect absolutely("/#{partition}/fixity/"), 301

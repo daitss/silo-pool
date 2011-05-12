@@ -28,15 +28,6 @@ else
   return conf
 end
 
-# To setup an instance of a silo-pool, create a new postgres database and enter 
-# the configuration information in a yaml file. 
-#
-# The yaml file consists of lines of account information similar to the following
-# (quote any datum with white space in it):
-#
-# your_new_db: { vendor: postgres, hostname: localhost, database: silo, username: dbuser, password: "top secret!" }
-
-
 include Store
 
 conf = parse_command_line ARGV

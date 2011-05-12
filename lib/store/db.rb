@@ -10,9 +10,7 @@ require 'socket'
 require 'store/exceptions'
 require 'time'
 
-# TODO:  make sure last compoent of the silo filesystem is unique
-
-
+# TODO: add code to ensure that the last compoent of the silo filesystem is unique.
 # Used by SiloDB, SiloTapeDB classes; Used by utility programs such as fixity.
 
 module Store
@@ -59,34 +57,6 @@ module Store
       end
     end
 
-    # A utility to handle a variety of argument signatures.
-    #
-    # foo(package_record)
-    # foo(package_record, :this => 0, :that => 2)
-    # foo(silo_record, package_name)
-    # foo(silo_record, package_name, :this => 0, :that => 2)
-    #
-    # This will do that parsing, returning a package_record (or nil if not found) and a hash
-
-    # def self.destructured_package_lookup *original_args
-    #   args = original_args.clone
-    #   pkg = nil
-
-    #   if args[0].class == PackageRecord
-    #     pkg = args.shift
-    #   elsif args[0].class == SiloRecord and args[1] == String
-    #     pkg = PackageRecord.lookup(args.shift, args.shift)
-    #   else
-    #     raise "Argument error: expected (silo_record, package_name_string) or (package_record)"
-    #   end
-
-    #   raise "Argument error: odd number of options" unless arguments.length % 2 == 0
-
-    #   options = {}
-    #   args.each_slice(2) { |key_value| options[key_value[0]] = key_value[1] }
-
-    #   return pkg, options
-    # end
 
     class DM
       def self.setup db
@@ -119,8 +89,7 @@ module Store
         end
       end
 
-
-    end
+    end # of class DM
 
     class SiloRecord
 
@@ -146,7 +115,7 @@ module Store
 
       has n,    :package_record, :constraint => :destroy
 
-      validates_uniqueness_of :filesystem, :scope => :hostname    # TODO: doesn't seem to work
+      validates_uniqueness_of :filesystem, :scope => :hostname
 
       def to_s
         "#<SiloRecord: #{self.hostname}:#{self.filesystem}>"

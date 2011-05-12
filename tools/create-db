@@ -8,7 +8,6 @@ require 'ostruct'
 require 'store/db'
 require 'store/pool'
 
-
 def parse_command_line args
   conf = OpenStruct.new(:file => nil, :key => nil)
   opts = OptionParser.new do |opts|
@@ -45,6 +44,3 @@ include Store
 conf = parse_command_line ARGV
 DB.setup(conf.file, conf.key)
 DB::DM.automigrate!
-
-
-

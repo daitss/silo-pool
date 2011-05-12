@@ -94,11 +94,6 @@ task :tarchive_beta do
   sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/betasilos -S who=silo:daitss"
 end
 
-desc "deploy to tarchive's gammasilos"
-task :tarchive_gamma do
-  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/gammasilos -S who=silo:daitss"
-end
-
 desc "Deploy to ripple's test silos"
 task :ripple do
  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/silos -S who=silo:daitss"
