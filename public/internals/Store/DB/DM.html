@@ -79,18 +79,7 @@
 </dl>
 <div class="clear"></div>
 
-<h2>Overview</h2><div class="docstring">
-  <div class="discussion">
-    <p>
-return pkg, options end
-</p>
 
-
-  </div>
-</div>
-<div class="tags">
-  
-</div>
 
 
   
@@ -105,6 +94,27 @@ return pkg, options end
   <span class="summary_signature">
     
       <a href="#automigrate%21-class_method" title="automigrate! (class method)">+ (Object) <strong>automigrate!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#patch_tables-class_method" title="patch_tables (class method)">+ (Object) <strong>patch_tables</strong> </a>
     
 
     
@@ -165,21 +175,76 @@ return pkg, options end
       <pre class="lines">
 
 
-94
-95
-96
-97
-98
-99</pre>
+68
+69
+70
+71
+72
+73
+74</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 94</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 68</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='automigrate! fid id'>automigrate!</span>
   <span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='auto_migrate! fid id'>auto_migrate!</span>
   <span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='auto_migrate! fid id'>auto_migrate!</span>
   <span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='auto_migrate! fid id'>auto_migrate!</span>
   <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='auto_migrate! fid id'>auto_migrate!</span>
+  <span class='self self kw'>self</span><span class='dot token'>.</span><span class='patch_tables identifier id'>patch_tables</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="patch_tables-class_method">
+  
+    + (<tt>Object</tt>) <strong>patch_tables</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 76</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='patch_tables identifier id'>patch_tables</span>
+  <span class='db identifier id'>db</span> <span class='assign token'>=</span> <span class='repository identifier id'>repository</span><span class='lparen token'>(</span><span class='symbol val'>:default</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='adapter identifier id'>adapter</span>
+  <span class='postgres_commands identifier id'>postgres_commands</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span> 
+                       <span class='string val'>'alter table histories alter timestamp type timestamp with time zone'</span><span class='comma token'>,</span>
+                       <span class='string val'>'alter table packages alter initial_timestamp type timestamp with time zone'</span><span class='comma token'>,</span>
+                       <span class='string val'>'alter table packages alter latest_timestamp type timestamp with time zone'</span><span class='comma token'>,</span>
+                       <span class='string val'>'alter table reserved_disk_spaces alter timestamp type timestamp with time zone'</span><span class='comma token'>,</span>
+                       <span class='string val'>'create index index_packages_initial_timestamp_silo_record_extant on packages(initial_timestamp, silo_record_id, extant)'</span><span class='comma token'>,</span>
+                       <span class='string val'>'create index index_packages_latest_timestamp_silo_record_extant on packages(latest_timestamp, silo_record_id, extant)'</span>
+                      <span class='rbrack token'>]</span>
+
+  <span class='if if kw'>if</span> <span class='db identifier id'>db</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'postgres_version'</span>
+    <span class='postgres_commands identifier id'>postgres_commands</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='sql identifier id'>sql</span><span class='bitor op'>|</span> <span class='db identifier id'>db</span><span class='dot token'>.</span><span class='execute identifier id'>execute</span> <span class='sql identifier id'>sql</span> <span class='rbrace token'>}</span>
+  <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -200,14 +265,14 @@ return pkg, options end
       <pre class="lines">
 
 
-88
-89
-90
-91
-92</pre>
+62
+63
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 88</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 62</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span> <span class='db identifier id'>db</span>
   <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='symbol val'>:default</span><span class='comma token'>,</span> <span class='db identifier id'>db</span><span class='rparen token'>)</span>
@@ -225,7 +290,7 @@ return pkg, options end
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:31:02 2011 by 
+  Generated on Thu May 12 23:42:18 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

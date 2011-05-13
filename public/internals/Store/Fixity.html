@@ -254,12 +254,12 @@ fixity checks, and return the date of earliest of them.
       <pre class="lines">
 
 
-140
-141
-142</pre>
+144
+145
+146</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 140</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 144</span>
 
 <span class='def def kw'>def</span> <span class='oldest_fixity identifier id'>oldest_fixity</span> 
   <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='min identifier id'>min</span><span class='lparen token'>(</span><span class='symbol val'>:latest_timestamp</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:silo_record</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='silo_record identifier id'>silo_record</span><span class='rparen token'>)</span>
@@ -295,16 +295,16 @@ mixin, or just back into DB, maybe:
       <pre class="lines">
 
 
-146
-147
-148
-149
 150
 151
-152</pre>
+152
+153
+154
+155
+156</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 146</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 150</span>
 
 <span class='def def kw'>def</span> <span class='package_count identifier id'>package_count</span> <span class='search identifier id'>search</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='if if kw'>if</span> <span class='search identifier id'>search</span>
@@ -332,10 +332,6 @@ mixin, or just back into DB, maybe:
       <pre class="lines">
 
 
-179
-180
-181
-182
 183
 184
 185
@@ -378,12 +374,26 @@ mixin, or just back into DB, maybe:
 222
 223
 224
-225</pre>
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 179</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 183</span>
 
 <span class='def def kw'>def</span> <span class='package_fixity_report identifier id'>package_fixity_report</span> <span class='name identifier id'>name</span>
+
+  <span class='comment val'>### TODO: we're going to extend history records to include sizes, and change package records</span>
+  <span class='comment val'>### to have initial_size and latest_size.  Step one of the refactoring is to use the 'size'</span>
+  <span class='comment val'>### record from the host</span>
 
   <span class='return return kw'>return</span> <span class='unless unless_mod kw'>unless</span> <span class='pkg identifier id'>pkg</span> <span class='assign token'>=</span> <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>
 
@@ -393,7 +403,7 @@ mixin, or just back into DB, maybe:
   <span class='count identifier id'>count</span>           <span class='assign token'>=</span> <span class='integer val'>0</span> 
   <span class='max_time identifier id'>max_time</span>        <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span><span class='lparen token'>(</span><span class='string val'>'1970-01-01'</span><span class='rparen token'>)</span>
   <span class='min_time identifier id'>min_time</span>        <span class='assign token'>=</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span>
-  <span class='history_records identifier id'>history_records</span> <span class='assign token'>=</span> <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='list identifier id'>list</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>  <span class='comment val'>### TODO: list raw here...</span>
+  <span class='history_records identifier id'>history_records</span> <span class='assign token'>=</span> <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='list identifier id'>list</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='rparen token'>)</span>  <span class='comment val'>### TODO: list raw here, perhaps, for speedup</span>
 
   <span class='history_records identifier id'>history_records</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span>        
     <span class='case case kw'>case</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='action identifier id'>action</span>
@@ -403,6 +413,7 @@ mixin, or just back into DB, maybe:
       <span class='fixity_records identifier id'>fixity_records</span><span class='dot token'>.</span><span class='push identifier id'>push</span><span class='lparen token'>(</span><span class='lbrace token'>{</span> <span class='symbol val'>:action</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='action identifier id'>action</span><span class='comma token'>,</span>
                             <span class='symbol val'>:md5</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span><span class='comma token'>,</span> 
                             <span class='symbol val'>:sha1</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span><span class='comma token'>,</span> 
+                            <span class='symbol val'>:size</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='comma token'>,</span>            <span class='comment val'># see TODO above</span>
                             <span class='symbol val'>:time</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span>
     <span class='when when kw'>when</span> <span class='symbol val'>:fixity</span>
       <span class='count identifier id'>count</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
@@ -410,6 +421,7 @@ mixin, or just back into DB, maybe:
                             <span class='symbol val'>:md5</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span><span class='comma token'>,</span> 
                             <span class='symbol val'>:sha1</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span><span class='comma token'>,</span> 
                             <span class='symbol val'>:time</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='timestamp identifier id'>timestamp</span><span class='comma token'>,</span>
+                            <span class='symbol val'>:size</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='comma token'>,</span>            <span class='comment val'># see TODO above</span>
                             <span class='symbol val'>:status</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lparen token'>(</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='md5 identifier id'>md5</span> <span class='eq op'>==</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_md5 identifier id'>initial_md5</span> <span class='and and kw'>and</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span> <span class='eq op'>==</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_sha1 identifier id'>initial_sha1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='symbol val'>:ok</span> <span class='colon op'>:</span> <span class='symbol val'>:fail</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span>
     <span class='when when kw'>when</span> <span class='symbol val'>:delete</span>
       <span class='count identifier id'>count</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
@@ -460,12 +472,12 @@ TODO: see above - these three don&#8217;t really belong here either:
       <pre class="lines">
 
 
-156
-157
-158</pre>
+160
+161
+162</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 156</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 160</span>
 
 <span class='def def kw'>def</span> <span class='package_names identifier id'>package_names</span>
   <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='list identifier id'>list</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='name identifier id'>name</span> <span class='rbrace token'>}</span>
@@ -489,10 +501,6 @@ TODO: see above - these three don&#8217;t really belong here either:
       <pre class="lines">
 
 
-160
-161
-162
-163
 164
 165
 166
@@ -505,10 +513,14 @@ TODO: see above - these three don&#8217;t really belong here either:
 173
 174
 175
-176</pre>
+176
+177
+178
+179
+180</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 160</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 164</span>
 
 <span class='def def kw'>def</span> <span class='package_names_by_page identifier id'>package_names_by_page</span> <span class='page identifier id'>page</span><span class='comma token'>,</span> <span class='number_per_page identifier id'>number_per_page</span><span class='comma token'>,</span> <span class='search identifier id'>search</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='if if kw'>if</span> <span class='search identifier id'>search</span>
@@ -572,16 +584,6 @@ last_fixity_check=&#8220;2010-03-24T10:02:25-04:00&#8221;>
       <pre class="lines">
 
 
-235
-236
-237
-238
-239
-240
-241
-242
-243
-244
 245
 246
 247
@@ -597,10 +599,21 @@ last_fixity_check=&#8220;2010-03-24T10:02:25-04:00&#8221;>
 257
 258
 259
-260</pre>
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 235</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 245</span>
 
 <span class='def def kw'>def</span> <span class='silo_fixity_report identifier id'>silo_fixity_report</span>
   <span class='fixity_records identifier id'>fixity_records</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -613,6 +626,7 @@ last_fixity_check=&#8220;2010-03-24T10:02:25-04:00&#8221;>
                           <span class='symbol val'>:status</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lparen token'>(</span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='latest_md5 identifier id'>latest_md5</span> <span class='eq op'>==</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='initial_md5 identifier id'>initial_md5</span> <span class='and and kw'>and</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='latest_sha1 identifier id'>latest_sha1</span> <span class='eq op'>==</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='initial_sha1 identifier id'>initial_sha1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='symbol val'>:ok</span> <span class='colon op'>:</span> <span class='symbol val'>:fail</span><span class='comma token'>,</span>
                           <span class='symbol val'>:md5</span>    <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='latest_md5 identifier id'>latest_md5</span><span class='comma token'>,</span> 
                           <span class='symbol val'>:sha1</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='latest_sha1 identifier id'>latest_sha1</span><span class='comma token'>,</span> 
+                          <span class='symbol val'>:size</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='size identifier id'>size</span><span class='comma token'>,</span>                  <span class='comment val'># see TODO above about renaming these fields to intial_ and latest_ size</span>
                           <span class='symbol val'>:time</span>   <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='latest_timestamp identifier id'>latest_timestamp</span> <span class='rbrace token'>}</span><span class='rparen token'>)</span>
 
     <span class='max_time identifier id'>max_time</span> <span class='assign token'>=</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='latest_timestamp identifier id'>latest_timestamp</span> <span class='gt op'>&gt;</span> <span class='max_time identifier id'>max_time</span> <span class='integer val'>? </span><span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='latest_timestamp identifier id'>latest_timestamp</span> <span class='colon op'>:</span> <span class='max_time identifier id'>max_time</span>
@@ -639,7 +653,7 @@ last_fixity_check=&#8220;2010-03-24T10:02:25-04:00&#8221;>
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:31:03 2011 by 
+  Generated on Thu May 12 23:41:56 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

@@ -83,7 +83,21 @@
 </dl>
 <div class="clear"></div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    <p>
+TODO: we want to populate the size field as well, need to add a size here,
+and  perhaps a latest_size on package record.  For now, we&#8217;re just
+using the size info from package to ensure we&#8217;re getting the
+functional interface correct - see the silo mixins for that.&#8230;
+</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+</div>
 
   
 
@@ -236,12 +250,12 @@ package_name, hash).
       <pre class="lines">
 
 
-340
-341
-342</pre>
+354
+355
+356</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 340</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 354</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='actions identifier id'>actions</span>
   <span class='lbrack token'>[</span> <span class='symbol val'>:put</span><span class='comma token'>,</span> <span class='symbol val'>:fixity</span><span class='comma token'>,</span> <span class='symbol val'>:delete</span> <span class='rbrack token'>]</span>    <span class='comment val'># implicity ordering historical workflow here.</span>
@@ -276,22 +290,22 @@ package_name, hash).
       <pre class="lines">
 
 
-439
-440
-441
-442
-443
-444
-445
-446
-447
-448
-449
-450
-451</pre>
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 439</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 453</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='delete identifier id'>delete</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>  
   <span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='transaction identifier id'>transaction</span> <span class='do do kw'>do</span>
@@ -336,23 +350,23 @@ package_name, hash).
       <pre class="lines">
 
 
-424
-425
-426
-427
-428
-429
-430
-431
-432
-433
-434
-435
-436
-437</pre>
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 424</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 438</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='fixity identifier id'>fixity</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>  
   <span class='hashes identifier id'>hashes</span> <span class='assign token'>=</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span>
@@ -398,13 +412,13 @@ gets either a package_record or silo_record, name as arguments
       <pre class="lines">
 
 
-357
-358
-359
-360</pre>
+371
+372
+373
+374</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 357</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 371</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list identifier id'>list</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>
   <span class='package_record identifier id'>package_record</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span><span class='rparen token'>)</span> <span class='question op'>?</span>  <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
@@ -451,20 +465,6 @@ hash must have the following attributes:
       <pre class="lines">
 
 
-372
-373
-374
-375
-376
-377
-378
-379
-380
-381
-382
-383
-384
-385
 386
 387
 388
@@ -501,10 +501,24 @@ hash must have the following attributes:
 419
 420
 421
-422</pre>
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 372</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 386</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='put identifier id'>put</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>  
 
@@ -568,7 +582,7 @@ hash must have the following attributes:
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:30:46 2011 by 
+  Generated on Thu May 12 23:42:20 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

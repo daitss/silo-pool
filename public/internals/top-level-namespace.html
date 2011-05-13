@@ -73,7 +73,7 @@
     
    
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="ArrayBasedStream.html" title="ArrayBasedStream (class)">ArrayBasedStream</a></span>, <span class='object_link'><a href="ComparisonStream.html" title="ComparisonStream (class)">ComparisonStream</a></span>, <span class='object_link'><a href="Connection.html" title="Connection (class)">Connection</a></span>, <span class='object_link'><a href="ConnectionId.html" title="ConnectionId (class)">ConnectionId</a></span>, <span class='object_link'><a href="DbStream.html" title="DbStream (class)">DbStream</a></span>, <span class='object_link'><a href="FileStream.html" title="FileStream (class)">FileStream</a></span>, <span class='object_link'><a href="Logger.html" title="Logger (class)">Logger</a></span>, <span class='object_link'><a href="SiloFixityStream.html" title="SiloFixityStream (class)">SiloFixityStream</a></span>, <span class='object_link'><a href="SiloStream.html" title="SiloStream (class)">SiloStream</a></span>, <span class='object_link'><a href="Trie.html" title="Trie (class)">Trie</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="ArrayBasedStream.html" title="ArrayBasedStream (class)">ArrayBasedStream</a></span>, <span class='object_link'><a href="ComparisonStream.html" title="ComparisonStream (class)">ComparisonStream</a></span>, <span class='object_link'><a href="Connection.html" title="Connection (class)">Connection</a></span>, <span class='object_link'><a href="ConnectionId.html" title="ConnectionId (class)">ConnectionId</a></span>, <span class='object_link'><a href="DateTime.html" title="DateTime (class)">DateTime</a></span>, <span class='object_link'><a href="DbStream.html" title="DbStream (class)">DbStream</a></span>, <span class='object_link'><a href="FileStream.html" title="FileStream (class)">FileStream</a></span>, <span class='object_link'><a href="FindStream.html" title="FindStream (class)">FindStream</a></span>, <span class='object_link'><a href="Logger.html" title="Logger (class)">Logger</a></span>, <span class='object_link'><a href="Reporter.html" title="Reporter (class)">Reporter</a></span>, <span class='object_link'><a href="SiloFixityStream.html" title="SiloFixityStream (class)">SiloFixityStream</a></span>, <span class='object_link'><a href="SiloStream.html" title="SiloStream (class)">SiloStream</a></span>, <span class='object_link'><a href="Trie.html" title="Trie (class)">Trie</a></span>, <span class='object_link'><a href="TsmStream.html" title="TsmStream (class)">TsmStream</a></span>
     
   
 </p>
@@ -86,8 +86,9 @@
           <div class="docstring">
   <div class="discussion">
     <p>
-TODO: recent sinatra fixed relative-redirection problem, check to see if we
-can remove &#8216;absolutely&#8217;
+TODO: document the site URL structure. TODO: recent sinatra fixed
+relative-redirection problem, check to see if we can remove
+&#8216;absolutely&#8217;
 </p>
 
 
@@ -135,7 +136,7 @@ can remove &#8216;absolutely&#8217;
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#check_for_missing-instance_method" title="#check_for_missing (instance method)">- (Object) <strong>check_for_missing</strong>(web_server, silo, filesystem) </a>
+      <a href="#check_for_missing-instance_method" title="#check_for_missing (instance method)">- (Object) <strong>check_for_missing</strong>(web_server, silo, filesystem, reporter) </a>
     
 
     
@@ -159,7 +160,7 @@ TODO: rename to database_check.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#check_package_fixities-instance_method" title="#check_package_fixities (instance method)">- (Object) <strong>check_package_fixities</strong>(web_server, silo_name, filesystem) </a>
+      <a href="#check_package_fixities-instance_method" title="#check_package_fixities (instance method)">- (Object) <strong>check_package_fixities</strong>(web_server, silo_name, filesystem, fresh_enough, reporter) </a>
     
 
     
@@ -183,7 +184,7 @@ check_package_fixities CONF.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#clean_up_scratch_disk-instance_method" title="#clean_up_scratch_disk (instance method)">- (Object) <strong>clean_up_scratch_disk</strong>(filesystem) </a>
+      <a href="#clean_up_scratch_disk-instance_method" title="#clean_up_scratch_disk (instance method)">- (Object) <strong>clean_up_scratch_disk</strong>(filesystem, reporter) </a>
     
 
     
@@ -259,27 +260,6 @@ the code into a directory created under ../releases/, with names such as
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#iam-instance_method" title="#iam (instance method)">- (Object) <strong>iam</strong>(ob) </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
       <a href="#pluralize_maybe-instance_method" title="#pluralize_maybe (instance method)">- (Object) <strong>pluralize_maybe</strong>(count, singular, plural = nil) </a>
     
 
@@ -301,7 +281,7 @@ the code into a directory created under ../releases/, with names such as
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#restore_to_scratch_disk-instance_method" title="#restore_to_scratch_disk (instance method)">- (Object) <strong>restore_to_scratch_disk</strong>(tape_server, silo, destination_directory) </a>
+      <a href="#restore_to_scratch_disk-instance_method" title="#restore_to_scratch_disk (instance method)">- (Object) <strong>restore_to_scratch_disk</strong>(tape_server, silo, destination_directory, reporter) </a>
     
 
     
@@ -344,7 +324,7 @@ restore_to_scratch_disk .
       <div class="method_details first">
   <p class="signature first" id="check_for_missing-instance_method">
   
-    - (<tt>Object</tt>) <strong>check_for_missing</strong>(web_server, silo, filesystem) 
+    - (<tt>Object</tt>) <strong>check_for_missing</strong>(web_server, silo, filesystem, reporter) 
   
 
   
@@ -363,7 +343,7 @@ TODO: rename to database_check
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">FatalFixityError</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">Store::FatalFixityError</a></span></tt>)</span>
       
       
       
@@ -378,22 +358,6 @@ TODO: rename to database_check
       <pre class="lines">
 
 
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
 119
 120
 121
@@ -424,15 +388,31 @@ TODO: rename to database_check
 146
 147
 148
-149</pre>
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 103</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 119</span>
 
-<span class='def def kw'>def</span> <span class='check_for_missing identifier id'>check_for_missing</span> <span class='web_server identifier id'>web_server</span><span class='comma token'>,</span> <span class='silo identifier id'>silo</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span>   
+<span class='def def kw'>def</span> <span class='check_for_missing identifier id'>check_for_missing</span> <span class='web_server identifier id'>web_server</span><span class='comma token'>,</span> <span class='silo identifier id'>silo</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span><span class='comma token'>,</span> <span class='reporter identifier id'>reporter</span>    
   <span class='info identifier id'>info</span> <span class='assign token'>=</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FileIssues constant id'>FileIssues</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='integer val'>0</span><span class='comma token'>,</span> <span class='integer val'>0</span><span class='comma token'>,</span> <span class='integer val'>0</span><span class='rparen token'>)</span>
 
-  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Database check for missing, ghost and alien packages for the silo #{silo} on filesystem #{filesystem}.&quot;</span>
+  <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Database check for missing, ghost and alien packages for the silo #{silo} on filesystem #{filesystem}.&quot;</span>
 
   <span class='silo_stream identifier id'>silo_stream</span> <span class='assign token'>=</span> <span class='SiloStream constant id'>SiloStream</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span>
   <span class='db_stream identifier id'>db_stream</span>   <span class='assign token'>=</span> <span class='DbStream constant id'>DbStream</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='web_server identifier id'>web_server</span><span class='comma token'>,</span> <span class='silo identifier id'>silo</span><span class='rparen token'>)</span>
@@ -456,25 +436,25 @@ TODO: rename to database_check
 
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='ghosts identifier id'>ghosts</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
     <span class='info identifier id'>info</span><span class='dot token'>.</span><span class='ghosts identifier id'>ghosts</span> <span class='assign token'>=</span> <span class='ghosts identifier id'>ghosts</span><span class='dot token'>.</span><span class='count identifier id'>count</span>
-    <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;The filesystem #{filesystem} has #{info.ghosts} #{pluralize_maybe(ghosts.count, 'package')} that the database indicates have been deleted from #{silo}: package names follow:&quot;</span>
-    <span class='ghosts identifier id'>ghosts</span><span class='dot token'>.</span><span class='each_slice identifier id'>each_slice</span><span class='lparen token'>(</span><span class='integer val'>5</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='slice identifier id'>slice</span><span class='bitor op'>|</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' '</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+    <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;The filesystem #{filesystem} has #{info.ghosts} #{pluralize_maybe(ghosts.count, 'package')} that the database indicates have been deleted from #{silo}: package names follow:&quot;</span>
+    <span class='ghosts identifier id'>ghosts</span><span class='dot token'>.</span><span class='each_slice identifier id'>each_slice</span><span class='lparen token'>(</span><span class='integer val'>5</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='slice identifier id'>slice</span><span class='bitor op'>|</span> <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' '</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
   <span class='end end kw'>end</span>
   
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='aliens identifier id'>aliens</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
     <span class='info identifier id'>info</span><span class='dot token'>.</span><span class='aliens identifier id'>aliens</span> <span class='assign token'>=</span> <span class='aliens identifier id'>aliens</span><span class='dot token'>.</span><span class='count identifier id'>count</span>
-    <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;The filesystem #{filesystem} has #{info.aliens} #{pluralize_maybe(aliens.count, 'package')} that the database for #{silo} has no record of, package names follow:&quot;</span>
-    <span class='aliens identifier id'>aliens</span><span class='dot token'>.</span><span class='each_slice identifier id'>each_slice</span><span class='lparen token'>(</span><span class='integer val'>5</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='slice identifier id'>slice</span><span class='bitor op'>|</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' '</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+    <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;The filesystem #{filesystem} has #{info.aliens} #{pluralize_maybe(aliens.count, 'package')} that the database for #{silo} has no record of, package names follow:&quot;</span>
+    <span class='aliens identifier id'>aliens</span><span class='dot token'>.</span><span class='each_slice identifier id'>each_slice</span><span class='lparen token'>(</span><span class='integer val'>5</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='slice identifier id'>slice</span><span class='bitor op'>|</span> <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' '</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
   <span class='end end kw'>end</span>
 
   <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='missing identifier id'>missing</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
     <span class='info identifier id'>info</span><span class='dot token'>.</span><span class='missing identifier id'>missing</span> <span class='assign token'>=</span> <span class='missing identifier id'>missing</span><span class='dot token'>.</span><span class='count identifier id'>count</span>
-    <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;The filesystem #{filesystem} is missing #{info.missing} #{pluralize_maybe(missing.count, 'package')} that the database for #{silo} indicates should be there, package names follow:&quot;</span>
-    <span class='missing identifier id'>missing</span><span class='dot token'>.</span><span class='each_slice identifier id'>each_slice</span><span class='lparen token'>(</span><span class='integer val'>5</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='slice identifier id'>slice</span><span class='bitor op'>|</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' '</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+    <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;The filesystem #{filesystem} is missing #{info.missing} #{pluralize_maybe(missing.count, 'package')} that the database for #{silo} indicates should be there, package names follow:&quot;</span>
+    <span class='missing identifier id'>missing</span><span class='dot token'>.</span><span class='each_slice identifier id'>each_slice</span><span class='lparen token'>(</span><span class='integer val'>5</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='slice identifier id'>slice</span><span class='bitor op'>|</span> <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='slice identifier id'>slice</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='string val'>' '</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
   <span class='end end kw'>end</span>
 
   <span class='return return kw'>return</span> <span class='info identifier id'>info</span>
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-  <span class='raise identifier id'>raise</span> <span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Error while doing database checking for missing, alien or ghost packages: #{e}&quot;</span>
+  <span class='raise identifier id'>raise</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Error while doing database checking for missing, alien or ghost packages: #{e}&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -485,7 +465,7 @@ TODO: rename to database_check
       <div class="method_details ">
   <p class="signature " id="check_package_fixities-instance_method">
   
-    - (<tt>Object</tt>) <strong>check_package_fixities</strong>(web_server, silo_name, filesystem) 
+    - (<tt>Object</tt>) <strong>check_package_fixities</strong>(web_server, silo_name, filesystem, fresh_enough, reporter) 
   
 
   
@@ -508,7 +488,7 @@ mismatch with a previous checksum.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">FatalFixityError</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">Store::FatalFixityError</a></span></tt>)</span>
       
       
       
@@ -523,14 +503,6 @@ mismatch with a previous checksum.
       <pre class="lines">
 
 
-9
-10
-11
-12
-13
-14
-15
-16
 17
 18
 19
@@ -564,15 +536,31 @@ mismatch with a previous checksum.
 47
 48
 49
-50</pre>
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 9</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 17</span>
 
-<span class='def def kw'>def</span> <span class='check_package_fixities identifier id'>check_package_fixities</span> <span class='web_server identifier id'>web_server</span><span class='comma token'>,</span> <span class='silo_name identifier id'>silo_name</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span>
+<span class='def def kw'>def</span> <span class='check_package_fixities identifier id'>check_package_fixities</span> <span class='web_server identifier id'>web_server</span><span class='comma token'>,</span> <span class='silo_name identifier id'>silo_name</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span><span class='comma token'>,</span> <span class='fresh_enough identifier id'>fresh_enough</span><span class='comma token'>,</span> <span class='reporter identifier id'>reporter</span>
   <span class='success identifier id'>success</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
-
-  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Checking package fixities from the database records for silo #{silo_name} against the filesystem #{filesystem}.&quot;</span>
+  <span class='skipped identifier id'>skipped</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+  <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Checking package fixities from the database records for silo #{silo_name} against the filesystem #{filesystem}.&quot;</span>
 
   <span class='silo_record identifier id'>silo_record</span> <span class='assign token'>=</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='web_server identifier id'>web_server</span><span class='comma token'>,</span> <span class='silo_name identifier id'>silo_name</span><span class='rparen token'>)</span>
   <span class='silo identifier id'>silo</span>        <span class='assign token'>=</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='Silo constant id'>Silo</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span>
@@ -581,6 +569,12 @@ mismatch with a previous checksum.
     <span class='begin begin kw'>begin</span>
 
       <span class='package_record identifier id'>package_record</span> <span class='assign token'>=</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='package identifier id'>package</span><span class='rparen token'>)</span> 
+
+      <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='package_record identifier id'>package_record</span><span class='dot token'>.</span><span class='initial_timestamp identifier id'>initial_timestamp</span> <span class='neq op'>!=</span> <span class='package_record identifier id'>package_record</span><span class='dot token'>.</span><span class='latest_timestamp identifier id'>latest_timestamp</span><span class='rparen token'>)</span> <span class='and and kw'>and</span> <span class='lparen token'>(</span><span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='package_record identifier id'>package_record</span><span class='dot token'>.</span><span class='latest_timestamp identifier id'>latest_timestamp</span><span class='rparen token'>)</span> <span class='lt op'>&lt;</span>  <span class='fresh_enough identifier id'>fresh_enough</span>
+        <span class='skipped identifier id'>skipped</span> <span class='opasgn op'>+=</span> <span class='integer val'>1</span>
+        <span class='next next kw'>next</span>
+      <span class='end end kw'>end</span>
+
       <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span> <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
       <span class='sha1 identifier id'>sha1</span> <span class='assign token'>=</span> <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='SHA1 constant id'>SHA1</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
       <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='get identifier id'>get</span><span class='lparen token'>(</span><span class='package identifier id'>package</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='buff identifier id'>buff</span><span class='bitor op'>|</span>
@@ -590,9 +584,11 @@ mismatch with a previous checksum.
       <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span> <span class='md5 identifier id'>md5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span>
       <span class='sha1 identifier id'>sha1</span> <span class='assign token'>=</span> <span class='sha1 identifier id'>sha1</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span>
     <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>              <span class='comment val'># We attempt to continue from a single package error</span>
-      <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;Fixity failure for package #{package} on #{filesytem}: #{e.message}.&quot;</span>
+      <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;Fixity failure for package #{package} on #{filesystem}: #{e.message}.&quot;</span>
       <span class='success identifier id'>success</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
     <span class='else else kw'>else</span>
+
+      <span class='comment val'>### TODO: we've seen a failure here with non-silo package left on disk..., protect..</span>
 
       <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='HistoryRecord constant id'>HistoryRecord</span><span class='dot token'>.</span><span class='fixity identifier id'>fixity</span><span class='lparen token'>(</span><span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='package identifier id'>package</span><span class='comma token'>,</span> <span class='symbol val'>:md5</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='md5 identifier id'>md5</span><span class='comma token'>,</span> <span class='symbol val'>:sha1</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='sha1 identifier id'>sha1</span><span class='rparen token'>)</span>   
       <span class='errors identifier id'>errors</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -601,7 +597,7 @@ mismatch with a previous checksum.
       <span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='dstring node'>&quot;database sha1 mismatch - expected #{package_record.initial_sha1} but got #{sha1}&quot;</span>     <span class='if if_mod kw'>if</span> <span class='lparen token'>(</span><span class='sha1 identifier id'>sha1</span> <span class='neq op'>!=</span> <span class='package_record identifier id'>package_record</span><span class='dot token'>.</span><span class='initial_sha1 identifier id'>initial_sha1</span><span class='rparen token'>)</span>
       <span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='push identifier id'>push</span> <span class='dstring node'>&quot;filesystem sha1 mismatch - expected #{silo.sha1(package)} but got #{sha1}&quot;</span>            <span class='if if_mod kw'>if</span> <span class='lparen token'>(</span><span class='sha1 identifier id'>sha1</span> <span class='neq op'>!=</span> <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='sha1 identifier id'>sha1</span><span class='lparen token'>(</span><span class='package identifier id'>package</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
       <span class='if if kw'>if</span> <span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='count identifier id'>count</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>
-         <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span>  <span class='dstring node'>&quot;Fixity failure for package #{package} belonging to silo #{silo_name} (checked at #{filesystem}): #{errors.join('; ')}.&quot;</span>
+         <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span>  <span class='dstring node'>&quot;Fixity failure for package #{package} belonging to silo #{silo_name} (checked at #{filesystem}): #{errors.join('; ')}.&quot;</span>
          <span class='success identifier id'>success</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
       <span class='end end kw'>end</span>
     <span class='end end kw'>end</span>
@@ -609,7 +605,7 @@ mismatch with a previous checksum.
 
   <span class='return return kw'>return</span> <span class='success identifier id'>success</span>
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-  <span class='raise identifier id'>raise</span> <span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Fixity check failure, #{e}&quot;</span>
+  <span class='raise identifier id'>raise</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Fixity check failure, #{e}&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -620,7 +616,7 @@ mismatch with a previous checksum.
       <div class="method_details ">
   <p class="signature " id="clean_up_scratch_disk-instance_method">
   
-    - (<tt>Object</tt>) <strong>clean_up_scratch_disk</strong>(filesystem) 
+    - (<tt>Object</tt>) <strong>clean_up_scratch_disk</strong>(filesystem, reporter) 
   
 
   
@@ -642,7 +638,7 @@ Attempt to remove all silo directories from the scratch disk.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">FatalFixityError</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">Store::FatalFixityError</a></span></tt>)</span>
       
       
       
@@ -657,32 +653,32 @@ Attempt to remove all silo directories from the scratch disk.
       <pre class="lines">
 
 
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166
-167
-168
-169
-170
-171
 172
 173
-174</pre>
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 156</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 172</span>
 
-<span class='def def kw'>def</span> <span class='clean_up_scratch_disk identifier id'>clean_up_scratch_disk</span> <span class='filesystem identifier id'>filesystem</span>
+<span class='def def kw'>def</span> <span class='clean_up_scratch_disk identifier id'>clean_up_scratch_disk</span> <span class='filesystem identifier id'>filesystem</span><span class='comma token'>,</span> <span class='reporter identifier id'>reporter</span>
 
-  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Cleaning scratch disk #{filesystem}.&quot;</span>
+  <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Cleaning scratch disk #{filesystem}.&quot;</span>
 
   <span class='targets identifier id'>targets</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
   <span class='Dir constant id'>Dir</span><span class='dot token'>.</span><span class='open identifier id'>open</span> <span class='filesystem identifier id'>filesystem</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='root identifier id'>root</span><span class='bitor op'>|</span>
@@ -697,7 +693,7 @@ Attempt to remove all silo directories from the scratch disk.
   <span class='FileUtils constant id'>FileUtils</span><span class='dot token'>.</span><span class='rm_rf identifier id'>rm_rf</span> <span class='targets identifier id'>targets</span>
 
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-  <span class='raise identifier id'>raise</span> <span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Unable to remove directories from the scratch disk #{filesystem}: #{e.message}&quot;</span>
+  <span class='raise identifier id'>raise</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Unable to remove directories from the scratch disk #{filesystem}: #{e.message}&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -802,35 +798,6 @@ includes configuration information that may not be checked in.
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="iam-instance_method">
-  
-    - (<tt>Object</tt>) <strong>iam</strong>(ob) 
-  
-
-  
-</p><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-13
-14
-15</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/irb-setup.rb', line 13</span>
-
-<span class='def def kw'>def</span> <span class='iam identifier id'>iam</span> <span class='ob identifier id'>ob</span>
-  <span class='lparen token'>(</span><span class='ob identifier id'>ob</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span> <span class='minus op'>-</span> <span class='Object constant id'>Object</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
   <p class="signature " id="pluralize_maybe-instance_method">
   
     - (<tt>Object</tt>) <strong>pluralize_maybe</strong>(count, singular, plural = nil) 
@@ -843,13 +810,13 @@ includes configuration information that may not be checked in.
       <pre class="lines">
 
 
-79
-80
-81
-82</pre>
+95
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 79</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 95</span>
 
 <span class='def def kw'>def</span> <span class='pluralize_maybe identifier id'>pluralize_maybe</span> <span class='count identifier id'>count</span><span class='comma token'>,</span> <span class='singular identifier id'>singular</span><span class='comma token'>,</span> <span class='plural identifier id'>plural</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='plural identifier id'>plural</span> <span class='opasgn op'>||=</span> <span class='singular identifier id'>singular</span> <span class='plus op'>+</span> <span class='string val'>'s'</span>
@@ -864,7 +831,7 @@ includes configuration information that may not be checked in.
       <div class="method_details ">
   <p class="signature " id="restore_to_scratch_disk-instance_method">
   
-    - (<tt>Object</tt>) <strong>restore_to_scratch_disk</strong>(tape_server, silo, destination_directory) 
+    - (<tt>Object</tt>) <strong>restore_to_scratch_disk</strong>(tape_server, silo, destination_directory, reporter) 
   
 
   
@@ -886,7 +853,7 @@ restore the daitssfs silo from Tivoli to the scratch disk.
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">FatalFixityError</a></span></tt>)</span>
+        <span class='type'>(<tt><span class='object_link'><a href="Store/FatalFixityError.html" title="Store::FatalFixityError (class)">Store::FatalFixityError</a></span></tt>)</span>
       
       
       
@@ -901,22 +868,6 @@ restore the daitssfs silo from Tivoli to the scratch disk.
       <pre class="lines">
 
 
-181
-182
-183
-184
-185
-186
-187
-188
-189
-190
-191
-192
-193
-194
-195
-196
 197
 198
 199
@@ -926,36 +877,82 @@ restore the daitssfs silo from Tivoli to the scratch disk.
 203
 204
 205
-206</pre>
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 181</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 197</span>
 
-<span class='def def kw'>def</span> <span class='restore_to_scratch_disk identifier id'>restore_to_scratch_disk</span> <span class='tape_server identifier id'>tape_server</span><span class='comma token'>,</span> <span class='silo identifier id'>silo</span><span class='comma token'>,</span> <span class='destination_directory identifier id'>destination_directory</span>
+<span class='def def kw'>def</span> <span class='restore_to_scratch_disk identifier id'>restore_to_scratch_disk</span> <span class='tape_server identifier id'>tape_server</span><span class='comma token'>,</span> <span class='silo identifier id'>silo</span><span class='comma token'>,</span> <span class='destination_directory identifier id'>destination_directory</span><span class='comma token'>,</span> <span class='reporter identifier id'>reporter</span>
 
   <span class='silo identifier id'>silo</span> <span class='assign token'>=</span> <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>%r{/+$}</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'/'</span>
   <span class='destination_directory identifier id'>destination_directory</span> <span class='assign token'>=</span> <span class='destination_directory identifier id'>destination_directory</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>%r{/+$}</span><span class='comma token'>,</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'/'</span>
 
-  <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Restoring silo #{silo} from tape to scratch disk #{destination_directory}.&quot;</span>
+  <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='info identifier id'>info</span> <span class='dstring node'>&quot;Restoring silo #{silo} from tape to scratch disk #{destination_directory}.&quot;</span>
 
   <span class='tsm identifier id'>tsm</span> <span class='assign token'>=</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='TsmExecutor constant id'>TsmExecutor</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='tape_server identifier id'>tape_server</span><span class='rparen token'>)</span>
   <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='restore identifier id'>restore</span><span class='lparen token'>(</span><span class='silo identifier id'>silo</span><span class='comma token'>,</span> <span class='destination_directory identifier id'>destination_directory</span><span class='comma token'>,</span> <span class='integer val'>16</span> <span class='mult op'>*</span> <span class='integer val'>60</span> <span class='mult op'>*</span> <span class='integer val'>60</span><span class='rparen token'>)</span>   <span class='comment val'># Sixteen hours to restore - twice the expected time</span>
 
-  <span class='if if kw'>if</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='gt op'>&gt;</span> <span class='integer val'>4</span>
-    <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;Command '#{tsm.command}', exited with status #{tsm.status}&quot;</span>
+  <span class='comment val'># list is sorted by tsm.list; status of 0 or 4 is OK; 8 may</span>
+  <span class='comment val'># be. 12 definitely isn't.</span>
+
+  <span class='if if kw'>if</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='gt op'>&gt;</span> <span class='integer val'>8</span>
+    <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='dstring node'>&quot;Command '#{tsm.command}', exited with status #{tsm.status}. This is a fatal error and processing will be stopped.&quot;</span>
     <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-      <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='string val'>&quot;Tivoli error log follows:&quot;</span>
-      <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span> <span class='rbrace token'>}</span>
+      <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='string val'>&quot;Tivoli error log follows:&quot;</span>
+      <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span> <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span> <span class='rbrace token'>}</span>
     <span class='end end kw'>end</span>
     <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='output identifier id'>output</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
-      <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='string val'>&quot;Tivoli output log follows:&quot;</span>
-      <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='output identifier id'>output</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span> <span class='Logger constant id'>Logger</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span> <span class='rbrace token'>}</span>
+      <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='string val'>&quot;Tivoli output log follows:&quot;</span>
+      <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='output identifier id'>output</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span> <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span> <span class='rbrace token'>}</span>
     <span class='end end kw'>end</span>
-    <span class='raise identifier id'>raise</span> <span class='string val'>&quot;fatal tivloi error&quot;</span>
+    <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='err identifier id'>err</span> <span class='string val'>&quot;An error occured in Tivoli processing. Giving up on fixity checking this tape.&quot;</span>
+    <span class='raise identifier id'>raise</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='string val'>&quot;Can't continue - Tivloi reported errors&quot;</span>
+
+  <span class='elsif elsif kw'>elsif</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='status identifier id'>status</span> <span class='gt op'>&gt;</span> <span class='integer val'>4</span>
+    <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='dstring node'>&quot;Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur.&quot;</span>
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+      <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='string val'>&quot;Tivoli error log follows:&quot;</span>
+      <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='errors identifier id'>errors</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span> <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span> <span class='rbrace token'>}</span>
+    <span class='end end kw'>end</span>
+    <span class='if if kw'>if</span> <span class='not not kw'>not</span> <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='output identifier id'>output</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+      <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='string val'>&quot;Tivoli output log follows:&quot;</span>
+      <span class='tsm identifier id'>tsm</span><span class='dot token'>.</span><span class='output identifier id'>output</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='line identifier id'>line</span><span class='bitor op'>|</span> <span class='reporter identifier id'>reporter</span><span class='dot token'>.</span><span class='warn identifier id'>warn</span> <span class='line identifier id'>line</span><span class='dot token'>.</span><span class='chomp identifier id'>chomp</span> <span class='rbrace token'>}</span>
+    <span class='end end kw'>end</span>
   <span class='end end kw'>end</span>
-  
+
 <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-  <span class='raise identifier id'>raise</span> <span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Restore failure: #{e}&quot;</span>
+  <span class='raise identifier id'>raise</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='FatalFixityError constant id'>FatalFixityError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Restore failure: #{e}&quot;</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -968,7 +965,7 @@ restore the daitssfs silo from Tivoli to the scratch disk.
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:31:06 2011 by 
+  Generated on Thu May 12 23:42:41 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

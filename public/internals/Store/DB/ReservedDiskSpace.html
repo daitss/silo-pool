@@ -201,12 +201,12 @@ hours at most
       <pre class="lines">
 
 
-468
-469
-470</pre>
+482
+483
+484</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 468</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 482</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='cleanout_stale_reservations identifier id'>cleanout_stale_reservations</span> <span class='max_reservation identifier id'>max_reservation</span>
   <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:timestamp</span><span class='dot token'>.</span><span class='lt identifier id'>lt</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
@@ -230,12 +230,12 @@ hours at most
       <pre class="lines">
 
 
-472
-473
-474</pre>
+486
+487
+488</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 472</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 486</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='distinct_partitions identifier id'>distinct_partitions</span>
   <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='partition identifier id'>partition</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
@@ -271,18 +271,18 @@ it automatically removes records older than max_reservation days.
       <pre class="lines">
 
 
-479
-480
-481
-482
-483
-484
-485
-486
-487</pre>
+493
+494
+495
+496
+497
+498
+499
+500
+501</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 479</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 493</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='partition_reservations identifier id'>partition_reservations</span><span class='lparen token'>(</span><span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span>
   <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='cleanout_stale_reservations identifier id'>cleanout_stale_reservations</span><span class='lparen token'>(</span><span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span>
@@ -304,7 +304,7 @@ it automatically removes records older than max_reservation days.
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:30:46 2011 by 
+  Generated on Thu May 12 23:42:17 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

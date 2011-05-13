@@ -363,7 +363,7 @@ we typically have only the hexstring.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#mysql_config-class_method" title="mysql_config (class method)">+ (Object) <strong>mysql_config</strong>(key, pathname = &quot;/opt/fda/etc/db.yml&quot;) </a>
+      <a href="#pid_file-class_method" title="pid_file (class method)">+ (Object) <strong>pid_file</strong>(dir) </a>
     
 
     
@@ -377,8 +377,8 @@ we typically have only the hexstring.
 
   
     <span class="summary_desc"><div class='inline'><p>
-TODO:  default pathname should be required - also, error messages here on
-missing yaml, etc.
+Given a directory, return a path to a PID file in it, naming based on the
+currently running process name.
 </p>
 </div></span>
   
@@ -507,13 +507,13 @@ returning the corresponding hex string.
       <pre class="lines">
 
 
-104
-105
-106
-107</pre>
+77
+78
+79
+80</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 104</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 77</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='base64_to_md5hex identifier id'>base64_to_md5hex</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='String constant id'>String</span> <span class='and and kw'>and</span> <span class='string identifier id'>string</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>24</span><span class='rparen token'>)</span>
@@ -549,12 +549,12 @@ put in commas in a number (American style numeric format)
       <pre class="lines">
 
 
-206
-207
-208</pre>
+179
+180
+181</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 206</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 179</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span> <span class='num identifier id'>num</span>
   <span class='num identifier id'>num</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(\d)(?=(\d\d\d)+(?!\d))/</span><span class='comma token'>,</span> <span class='string val'>&quot;\\1,&quot;</span><span class='rparen token'>)</span>
@@ -578,12 +578,12 @@ put in commas in a number (American style numeric format)
       <pre class="lines">
 
 
-66
-67
-68</pre>
+39
+40
+41</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 66</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 39</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='csv_escape identifier id'>csv_escape</span> <span class='str identifier id'>str</span>
   <span class='string val'>'&quot;'</span> <span class='plus op'>+</span> <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&quot;'</span><span class='comma token'>,</span> <span class='string val'>'&quot;&quot;'</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'&quot;'</span>   <span class='comment val'># 'fo,o&quot;bar' =&gt;  '&quot;fo,o&quot;&quot;bar&quot;'</span>
@@ -607,13 +607,13 @@ put in commas in a number (American style numeric format)
       <pre class="lines">
 
 
-48
-49
-50
-51</pre>
+21
+22
+23
+24</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 48</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 21</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_free identifier id'>disk_free</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -638,12 +638,12 @@ put in commas in a number (American style numeric format)
       <pre class="lines">
 
 
-39
-40
-41</pre>
+12
+13
+14</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 39</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 12</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_id identifier id'>disk_id</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='dev identifier id'>dev</span>
@@ -678,25 +678,25 @@ N.B. We depend on a trailing slash being removed in path
       <pre class="lines">
 
 
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90</pre>
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 75</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 48</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_mount_point identifier id'>disk_mount_point</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -733,13 +733,13 @@ N.B. We depend on a trailing slash being removed in path
       <pre class="lines">
 
 
-43
-44
-45
-46</pre>
+16
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 43</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 16</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='disk_size identifier id'>disk_size</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
   <span class='fs identifier id'>fs</span> <span class='assign token'>=</span> <span class='Sys constant id'>Sys</span><span class='colon2 op'>::</span><span class='Filesystem constant id'>Filesystem</span><span class='dot token'>.</span><span class='stat identifier id'>stat</span><span class='lparen token'>(</span><span class='path identifier id'>path</span><span class='rparen token'>)</span>
@@ -788,6 +788,33 @@ return); on success returns a struct with the following
       <pre class="lines">
 
 
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
 123
 124
 125
@@ -804,37 +831,10 @@ return); on success returns a struct with the following
 136
 137
 138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158
-159
-160
-161
-162
-163
-164
-165
-166</pre>
+139</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 123</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 96</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='get_silo_options identifier id'>get_silo_options</span> <span class='args identifier id'>args</span>
   <span class='conf identifier id'>conf</span> <span class='assign token'>=</span> <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='symbol val'>:hostname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='symbol val'>:silo_path</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='symbol val'>:syslog_facility</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span>
@@ -912,16 +912,16 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
-196
-197
-198
-199
-200
-201
-202</pre>
+169
+170
+171
+172
+173
+174
+175</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 196</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 169</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='group identifier id'>group</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='if if kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> 
@@ -949,13 +949,13 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
-168
-169
-170
-171</pre>
+141
+142
+143
+144</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 168</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 141</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath identifier id'>hashpath</span> <span class='name identifier id'>name</span>
   <span class='md5 identifier id'>md5</span>  <span class='assign token'>=</span>  <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span> <span class='name identifier id'>name</span>
@@ -980,12 +980,12 @@ return the group name who owns it as a string.
       <pre class="lines">
 
 
-173
-174
-175</pre>
+146
+147
+148</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 173</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 146</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='hashpath_parent identifier id'>hashpath_parent</span> <span class='name identifier id'>name</span>
   <span class='Digest constant id'>Digest</span><span class='colon2 op'>::</span><span class='MD5 constant id'>MD5</span><span class='dot token'>.</span><span class='hexdigest identifier id'>hexdigest</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>2</span><span class='rbrack token'>]</span>
@@ -1023,13 +1023,13 @@ representation.
       <pre class="lines">
 
 
-96
-97
-98
-99</pre>
+69
+70
+71
+72</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 96</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 69</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='md5hex_to_base64 identifier id'>md5hex_to_base64</span><span class='lparen token'>(</span><span class='hexstring identifier id'>hexstring</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span> <span class='unless unless_mod kw'>unless</span> <span class='hexstring identifier id'>hexstring</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>32</span>
@@ -1042,17 +1042,17 @@ representation.
 </div>
     
       <div class="method_details ">
-  <p class="signature " id="mysql_config-class_method">
+  <p class="signature " id="pid_file-class_method">
   
-    + (<tt>Object</tt>) <strong>mysql_config</strong>(key, pathname = &quot;/opt/fda/etc/db.yml&quot;) 
+    + (<tt>Object</tt>) <strong>pid_file</strong>(dir) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
     <p>
-TODO:  default pathname should be required - also, error messages here on
-missing yaml, etc
+Given a directory, return a path to a PID file in it, naming based on the
+currently running process name
 </p>
 
 
@@ -1066,21 +1066,15 @@ missing yaml, etc
       <pre class="lines">
 
 
-32
-33
-34
-35
-36
-37</pre>
+185
+186
+187</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 32</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 185</span>
 
-<span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='mysql_config identifier id'>mysql_config</span> <span class='key identifier id'>key</span><span class='comma token'>,</span> <span class='pathname identifier id'>pathname</span> <span class='assign token'>=</span> <span class='string val'>&quot;/opt/fda/etc/db.yml&quot;</span>
-  <span class='hash identifier id'>hash</span> <span class='assign token'>=</span> <span class='YAML constant id'>YAML</span><span class='colon2 op'>::</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='pathname identifier id'>pathname</span><span class='rparen token'>)</span><span class='rparen token'>)</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
-  <span class='OpenStruct constant id'>OpenStruct</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='string val'>'database'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='hash identifier id'>hash</span><span class='lbrack token'>[</span><span class='string val'>'database'</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>'hostname'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='hash identifier id'>hash</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>'password'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='hash identifier id'>hash</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='string val'>'username'</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='hash identifier id'>hash</span><span class='lbrack token'>[</span><span class='string val'>'username'</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
-<span class='rescue rescue kw'>rescue</span>
-  <span class='return return kw'>return</span> <span class='nil nil kw'>nil</span>
+<span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='pid_file identifier id'>pid_file</span> <span class='dir identifier id'>dir</span>
+  <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='comma token'>,</span> <span class='$0 gvar id'>$0</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='SEPARATOR constant id'>SEPARATOR</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span> <span class='plus op'>+</span> <span class='string val'>'.pid'</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1101,13 +1095,13 @@ missing yaml, etc
       <pre class="lines">
 
 
-53
-54
-55
-56</pre>
+26
+27
+28
+29</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 53</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 26</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='strip_trailing_slash_maybe identifier id'>strip_trailing_slash_maybe</span><span class='lparen token'>(</span><span class='string identifier id'>string</span><span class='rparen token'>)</span>
   <span class='return return kw'>return</span> <span class='string identifier id'>string</span> <span class='if if_mod kw'>if</span> <span class='string identifier id'>string</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>1</span>
@@ -1145,16 +1139,16 @@ return the user name who owns it as a string.
       <pre class="lines">
 
 
-183
-184
-185
-186
-187
-188
-189</pre>
+156
+157
+158
+159
+160
+161
+162</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 183</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 156</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='user identifier id'>user</span> <span class='path identifier id'>path</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='if if kw'>if</span> <span class='path identifier id'>path</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
@@ -1203,12 +1197,12 @@ return the user name who owns it as a string.
       <pre class="lines">
 
 
-58
-59
-60</pre>
+31
+32
+33</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 58</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 31</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='valid_ieid_name? fid id'>valid_ieid_name?</span> <span class='string identifier id'>string</span>
    <span class='string identifier id'>string</span> <span class='match op'>=~</span> <span class='regexp val'>/^E20\d{2}[0-1]\d[0-3]\d_[A-Z]{6}$/</span> <span class='question op'>?</span> <span class='true true kw'>true</span> <span class='colon op'>:</span> <span class='false false kw'>false</span>
@@ -1232,12 +1226,12 @@ return the user name who owns it as a string.
       <pre class="lines">
 
 
-62
-63
-64</pre>
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 62</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 35</span>
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='xml_escape identifier id'>xml_escape</span> <span class='str identifier id'>str</span>
   <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&amp;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;amp;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&lt;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;lt;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&gt;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;gt;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>&quot;'&quot;</span><span class='comma token'>,</span> <span class='string val'>'&amp;apos;'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='string val'>'&quot;'</span><span class='comma token'>,</span> <span class='string val'>'&amp;quot;'</span><span class='rparen token'>)</span>
@@ -1253,7 +1247,7 @@ return the user name who owns it as a string.
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:31:04 2011 by 
+  Generated on Thu May 12 23:41:46 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

@@ -165,6 +165,32 @@ needed.
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#lookup_by_partition-class_method" title="lookup_by_partition (class method)">+ (Object) <strong>lookup_by_partition</strong>(hostname, partition) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'><p>
+The web service names silos using abbreviated verision of the silo&#8217;s
+filesystem - the last path component of the silo filesystem (so the last
+filesystem component has to be unique across all filesystem).
+</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#methods-class_method" title="methods (class method)">+ (Object) <strong>methods</strong> </a>
     
 
@@ -407,16 +433,16 @@ TODO: only allow certain transitions.
       <pre class="lines">
 
 
-132
-133
-134
-135
-136
-137
-138</pre>
+124
+125
+126
+127
+128
+129
+130</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 132</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 124</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span>
   <span class='filesystem identifier id'>filesystem</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span>
@@ -456,14 +482,14 @@ needed.
       <pre class="lines">
 
 
-147
 148
 149
 150
-151</pre>
+151
+152</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 147</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 148</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list identifier id'>list</span> <span class='hostname identifier id'>hostname</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:hostname</span><span class='dot token'>.</span><span class='asc identifier id'>asc</span><span class='comma token'>,</span> <span class='symbol val'>:filesystem</span><span class='dot token'>.</span><span class='asc identifier id'>asc</span> <span class='rbrack token'>]</span> <span class='rbrace token'>}</span>
@@ -489,17 +515,59 @@ needed.
       <pre class="lines">
 
 
-140
-141
-142
-143</pre>
+132
+133
+134
+135</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 140</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 132</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='filesystem identifier id'>filesystem</span>
   <span class='filesystem identifier id'>filesystem</span> <span class='assign token'>=</span> <span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span><span class='filesystem identifier id'>filesystem</span><span class='rparen token'>)</span>  <span class='comment val'># strips trailing slash..</span>
   <span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span> <span class='symbol val'>:filesystem</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='filesystem identifier id'>filesystem</span><span class='comma token'>,</span> <span class='symbol val'>:hostname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='hostname identifier id'>hostname</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="lookup_by_partition-class_method">
+  
+    + (<tt>Object</tt>) <strong>lookup_by_partition</strong>(hostname, partition) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    <p>
+The web service names silos using abbreviated verision of the silo&#8217;s
+filesystem - the last path component of the silo filesystem (so the last
+filesystem component has to be unique across all filesystem).
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+142
+143
+144</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 142</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup_by_partition identifier id'>lookup_by_partition</span> <span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='partition identifier id'>partition</span>
+  <span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span> <span class='symbol val'>:filesystem</span><span class='dot token'>.</span><span class='like identifier id'>like</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='string val'>'%'</span> <span class='plus op'>+</span> <span class='partition identifier id'>partition</span><span class='comma token'>,</span> <span class='symbol val'>:hostname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='hostname identifier id'>hostname</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -520,12 +588,12 @@ needed.
       <pre class="lines">
 
 
-109
-110
-111</pre>
+101
+102
+103</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 109</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 101</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='methods identifier id'>methods</span>
   <span class='lbrack token'>[</span> <span class='symbol val'>:get</span><span class='comma token'>,</span> <span class='symbol val'>:put</span><span class='comma token'>,</span> <span class='symbol val'>:delete</span><span class='comma token'>,</span> <span class='symbol val'>:post</span><span class='comma token'>,</span> <span class='symbol val'>:options</span> <span class='rbrack token'>]</span>
@@ -549,12 +617,12 @@ needed.
       <pre class="lines">
 
 
-104
-105
-106</pre>
+96
+97
+98</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 104</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 96</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='states identifier id'>states</span>
   <span class='lbrack token'>[</span> <span class='symbol val'>:disk_master</span><span class='comma token'>,</span> <span class='symbol val'>:disk_idling</span><span class='comma token'>,</span> <span class='symbol val'>:disk_copied</span><span class='comma token'>,</span> <span class='symbol val'>:tape_master</span> <span class='rbrack token'>]</span>   <span class='comment val'># to do deprecate :disk_copied (db alter?)</span>
@@ -584,7 +652,6 @@ needed.
       <pre class="lines">
 
 
-195
 196
 197
 198
@@ -593,10 +660,11 @@ needed.
 201
 202
 203
-204</pre>
+204
+205</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 195</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 196</span>
 
 <span class='def def kw'>def</span> <span class='allow identifier id'>allow</span> <span class='mult op'>*</span><span class='methods identifier id'>methods</span>
   <span class='methods identifier id'>methods</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='method identifier id'>method</span><span class='bitor op'>|</span>
@@ -627,12 +695,12 @@ needed.
       <pre class="lines">
 
 
-191
 192
-193</pre>
+193
+194</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 191</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 192</span>
 
 <span class='def def kw'>def</span> <span class='allowed_methods identifier id'>allowed_methods</span>
   <span class='possible_methods identifier id'>possible_methods</span> <span class='minus op'>-</span> <span class='forbidden identifier id'>forbidden</span>
@@ -656,7 +724,6 @@ needed.
       <pre class="lines">
 
 
-206
 207
 208
 209
@@ -665,10 +732,11 @@ needed.
 212
 213
 214
-215</pre>
+215
+216</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 206</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 207</span>
 
 <span class='def def kw'>def</span> <span class='forbid identifier id'>forbid</span> <span class='mult op'>*</span><span class='methods identifier id'>methods</span>
   <span class='methods identifier id'>methods</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='method identifier id'>method</span><span class='bitor op'>|</span>
@@ -711,13 +779,13 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
       <pre class="lines">
 
 
-173
 174
 175
-176</pre>
+176
+177</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 173</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 174</span>
 
 <span class='def def kw'>def</span> <span class='make_tape_master identifier id'>make_tape_master</span>
   <span class='self self kw'>self</span><span class='dot token'>.</span><span class='state identifier id'>state</span> <span class='assign token'>=</span> <span class='symbol val'>:tape_master</span>
@@ -742,7 +810,6 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
       <pre class="lines">
 
 
-158
 159
 160
 161
@@ -751,10 +818,11 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
 164
 165
 166
-167</pre>
+167
+168</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 158</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 159</span>
 
 <span class='def def kw'>def</span> <span class='media_device identifier id'>media_device</span>
   <span class='case case kw'>case</span> <span class='state identifier id'>state</span>
@@ -785,7 +853,6 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
       <pre class="lines">
 
 
-178
 179
 180
 181
@@ -796,10 +863,11 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
 186
 187
 188
-189</pre>
+189
+190</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 178</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 179</span>
 
 <span class='def def kw'>def</span> <span class='possible_methods identifier id'>possible_methods</span>
   <span class='case case kw'>case</span> <span class='state identifier id'>state</span>
@@ -832,12 +900,12 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
       <pre class="lines">
 
 
-154
 155
-156</pre>
+156
+157</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 154</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 155</span>
 
 <span class='def def kw'>def</span> <span class='short_name identifier id'>short_name</span>
   <span class='filesystem identifier id'>filesystem</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>'/'</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span>
@@ -861,12 +929,12 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
       <pre class="lines">
 
 
-128
-129
-130</pre>
+120
+121
+122</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 128</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 120</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;SiloRecord: #{self.hostname}:#{self.filesystem}&gt;&quot;</span>
@@ -882,7 +950,7 @@ this doesn&#8217;t belong here, maybe (used in do-tape)
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:30:59 2011 by 
+  Generated on Thu May 12 23:42:22 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>

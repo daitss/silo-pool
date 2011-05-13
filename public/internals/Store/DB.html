@@ -159,6 +159,8 @@ little reporting machinery can be set up at the time it is called.
       <pre class="lines">
 
 
+24
+25
 26
 27
 28
@@ -189,10 +191,12 @@ little reporting machinery can be set up at the time it is called.
 53
 54
 55
-56</pre>
+56
+57
+58</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 26</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 24</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
   <span class='oops identifier id'>oops</span> <span class='assign token'>=</span> <span class='string val'>&quot;DB setup can't&quot;</span>
@@ -212,14 +216,18 @@ little reporting machinery can be set up at the time it is called.
   <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                               <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'hostname'</span>
   <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                               <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'username'</span>
 
-  <span class='comment val'># Example string: 'mysql://root:topsecret@localhost/silos'</span>
+  <span class='comment val'># Example string: 'postgres://root:topsecret@localhost:5432/silos'</span>
 
-  <span class='connection_string identifier id'>connection_string</span> <span class='assign token'>=</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'vendor'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'username'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span>
-                     <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span>
-                     <span class='string val'>'@'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span> <span class='string val'>'/'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'database'</span><span class='rbrack token'>]</span>
+  <span class='connection_string identifier id'>connection_string</span> <span class='assign token'>=</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'vendor'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span>
+                      <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'username'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span>
+                     <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'@'</span> <span class='plus op'>+</span>
+                      <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span>
+                     <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span> <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'/'</span> <span class='plus op'>+</span>
+                      <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'database'</span><span class='rbrack token'>]</span>
   <span class='begin begin kw'>begin</span>
     <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DM constant id'>DM</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span> <span class='connection_string identifier id'>connection_string</span>        
     <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='string val'>'select 1 + 1'</span><span class='rparen token'>)</span>  <span class='comment val'># if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.</span>
+    <span class='dm identifier id'>dm</span>
   <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
     <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span>
           <span class='dstring node'>&quot;Failure setting up the #{dbinfo['vendor']} #{dbinfo['database']} database for #{dbinfo['username']} on #{dbinfo['hostname']} (#{dbinfo['password'] ? 'password supplied' : 'no password'}) - used the configuration file #{yaml_file}: #{e.message}&quot;</span>
@@ -236,7 +244,7 @@ little reporting machinery can be set up at the time it is called.
 </div>
     
     <div id="footer">
-  Generated on Wed Jan 26 13:30:48 2011 by 
+  Generated on Thu May 12 23:42:34 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.6.0 (ruby-1.8.7).
 </div>
