@@ -95,8 +95,13 @@ class Client
     end
   end
 
-  def delete package
-    uri = URI.parse(File.join(location, package.name))
+  def delete package = nil
+
+    if package
+      uri = URI.parse(File.join(location, package.name))
+    else
+      uri = URI.parse(location)
+    end
 
     Net::HTTP.start(uri.host, uri.port) do |http|
       http.read_timeout = 10
@@ -105,16 +110,6 @@ class Client
     end
   end
 
-
-  # When we have the package in the location, don't need package ob
-  def simple_delete
-    uri = URI.parse(location)
-    Net::HTTP.start(uri.host, uri.port) do |http|
-      http.read_timeout = 10
-      response = http.send_request('DELETE', uri.request_uri)
-      return response
-    end
-  end
 
   def get package = nil
     if package
