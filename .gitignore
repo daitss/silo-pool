@@ -2,6 +2,7 @@
 *-
 .#*
 \#*
+irb*.rb
 .emacs*
 .yardoc
 REVISION

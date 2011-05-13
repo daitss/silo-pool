@@ -25,14 +25,16 @@ Given /^a new package$/ do
   @@new_package = Package.new
 end
 
-When /^I PUT the package/ do
-  @response = Client.new(@@active_silo).put @@new_package
-end
-
 Then /^I should see "([^\"]*)"$/ do |arg1|
   code, message = arg1.split(/\s+/, 2)
   @response.code.should    == code 
   @response.message.should =~ /#{message}/
+end
+
+# support for the first protocol
+
+When /^I PUT the package/ do
+  @response = Client.new(@@active_silo).put @@new_package
 end
 
 When /^I GET the package/ do
@@ -47,7 +49,7 @@ Then /^the checksum of the retrieved package should match the original package$/
   @@new_package.md5.should == Digest::MD5.hexdigest(@response.body)
 end
 
-# Support for newer protocol
+# Support for the second protocol
 
 When /^I GET the service document from the pool/ do
   @response = Client.new(@@service_url).get
