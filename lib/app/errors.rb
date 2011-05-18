@@ -1,30 +1,35 @@
 # -*- coding: utf-8 -*-
-#
-# TODO: if we get a message with embedded newlines, break them out for the logging.
 
 error do
   e = @env['sinatra.error']
 
   # Passenger phusion complains to STDERR about the dropped body data
-  # unless we rewind. (would flush or close do? it would read better)
+  # unless we rewind.
 
-  request.body.rewind if request.body.respond_to?('rewind')  
+  rewind_maybe
 
   # The Store::HttpError classes carry along their own messages and
   # HTTP status codes.
 
-  if e.is_a? Store::Http400Error
+  if e.is_a? Store::Http401
+    Logger.warn e.client_message, @env
+    response['WWW-Authenticate'] = 'Basic realm="Password-Protected Silo"'
+    [ halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message ]
+
+  elsif e.is_a? Store::Http400Error
     Logger.warn e.client_message, @env
     [ halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message ]
-    
+
+  # No backtrace needed for configuration errors; the messages are
+  # pretty good:
 
   elsif e.is_a? Store::ConfigurationError
     Logger.err e.client_message, @env
     [ halt 500, { 'Content-Type' => 'text/plain' }, e.client_message ]
 
-  # Next are known errors with sufficient diagnostic  messages for the
-  # user; they won't need backtraces.  It is important that kinds of 
-  # messages not leak information.
+  # Next are known errors with sufficiently informative messages for
+  # the user; they won't need backtraces.  It is important that kinds
+  # of messages not leak information.
 
   elsif e.is_a? Store::HttpError
     Logger.err e.client_message, @env
@@ -43,18 +48,13 @@ error do
   end
 end
 
-# Urg.  The not_found method grabs *my* ( [ halt(404), ... ], a Bad
-# Thing (© G R Fischer, 1956).  Repeat the code above for this special
-# case.
+# Urg.  The not_found method fields (overrides?) the halt(404) handler above, repeat.
 
 not_found  do
-  request.body.rewind if request.body.respond_to?('rewind')  
-  e = @env['sinatra.error']
-  message = if e.is_a? Store::Http404 
-              e.client_message
-            else
-              "404 Not Found - #{request.url} doesn't exist.\n"
-            end
+  rewind_maybe
+
+  err = @env['sinatra.error']
+  message = err.is_a?(Store::Http404) ? err.client_message : "404 Not Found - #{request.url} doesn't exist.\n"
   Logger.warn message, @env
   content_type 'text/plain'
   message

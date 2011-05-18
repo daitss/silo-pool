@@ -3,7 +3,7 @@ require 'store'
 require 'store/silodb'
 require 'store/silotape'
 
-# TODO: transfer compression in PUT seems to retain files as compressed...fah.  Need to check for this...
+# TODO: transfer compression in PUT seems to retain files as compressed...fah.
 
 # configure expects some environment variables (typically set up in config.ru, which sets development
 # defaults and may be over-ridden from either the command line or apache SetEnv directives):
@@ -53,6 +53,10 @@ configure do
     e.backtrace.each { |line| Logger.err e.message }
     raise e
   end
+end
+
+before do
+  raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?
 end
 
 load 'lib/app/helpers.rb'

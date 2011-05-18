@@ -69,7 +69,10 @@ module Store
         SiloRecord.auto_migrate!
         PackageRecord.auto_migrate!
         HistoryRecord.auto_migrate!
+
         ReservedDiskSpace.auto_migrate!
+        Authentication.auto_migrate!
+
         self.patch_tables
       end
 
@@ -91,6 +94,50 @@ module Store
 
     end # of class DM
 
+
+    # Way overkill.  Table with at most one row, for name 'admin', for now.
+
+    class Authentication
+
+      include DataMapper::Resource
+      storage_names[:default] = 'authentications'
+      
+      property :id,              Serial
+      property :name,            String, :required => true
+      property :salt,            String, :required => true
+      property :password_hash,   String, :required => true
+
+
+      def self.lookup username
+        first(:name =>username)
+      end
+
+      def self.create username, password
+        rec = Authentication.first(:name => username) || Authentication.new(:name => username)
+        
+        rec.password = password
+        raise "Can't create new credentials for #{administrator}: #{rec.errors.full_messages.join('; ')}." unless rec.save
+        rec
+      end
+
+      def password= password
+        self.salt = rand(1_000_000_000_000_000_000).to_s(36)
+        self.password_hash = Digest::MD5.hexdigest(salt + password)
+        raise "Can't create new password for #{self.name}: #{self.errors.full_messages.join('; ')}." unless self.save
+      end
+
+      def authenticate password
+        Digest::MD5.hexdigest(self.salt + password) == self.password_hash
+      end
+
+
+      def self.clear
+        Authentication.destroy
+      end
+
+    end
+
+
     class SiloRecord
 
       def self.states
@@ -111,7 +158,7 @@ module Store
       property  :state,       Enum[ *states  ], :default =>   :disk_master
       property  :forbidden,   Flag[ *methods ], :default => [ :post, :options ]
 ###   TODO: add this
-###   property  :retired,     Boolean, :default  => true
+###   property  :retired,     Boolean, :default  => false
 
       has n,    :package_record, :constraint => :destroy
 
@@ -477,7 +524,7 @@ module Store
       property  :size,        Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1      
 
       # remove all records from the database older than +max_reservation+.
-      # +max_reservation+ is expressed in days - typically this is a few hours at most
+      # +max_reservation+ is expressed in days - a few hours works well.
 
       def self.cleanout_stale_reservations max_reservation
         ReservedDiskSpace.all(:timestamp.lt => DateTime.now - max_reservation).destroy

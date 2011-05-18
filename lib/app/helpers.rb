@@ -204,6 +204,29 @@ helpers do
     end
   end
 
+  # check to see if we've got an admin password on file - if so, check the request to see
+  # if the client supplied the correct username (admin) and password.
+
+  def needs_authentication?
+    admin_credentials = DB::Authentication.lookup('admin')
+
+    return false if admin_credentials.nil?                    # we don't require authentication
+
+    auth =  Rack::Auth::Basic::Request.new(request.env)
+
+    if auth.provided? && auth.basic? && auth.credentials 
+      user, password = auth.credentials
+      return (user != 'admin' or not admin_credentials.authenticate(password))
+    else
+      return true
+    end
+  end
+
+
+  def rewind_maybe
+    request.body.rewind if request.body.respond_to?('rewind')  
+  end
+
 end
 
 
