@@ -23,6 +23,8 @@ module Store
 
   class PoolFixity
 
+    CHUNK_SIZE = 2000
+
     Struct.new('FixityHeader', :hostname, :count, :earliest, :latest)
     Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :fixity_time, :put_time, :size)
 
@@ -32,12 +34,14 @@ module Store
     @silos    = nil
     @port     = nil
     @scheme   = nil
+    @started  = nil
 
     def initialize hostname, port = 80, scheme = 'http'
       @hostname = hostname
       @port     = port
       @scheme   = scheme
       @silos = DB::SiloRecord.all(:hostname => hostname)
+      @started = DateTime.now
     end
 
     def summary
@@ -59,9 +63,14 @@ module Store
     # us 125 or so separate database hits.
 
     def package_chunks
-      size   = 2000
+      size   = CHUNK_SIZE
       offset = 0
-      while (records = Store::DB::PackageRecord.all(:order => [ :name.asc ], :extant => true, :silo_record => @silos).slice(offset, size)).length > 0  do
+      while (records = Store::DB::PackageRecord.all(
+                                                    :order => [ :name.asc ],
+                                                    :extant => true,
+                                                    :initial_timestamp.lt => @started, # stop newly-arrived randomly-named packages 'slipping in' and causing apparent missed packages
+                                                    :silo_record => @silos
+                                                    ).slice(offset, size)).length > 0  do
         offset += size
         yield records
       end
@@ -70,7 +79,7 @@ module Store
     def each
       package_chunks do |packages|
         packages.each do |pkg|
-          # Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :time, :size)
+          # Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :fixity_time, :put_time, :size)
           yield Struct::FixityRecord.new(pkg.name,
                                          pkg.url(@port, @scheme),
                                          (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) ? :ok : :fail,
