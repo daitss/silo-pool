@@ -95,7 +95,7 @@ module Store
     end # of class DM
 
 
-    # Way overkill.  Table with at most one row, for name 'admin', for now.
+    # Way overkill for what we use it for now:  table with at most one row, for name 'admin', for now.
 
     class Authentication
 
@@ -121,6 +121,8 @@ module Store
       end
 
       def password= password
+        raise BadPassword, "No password supplied" unless password and password.length > 0
+
         self.salt = rand(1_000_000_000_000_000_000).to_s(36)
         self.password_hash = Digest::MD5.hexdigest(salt + password)
         raise "Can't create new password for #{self.name}: #{self.errors.full_messages.join('; ')}." unless self.save

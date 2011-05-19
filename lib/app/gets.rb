@@ -18,12 +18,20 @@ REVISION = Store.version.rev
 get '/'       do;    redirect absolutely('/silos/'), 302;  end
 get '/silos'  do;    redirect absolutely('/silos/'), 301;  end
 get '/silos/' do
-  erb :silos, :locals => { :hostname => hostname, :silos => list_silos, :revision => REVISION}
+  erb :silos, :locals => { :credentials => DB::Authentication.lookup('admin'), :hostname => hostname, :silos => list_silos, :revision => REVISION}
 end
+
+get '/credentials?' do
+  erb :credentials, :locals => { :credentials => DB::Authentication.lookup('admin'), :hostname => hostname, :revision => REVISION}
+end
+
 
 # provide information on the services we supply.  There are two requirements: 
 #   * a URL that we can POST to: it will return a URL that we can PUT a new resource to store.
 #   * one or more URLs where we can retrieve fixity data
+
+
+# TODO: add the per-partition fixity URLs here as well.
 
 get '/services' do
   xml = Builder::XmlMarkup.new(:indent => 2)
@@ -85,9 +93,6 @@ get '/:partition/data/' do |partition|
 end
 
 
-# TODO: The used send_file lets us set the content-length, but not
-# last-modified. There may be a patch to allow
-
 
 get '/:partition/data/:name' do |partition, name|
   silo = get_silo(partition, name)
@@ -140,7 +145,7 @@ get '/fixity.csv' do
   [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname, port) ]
 end
 
-# TODO:  refactor individual silos to use the above xml/csv report techniques.
+# TODO:  refactor individual silo fixities to use the above xml/csv report techniques.
 
 get '/:partition/fixity'  do |partition|
   redirect absolutely("/#{partition}/fixity/"), 301
@@ -241,6 +246,13 @@ get '/settings/?' do
   end
   erb :settings, :locals => { :opts => myopts, :revision => REVISION }
 end
+
+
+get '/status' do
+  content_type 'text/plain'
+  ''
+end
+
 
 # for testing logging, error handling:
 

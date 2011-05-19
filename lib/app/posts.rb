@@ -62,6 +62,24 @@ post '/:partition/knobs/allowed-methods' do |partition|
   redirect absolutely("/silos/")
 end
 
+post '/credentials?' do
+
+  case params[:action]
+
+  when /clear password/i
+    Logger.warn "Request from #{@env['REMOTE_ADDR']} to remove password protection for this silo pool."
+    DB::Authentication.clear
+
+  when /change password/i, /set password/i
+    Logger.warn "Request from #{@env['REMOTE_ADDR']} to change the password protection for this silo pool."
+    DB::Authentication.create('admin', params[:password])
+  end
+
+  redirect absolutely("/silos/")
+end
+
+
+
 
 post '/:partition/knobs/allowed-states' do |partition|
 

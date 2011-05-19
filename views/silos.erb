@@ -19,10 +19,11 @@
 
   <body>
 
-    <h1> Available Silos </h1>
+    <h1> Silo Management</a></h1>
     <h2> 
       <%= hostname %>
     </h2>
+
     <table id="silos">
       <thead>
 	<tr class="border">
@@ -32,8 +33,13 @@
           <th>Methods</th>
           <th>Pkgs</th>
           <th>Fixity Date</th>
-          <th></th>
-          <th></th>
+          <th colspan="2">
+	    <% if credentials %>	    
+   	      <a href="/credentials">Change Site Password</a>
+	    <% else %>
+   	      <a href="/credentials">Set Site Password</a>
+	    <% end %>
+	  </th>
 	</tr>
       </thead>
       <tbody>
@@ -80,9 +86,16 @@
       </tbody>
     </table>
 
+
+
+
+
+
+
     <p class="footer">
       <%= revision %>
     </p>
 
   </body>
 </html>
+

@@ -184,6 +184,7 @@ module Store
   class MD5Mismatch               < Http412;  end   # the supplied md5 didn't match the computed one
 
   class FatalFixityError          < Http500;  end
+  class BadPassword               < Http400;  end   # empty or bad password
 
   # TODO investigate how each of these are used and get them subclassed into the HTTP classed errors as above
   # This set is way over-engineered.
