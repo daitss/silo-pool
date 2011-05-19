@@ -1,9 +1,6 @@
 Some of these utlities are specific to the Florida Digital Archive,
 but are included as a starting point for your own DAITSS development.
-
-
 Of general applicablity:
-
 
  * disk-fixity
    
@@ -12,7 +9,27 @@ Of general applicablity:
    checksums - with implicit time.  The checksums are added to the
    histories and packages tables in the database. Meant to be used from cron.
 
+ * create-db
 
+   Initialize the silo pool databases.  Run this without arguments for directions:
+
+   bundle exec ./create-db
+
+ * admin-password
+
+   Clear or set the admin password for the site, which uses basic web authentication
+   against a user 'admin' - Run this without arguments for directions:
+
+   bundle exec ./create-db
+
+  * md5-base64
+
+    Given a filename on the commandline, print the MD5 hash in base 64
+    notation.  Useful backquoted in testing scripts using curl, e.g.
+
+    curl -sv -X PUT -H "Content-MD5: `md5-base64 filename`" --upload-file filename http://silos.com/001/data/E19561201_ABCXYZ
+
+    Shouldn't require bundler to use it.
  
 FDA specific, no warranties expressed or implied:
 
@@ -36,13 +53,6 @@ FDA specific, no warranties expressed or implied:
    Needs to be fleshed out, as the above. Meant to fetch a sub-directory
    of a tape-based silo.
    
-  * md5-base64
-
-    Given a filename on the commandline, print the MD5 hash in base 64
-    notation.  Useful backquoted in testing scripts using curl, e.g.
-
-    curl -sv -X PUT -H "Content-MD5: `md5-base64 filename`" --upload-file filename http://silos.com/001/data/E19561201_ABCXYZ
-
   * put-to-silo
 
     hacky test script that puts data to a silo-pool using an old protocol
