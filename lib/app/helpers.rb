@@ -208,6 +208,9 @@ helpers do
   # if the client supplied the correct username (admin) and password.
 
   def needs_authentication?
+
+    return false unless request.put? or request.delete? or request.post?
+
     admin_credentials = DB::Authentication.lookup('admin')
 
     return false if admin_credentials.nil?                    # we don't require authentication

@@ -67,8 +67,7 @@ module Store
       offset = 0
       while (records = Store::DB::PackageRecord.all(
                                                     :order => [ :name.asc ],
-                                                    :extant => true,
-                                                    :initial_timestamp.lt => @started, # stop newly-arrived randomly-named packages 'slipping in' and causing apparent missed packages
+                                                    :initial_timestamp.lt => @started, # stop newly-arrived randomly-named packages 'slipping in' and causing apparent double packages
                                                     :silo_record => @silos
                                                     ).slice(offset, size)).length > 0  do
         offset += size
@@ -77,9 +76,15 @@ module Store
     end
 
     def each
-      package_chunks do |packages|
-        packages.each do |pkg|
-          # Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :fixity_time, :put_time, :size)
+      package_chunks do |packages|  # get each sublist (of CHUNK_SIZE)        
+        packages.each do |pkg|      # and process it
+
+          next unless pkg.extant    # We could place ':extant => true' in the DB query, but we need to
+                                    # preserve the entire package list to avoid a package being dropped
+                                    # out of a sublist when a delete occured just before that sublist was
+                                    # generated.  We use a timestamp in the above list to avoid the 
+                                    # converse case, a package insert.
+
           yield Struct::FixityRecord.new(pkg.name,
                                          pkg.url(@port, @scheme),
                                          (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) ? :ok : :fail,
@@ -90,13 +95,15 @@ module Store
                                          pkg.size
                                          )
         end
+
+        
       end
     end
   end # of class PoolFixity
 
 
   # A wrapper for the data returned by the PoolFixity class that can be used in a space-efficient rack response.
-  # It returns an XML document with the fixity data provided by a PoolFixity object.
+  # It returns an XML document with the fixity data provided by a PoolFixity object, a piece at a time.
 
   class PoolFixityXmlReport
     include Enumerable
