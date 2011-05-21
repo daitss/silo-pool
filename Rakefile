@@ -61,11 +61,11 @@ DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...plac
 
 # Rebuild bundler vendor files for local development (capistrano invokes bundler remotely).
 # This will rebuild the Gemfile.lock, which we check in, but place the gems under the local
-# vendor/ tree....
+# bundle tree....
 
 desc "Reset bundles"
 task :bundle do
-  sh "rm -rf #{HOME}/bundle"
+  sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.lock"
   sh "mkdir -p #{HOME}/bundle"
   sh "cd #{HOME}; bundle install --path bundle"
 end
