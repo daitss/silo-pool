@@ -11,8 +11,6 @@ end
 
 module Store
 
-
-
 # Class PoolFixity
 #
 # TODO: make silo-level fixities use this same strategem, include here.
@@ -40,8 +38,8 @@ module Store
       @hostname = hostname
       @port     = port
       @scheme   = scheme
-      @silos = DB::SiloRecord.all(:hostname => hostname)
-      @started = DateTime.now
+      @silos    = DB::SiloRecord.all(:hostname => hostname)   # TODO:  adjust when we add 'retired' attribute to silos
+      @started  = DateTime.now
     end
 
     def summary
@@ -52,22 +50,21 @@ module Store
     end
 
     # There's too much data to get all of the packages at once;
-    # chunking it in sizes of 2000 records is an order of magnitude
-    # faster (but it's still pretty slow due to datamapper's casting
-    # of the timestamps to DateTime, which we really don't need - a
-    # string straight out of the database would be better for our
-    # needs).
+    # chunking it in sizes of 2000 records was an order of magnitude
+    # faster (but it's still pretty slow, partially due to
+    # datamapper's casting of the timestamps to DateTime, which we
+    # really don't need - a string straight out of the database would
+    # be better for our needs).
 
-    # TODO: try doing tests with different sizes to determine the
-    # sweet spot. Currently we have 1/4 million records, so 2000 gives
-    # us 125 or so separate database hits.
+    # At the time of this writing, we have 1/4 million records, so
+    # 2000 gives us 125 or so separate database hits.
 
     def package_chunks
       size   = CHUNK_SIZE
       offset = 0
       while (records = Store::DB::PackageRecord.all(
                                                     :order => [ :name.asc ],
-                                                    :initial_timestamp.lt => @started, # stop newly-arrived randomly-named packages 'slipping in' and causing apparent double packages
+                                                    :initial_timestamp.lt => @started, # stop newly-arrived randomly-named packages 'slipping in' and causing apparent doubly-listed packages
                                                     :silo_record => @silos
                                                     ).slice(offset, size)).length > 0  do
         offset += size
@@ -79,11 +76,13 @@ module Store
       package_chunks do |packages|  # get each sublist (of CHUNK_SIZE)        
         packages.each do |pkg|      # and process it
 
-          next unless pkg.extant    # We could place ':extant => true' in the DB query, but we need to
+          next unless pkg.extant    # We used to place ':extant => true' in the DB query, but we need to
                                     # preserve the entire package list to avoid a package being dropped
-                                    # out of a sublist when a delete occured just before that sublist was
-                                    # generated.  We use a timestamp in the above list to avoid the 
-                                    # converse case, a package insert.
+                                    # out from a sublist when a delete to a prior pakage occurs before that
+                                    # next sublist is generated.  We use a timestamp in the above list to 
+                                    # avoid the converse case, a package insert.
+
+          #  StructFixityRecord is ordered as:  name, location, status, md5, sha1, fixity_time, put_time, size
 
           yield Struct::FixityRecord.new(pkg.name,
                                          pkg.url(@port, @scheme),
@@ -95,12 +94,9 @@ module Store
                                          pkg.size
                                          )
         end
-
-        
       end
     end
-  end # of class PoolFixity
-
+  end # of class Store::PoolFixity
 
   # A wrapper for the data returned by the PoolFixity class that can be used in a space-efficient rack response.
   # It returns an XML document with the fixity data provided by a PoolFixity object, a piece at a time.
@@ -134,18 +130,14 @@ module Store
                   'fixity_time="'   + fix.fixity_time.to_utc              + '" '  +
                      'put_time="'   + fix.put_time.to_utc                 + '" '  +
                        'status="'   + fix.status.to_s                     + '"/>' + "\n"
-
-
-
       end
 
       yield "</fixities>\n"
     end
-  end # of class PoolFixityXmlReport
+  end # of class Store::PoolFixityXmlReport
 
-
-  # A wrapper for the data returned by the PoolFixity class that can be used in a space-efficient rack response.
-  # It returns a CSV document with the fixity data provided by a PoolFixity object.
+  # A CSV wrapper for the data returned by the PoolFixity class that can
+  # be used in a space-efficient rack response.
 
   class PoolFixityCsvReport
     include Enumerable
@@ -163,5 +155,5 @@ module Store
       end
     end
 
-  end # of class PoolFixityCsvReport
+  end # of class Store::PoolFixityCsvReport
 end
