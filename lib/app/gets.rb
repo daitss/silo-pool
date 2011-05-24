@@ -100,7 +100,7 @@ get '/:partition/data/:name' do |partition, name|
 
   etag silo.etag(name)
   
-  headers  'Content-MD5' => StoreUtils.md5hex_to_base64(silo.md5 name), 'Content-Type' => silo.type(name), 'Last-Modified' => Time.parse(silo.datetime(name).to_s).http_date
+  headers  'Content-MD5' => StoreUtils.md5hex_to_base64(silo.md5 name), 'Content-Type' => silo.type(name), 'Last-Modified' => Time.parse(silo.datetime(name).to_s).httpdate
   send_file silo.data_path(name), :filename => "#{name}.tar", :type => silo.type(name)
 end
 
@@ -119,7 +119,6 @@ get '/:partition/data/:name/' do |partition, name|
     :revision => REVISION
   }
 end
-
 
 get '/:partition/data/:name/*' do |partition, name, path|
   silo = get_silo(partition, name)

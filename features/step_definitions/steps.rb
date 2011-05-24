@@ -6,8 +6,8 @@ require 'helpers'
 # You have to set up these to point to an active silo
 
 Before  do
-  @@active_pool = "http://pool.a.local"
-  @@active_silo = "#{@@active_pool}/silo-pool.a.1/data/"
+  @@active_pool = "http://silos.local"
+  @@active_silo = "#{@@active_pool}/03/data/"
   @@service_url = "#{@@active_pool}/services"
 end
 
@@ -62,6 +62,7 @@ end
 
 When /^I POST the package to the create URL/ do
   @posting_url = sprintf(@url, @@new_package.name)
+  `echo #{@posting_url} >> /tmp/xx`
   @response = Client.new(@posting_url).post @@new_package
 end
 

@@ -11,10 +11,11 @@ end
 
 module Store
 
-# Class PoolFixity
-#
-# TODO: make silo-level fixities use this same strategem, include here.
-#
+  # Class PoolFixity
+  #
+  # TODO: make silo-level fixities use this same strategem, include here.
+  #
+
 
   # Assemble all the recent fixity data for all silos associated with
   # a given hostname.  Fixity data are returned sorted by package name.
@@ -25,14 +26,6 @@ module Store
 
     Struct.new('FixityHeader', :hostname, :count, :earliest, :latest)
     Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :fixity_time, :put_time, :size)
-
-    include Enumerable
-
-    @hostname = nil
-    @silos    = nil
-    @port     = nil
-    @scheme   = nil
-    @started  = nil
 
     def initialize hostname, port = 80, scheme = 'http'
       @hostname = hostname
@@ -52,12 +45,9 @@ module Store
     # There's too much data to get all of the packages at once;
     # chunking it in sizes of 2000 records was an order of magnitude
     # faster (but it's still pretty slow, partially due to
-    # datamapper's casting of the timestamps to DateTime, which we
-    # really don't need - a string straight out of the database would
-    # be better for our needs).
-
-    # At the time of this writing, we have 1/4 million records, so
-    # 2000 gives us 125 or so separate database hits.
+    # datamapper's casting of the timestamps to DateTime).  At the
+    # time of this writing, we have 1/4 million records, so 2000 gives
+    # us 125 or so separate database hits.
 
     def package_chunks
       size   = CHUNK_SIZE
@@ -102,13 +92,8 @@ module Store
   # It returns an XML document with the fixity data provided by a PoolFixity object, a piece at a time.
 
   class PoolFixityXmlReport
-    include Enumerable
-
-    @pool_fixity = nil
-    @hostname    = nil
 
     def initialize hostname, port = 80, scheme = 'http'
-
       @hostname    = hostname
       @pool_fixity = PoolFixity.new(hostname, port, scheme)
     end
@@ -140,9 +125,6 @@ module Store
   # be used in a space-efficient rack response.
 
   class PoolFixityCsvReport
-    include Enumerable
-
-    @pool_fixity = nil
 
     def initialize hostname, port = '80', scheme = 'http'
       @pool_fixity = PoolFixity.new(hostname, port, scheme)

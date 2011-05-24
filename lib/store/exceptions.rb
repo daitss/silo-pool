@@ -178,7 +178,7 @@ module Store
   class CouldNotLockPool          < Http500;  end   # timed out acquiring lock.
 
   class SiloBadName               < Http409;  end   # bad name
-  class SiloResourceExists        < Http405;  end   # already exists, and put/post was attempted to modify it
+  class SiloResourceExists        < Http403;  end   # already exists, and put/post was attempted to modify it
   class MissingMD5                < Http400;  end   # when we require an MD5 header
   class MissingTar                < Http400;  end   # when we require a content type of application/x-tar
   class MD5Mismatch               < Http412;  end   # the supplied md5 didn't match the computed one

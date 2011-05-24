@@ -28,6 +28,13 @@ Feature: Manage the life cycle of a package on a silo partition, protocol 2
     Then I should see "200 OK"
     And the checksum of the retrieved package should match the original package
 
+    When I POST the package to the create URL a second time
+    Then I should see "403 Forbidden"
+
+    When I GET the stored package for the second time
+    Then I should see "200 OK"
+    And the checksum of the retrieved package should match the original package
+
     When I DELETE the stored package for the first time
     Then I should see "204 No Content"
 
@@ -37,4 +44,8 @@ Feature: Manage the life cycle of a package on a silo partition, protocol 2
     When I DELETE the stored package for a second time
     Then I should see "404 Not Found"
 
+# TODO: when silos can support 410 we'll need to support this feature as well
+#
+#    When I POST the package to the create URL after it was DELETEd
+#    Then I should see "403 Forbidden"
 
