@@ -230,7 +230,20 @@ helpers do
     request.body.rewind if request.body.respond_to?('rewind')  
   end
 
-end
+  def safe_silo_size silo, name
+    pretty_size(silo.size(name))
+  rescue => e
+    'error'
+  end
+
+  def safe_silo_datetime silo, name
+    silo.datetime(name).strftime("%B %d, %Y - %r")
+  rescue => e
+    'error'
+  end
+
+
+pend
 
 
 

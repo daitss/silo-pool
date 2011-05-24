@@ -67,8 +67,8 @@
 	      <% packages_1.each do |name| %>
 	      <tr>
 		<td><a href="<%= name %>/"><%= name %></a></td>
-		<td align="right"><%= pretty_size(silo.size(name)) %></td>
-		<td><%= silo.datetime(name).strftime("%B %d, %Y - %r") %></td>
+		<td align="right"><%= safe_silo_size(silo, name) %></td>
+		<td><%= safe_silo_datetime(silo, name) %></td>
               </tr>
               <% end %>
 	    </tbody>
@@ -90,8 +90,8 @@
 	      <% packages_2.each do |name| %>
 	      <tr>
 		<td><a href="<%= name %>/"><%= name %></a></td>
-		<td align="right"><%= pretty_size(silo.size(name)) %></td>
-		<td><%= silo.datetime(name).strftime("%B %d, %Y - %r") %></td>
+		<td align="right"><%= safe_silo_size(silo, name) %></td>
+		<td><%= safe_silo_datetime(silo, name) %></td>
               </tr>
               <% end %>
 	    </tbody>
