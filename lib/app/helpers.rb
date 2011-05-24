@@ -225,7 +225,6 @@ helpers do
     end
   end
 
-
   def rewind_maybe
     request.body.rewind if request.body.respond_to?('rewind')  
   end
@@ -233,17 +232,15 @@ helpers do
   def safe_silo_size silo, name
     pretty_size(silo.size(name))
   rescue => e
+    Logger.err "Error when retrieving size information for #{name} from #{silo}: #{e.class} - #{e.message}"
     'error'
   end
 
   def safe_silo_datetime silo, name
     silo.datetime(name).strftime("%B %d, %Y - %r")
   rescue => e
+    Logger.err "Error when retrieving date information for #{name} from #{silo}: #{e.class} - #{e.message}"
     'error'
   end
 
-
-pend
-
-
-
+end
