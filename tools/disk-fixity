@@ -148,6 +148,7 @@ end
 config   = get_options(ARGV)
 reporter = setup(config)
 
+reporter.info  "DiskFixity started at #{Time.now}"
 
 silos    = select_silos(config, reporter)
 
@@ -204,6 +205,8 @@ silos.each do |silo|
   reporter.info "Total of #{counter.total} packages: #{counter.skipped} skipped, #{counter.ok} succeeded, #{counter.errors} failed"  # TODO: commify, pluralize
   reporter.info 
 end
+
+reporter.info  "DiskFixity finished at #{Time.now}"
 
 reporter.write
 teardown(config)

@@ -233,14 +233,14 @@ helpers do
     pretty_size(silo.size(name))
   rescue => e
     Logger.err "Error when retrieving size information for #{name} from #{silo}: #{e.class} - #{e.message}"
-    'error'
+    'error retrieving size'
   end
 
   def safe_silo_datetime silo, name
     silo.datetime(name).strftime("%B %d, %Y - %r")
   rescue => e
     Logger.err "Error when retrieving date information for #{name} from #{silo}: #{e.class} - #{e.message}"
-    'error'
+    'error retrieving date'
   end
 
 end

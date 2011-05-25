@@ -48,7 +48,7 @@ class Reporter
     @tempfile  = Tempfile.new("report-#{title.split(/\s+/).map{ |word| word.gsub(/[^a-zA-Z0-9]/, '').downcase }.join('-')}-")
     @tempfile.unlink
   rescue => e
-    Logger.error "Fatal error initializing Reporter module: #{e.class}: #{e.message}"
+    Logger.error "Fatal error in Reporter module; #{e.class}: #{e.message}"
   end
 
   def self.max_lines_to_write
@@ -61,7 +61,7 @@ class Reporter
 
   # for debugging - if you call 'done' the report will add to the
   # title its total runtime - from the creation time of the
-  # constructor to the point 'done' was called'
+  # constructor to the point 'done' was called
 
   def done
     @done = Time.now
@@ -140,5 +140,13 @@ class Reporter
       io.puts line
     end
   end
+
+  # A class version of the above, for immediate gratification
+
+  def self.note message, io = STDOUT
+    Logger.info message
+    io.puts message
+  end
+
 
 end # of class Reporter

@@ -385,7 +385,8 @@ reporter = setup(config)
 
 
 begin
-  reporter.info "Starting Tape Mastering/Fixity Checking"
+  reporter.info "Starting Tape Mastering/Fixity Checking at #{Time.now}"
+
   silodata = nil
 
   clean_up_scratch_disk(config.fixity_disk, reporter)
@@ -414,7 +415,7 @@ rescue => e
   e.backtrace.each { |line| reporter.err line.chomp }
   reporter.err "Can't continue checking silo #{silodata.filesystem}, quitting."
 else
-  reporter.info "Finished checking silo #{silodata.filesystem}."
+  reporter.info "Finished Tape Mastering/Fixity Checking at #{Time.now}"
   reporter.write
   teardown(config)
 end

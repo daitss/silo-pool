@@ -16,7 +16,8 @@ gem 'sys-filesystem',       '>= 0.3.2'
 
 # development
 
+gem 'rspec',		  '>= 1.3.0'
+
 # gem 'ci_reporter',      '>= 1.6.2'
 # gem 'cucumber',	  '>= 0.8.5'
-# gem 'rspec',		  '>= 1.3.0'
 

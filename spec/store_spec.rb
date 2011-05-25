@@ -21,10 +21,6 @@ describe Store do
     (Store::REVISION.length > 0).should == true
   end
 
-  it "should provide a to_s method on version that matches the version label information" do
-    ("#{Store.version}" =~ /^Silo Service/).should == 0
-  end
-
   it "should provide version rev information" do
     (Store.version.rev =~ %r{Version}).should_not == nil
   end
