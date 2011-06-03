@@ -17,8 +17,13 @@ helpers do
     1
   end
 
-  def fixity_time silo
+  def oldest_fixity_time silo    # least recent
     ts = silo.oldest_fixity
+    ts.nil? ? '' : ts.strftime('%Y-%m-%d %X')
+  end
+
+  def newest_fixity_time silo    # most recent
+    ts = silo.newest_fixity
     ts.nil? ? '' : ts.strftime('%Y-%m-%d %X')
   end
 

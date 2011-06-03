@@ -145,6 +145,10 @@ module Store
       DB::PackageRecord.min(:latest_timestamp, :extant => true, :silo_record => silo_record)
     end
 
+    def newest_fixity 
+      DB::PackageRecord.max(:latest_timestamp, :extant => true, :silo_record => silo_record)
+    end
+
 ### TODO: these need to be pulled out into different more appropriately named mixin, or just back into DB, maybe:
 
     def package_count search = nil

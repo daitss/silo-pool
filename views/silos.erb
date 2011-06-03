@@ -32,7 +32,7 @@
           <th>State</th>
           <th>Methods</th>
           <th>Pkgs</th>
-          <th>Fixity Date</th>
+          <th colspan="2">Fixity Dates</th>
           <th colspan="2">
 	    <% if credentials %>	    
    	      <a href="/credentials">Change Site Password</a>
@@ -69,7 +69,11 @@
 	  </td>
 
           <td>
-	    <%= fixity_time(silo) %></a>
+	    <%= oldest_fixity_time(silo) %></a>
+	  </td>
+
+          <td>
+	    <%= newest_fixity_time(silo) %></a>
 	  </td>
 
           <td>
