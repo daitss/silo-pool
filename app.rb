@@ -15,6 +15,19 @@ require 'store/silotape'
 #   SILO_TEMP              a temporary directory for us to write mini-silos to from tape (see SiloTape).
 #   TIVOLI                 the name of the tape robot (see SiloTape and TsmExecutor).
 
+
+def initialize_database config_file, config_key
+  Store::SiloDB.setup config_file, config_key
+rescue Store::ConfigurationError => e
+  Logger.err e.message
+  raise e
+rescue => e
+  Logger.err e.message
+  e.backtrace.each { |line| Logger.err e.message }
+  raise e
+end
+
+
 configure do
   $KCODE = 'UTF8'
 
@@ -32,32 +45,51 @@ configure do
 
   ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
 
-  use Rack::CommonLogger, Logger.new(:info, 'Rack:')
-
   Logger.info "Starting #{Store.version.name}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
-  # (ENV.keys - ['TIVOLI_SERVER', 'DATABASE_CONFIG_KEY', 'DATABASE_CONFIG_FILE']).sort.each do |key|
-  #   Logger.info "Environment: #{key} => #{ENV[key].nil? ? 'undefined' : "'" + ENV[key] +"'"}"
-  # end
-
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATABASE_LOGGING']
 
-  begin
-    Store::SiloDB.setup ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY']
-  rescue Store::ConfigurationError => e
-    Logger.err e.message
-    raise e
-  rescue => e
-    Logger.err e.message
-    e.backtrace.each { |line| Logger.err e.message }
-    raise e
-  end
+  initialize_database(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 end
 
+
+def log_incoming
+  @started = Time.now
+  Logger.info sprintf('Sinatra: %s %s %s %s "%s%s"',
+                      env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
+                      env["REMOTE_USER"] || "-",
+                      env["SERVER_PROTOCOL"],
+                      env["REQUEST_METHOD"],
+                      env["PATH_INFO"],
+                      env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"])
+end
+
+
+def log_outgoing
+  Logger.info sprintf('Sinatra: %s %s %s %s "%s%s" %d %s %0.4f',
+                      env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
+                      env["REMOTE_USER"] || "-",
+                      env["SERVER_PROTOCOL"],
+                      env["REQUEST_METHOD"],
+                      env["PATH_INFO"],
+                      env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"],
+                      response.status.to_s[0..3],
+                      response.length,
+                      Time.now - @started)
+end
+
+
 before do
+  log_incoming
   raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?
 end
+
+
+after do
+  log_outgoing 
+end
+
 
 load 'lib/app/helpers.rb'
 load 'lib/app/errors.rb'

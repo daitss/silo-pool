@@ -186,10 +186,10 @@ module Store
   class FatalFixityError          < Http500;  end
   class BadPassword               < Http400;  end   # empty or bad password
 
+  class TarReaderError < Http500 ; end
+
   # TODO investigate how each of these are used and get them subclassed into the HTTP classed errors as above
   # This set is way over-engineered.
-
-  class TarReaderError < StandardError ; end
   
   class StorageError < StandardError; end
 
