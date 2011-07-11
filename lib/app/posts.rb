@@ -4,7 +4,7 @@ require 'store/poolreservation'
 require 'builder'
 
 post '/create/:name' do |name|
-
+  log_start_of_request
   # TODO: check if name is unique accross entire set of pools.
   
   raise SiloBadName, "The identifier #{name} does not meet our resource naming convention"    unless good_name name
@@ -61,6 +61,29 @@ post '/:partition/knobs/allowed-methods' do |partition|
 
   redirect absolutely("/silos/")
 end
+
+
+post '/new-silo?' do
+  new_filesystem = params[:new_filesystem]
+  raise BadFilesystem, "filesystem wasn't specified" unless new_filesystem.class == String
+  
+  raise BadFilesystem, "#{new_filesystem} is already listed as a silo" if Store::DB::SiloRecord.lookup(hostname, new_filesystem)
+
+  Logger.warn "Request from #{@env['REMOTE_ADDR']} to add silo #{new_filesystem}"
+
+  raise BadFilesystem, "#{new_filesystem} doesn't exist"      unless File.exists? new_filesystem
+  raise BadFilesystem, "#{new_filesystem} isn't a directory"  unless File.directory? new_filesystem
+  raise BadFilesystem, "#{new_filesystem} isn't writable"     unless File.writable? new_filesystem
+  raise BadFilesystem, "#{new_filesystem} isn't a readable"   unless File.readable? new_filesystem
+  raise BadFilesystem, "#{new_filesystem} needs to be owned by #{StoreUtils.user}"  unless StoreUtils.user == StoreUtils.user(new_filesystem)
+
+  rec = Store::SiloDB.create(hostname, new_filesystem)
+
+  raise "Database record for new silo at #{new_filesystem} could not be created: " + rec.errors.full_messages.join('; ') unless rec and rec.saved?
+
+  redirect absolutely("/#{rec.short_name}/knobs/")
+end
+
 
 post '/credentials?' do
 

@@ -13,7 +13,7 @@ def parse_command_line args
   opts = OptionParser.new do |opts|
     opts.on("--file DB_CONFIG_FILE",  String, "The database configuration filename for this service")        { |filename| conf.file = filename }
     opts.on("--key DB_CONFIG_KEY",    String, "The key in the database configuration file for this service") { |key|      conf.key = key }
-    opts.on("--server-name HOSTNAME", String, "The hostname for this service")                               { |address|  conf.address = address }
+    opts.on("--server-name HOSTNAME", String, "The server name for this service")                            { |address|  conf.address = address }
   end
   opts.parse!(args)
   raise "No filename for the DB configuration file provided"  unless conf.file
@@ -21,6 +21,10 @@ def parse_command_line args
   raise "Configuration yaml file #{conf.file} not readable"   unless File.readable? conf.file
   raise "No key to the DB configuration file provided"        unless conf.key
   raise "No server address provided"                          unless conf.address
+
+  if conf.address.downcase =~ /localhost/
+    STDERR.puts "Warning: normally, you want to use the external virtual address of the service here, not localhost"
+  end
 rescue => e
   STDERR.puts e, opts
   exit

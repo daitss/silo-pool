@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+# TODO:  print out all configuration information in log
+
+
 # TODO: add randomize option, like disk-fixity
 # TODO: take optional argument from commandline, specifying one or more particular
 # tape silos to check.

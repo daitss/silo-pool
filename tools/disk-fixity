@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+# TODO:  print out all configuration information in log
+
 $LOAD_PATH.unshift      File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 # This program trundles through one or more disk-based silos and does md5 and sha1 checksums,

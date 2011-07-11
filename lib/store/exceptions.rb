@@ -189,7 +189,6 @@ module Store
   class TarReaderError < Http500 ; end
 
   # TODO investigate how each of these are used and get them subclassed into the HTTP classed errors as above
-  # This set is way over-engineered.
   
   class StorageError < StandardError; end
 
@@ -208,6 +207,8 @@ module Store
   
   class FixityDbError < StorageError; end                 # e.g. can't connect to database
                 
+  class BadFilesystem < Http400; end            # new silo can't be made from a silo filesystem, for some reason
+
 
 end # of module
 

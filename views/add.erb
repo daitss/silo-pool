@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css" media="screen">
+      @import "/std.css";
+    </style>
+    <title>New Silo</title>
+  </head>
+
+  <body>
+    <h1>New Silo</h1>
+    <h2> 
+      <a href="/silos/"><%= hostname %></a> 
+      &rArr; 
+      Add New Silo
+    </h2>
+
+
+      <form method="post"  action="/new-silo">
+      <fieldset>
+	<legend>
+	  Enter a New Filesystem to Use
+	</legend>
+	
+	<table class="expansive" style="border: none;">
+	  <tr>
+	    <td class="bl">
+	      <input style="width: 30em;" id="new_filesystem" type="text" name="new_filesystem">
+	      <label for="new_filesystem"></label>
+	    </td>
+	    
+	    <td class="br">
+	      <input type="submit" value="proceed">
+	    </td>
+	  </tr>
+	</table>
+	
+      </fieldset>  
+      </form>
+
+
+      <form method="get" name="cancel" action="/silos/">
+      <div style="margin:20px;">
+	<input type="submit" value="cancel">
+      </div>
+      </form>
+      
+      <p class="footer">
+	<%= revision %>
+      </p>
+  </body>
+</html>

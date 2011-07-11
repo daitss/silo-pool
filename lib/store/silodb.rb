@@ -19,7 +19,7 @@ module Store
     
     def initialize(hostname, filesystem)
       @hostname    = hostname.downcase
-      @filesystem  = filesystem.gsub(%r{/+$}, '')
+      @filesystem  = filesystem.sub(%r{/+$}, '')
       @silo_record = DB::SiloRecord.lookup(hostname, filesystem) ### or DB::SiloRecord.create(hostname, filesystem)
       super filesystem
     end
@@ -29,6 +29,7 @@ module Store
     end
 
     def self.create(hostname, filesystem)
+      filesystem = filesystem.sub(%r{/+$}, '')
       raise "Silo create: filesystem #{filesystem} does not exist" unless File.directory? filesystem
       DB::SiloRecord.create hostname, filesystem
     end

@@ -28,14 +28,14 @@ module Store
 
     @@lockfile_directory =  '/var/tmp/'
 
-    MAX_RESERVATION = 3.0 / 24.0   # 3 hours expressed in days
+    MAX_RESERVATION = 16.0 / 24.0  # 16 hours expressed in days for DateTime
     LOCK_TIMEOUT = 30              # seconds we'll wait to get at the DB ReservedDiskSpace table
-    HEADROOM  = 256 * 1024         # 256 KB headroom required
+    HEADROOM  = 256 * 1024         # 256 KB headroom required on partitions
 
     attr_reader :record_id
 
     def initialize size   # size in bytes
-      @record_id = nil      
+      @record_id = nil
       yield reservation_lock { best_fit_silo(size) }
     ensure
       rec = nil
@@ -87,7 +87,7 @@ module Store
 
     def reservation_lock wait_time = LOCK_TIMEOUT
       open(PoolReservation.lockfile, 'w') do |fd| 
-       Timeout.timeout(wait_time) { fd.flock(File::LOCK_EX) }
+        Timeout.timeout(wait_time) { fd.flock(File::LOCK_EX) }
         yield
       end
     rescue Timeout::Error => e

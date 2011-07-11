@@ -21,32 +21,12 @@ module Store
     # especially since very little reporting machinery can be set up
     # at the time it is called.
 
-    def self.setup yaml_file, key
-      oops = "DB setup can't"
+    def self.setup *args
 
-      raise ConfigurationError, "#{oops} understand the configuration file name - it's not a filename string, it's a #{yaml_file.class}."  unless (yaml_file.class == String)
-      raise ConfigurationError, "#{oops} understand key for the configuration file #{yaml_file} - it's not a string, it's a #{key.class}." unless (key.class == String)
-      begin
-        dict = YAML::load(File.open(yaml_file))
-      rescue => e
-        raise ConfigurationError, "#{oops} parse the configuration file #{yaml_file}: #{e.message}."
-      end
-      raise ConfigurationError, "#{oops} parse the data in the configuration file #{yaml_file}." if dict.class != Hash
-      dbinfo = dict[key]
-      raise ConfigurationError, "#{oops} get any data from the #{yaml_file} configuration file using the key #{key}."                                    unless dbinfo
-      raise ConfigurationError, "#{oops} get the vendor name (e.g. 'mysql' or 'postsql') from the #{yaml_file} configuration file using the key #{key}." unless dbinfo.include? 'vendor'
-      raise ConfigurationError, "#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}."                           unless dbinfo.include? 'database'
-      raise ConfigurationError, "#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'hostname'
-      raise ConfigurationError, "#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}."                               unless dbinfo.include? 'username'
+      connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
 
-      # Example string: 'postgres://root:topsecret@localhost:5432/silos'
+      dm = DataMapper.setup(:store_master, connection_string)
 
-      connection_string = dbinfo['vendor'] + '://' +
-                          dbinfo['username'] +
-                         (dbinfo['password'] ? ':' + dbinfo['password'] : '') + '@' +
-                          dbinfo['hostname'] +
-                         (dbinfo['port'] ? ':' + dbinfo['port'].to_s : '') + '/' +
-                          dbinfo['database']
       begin
         dm = DM.setup connection_string        
         dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
@@ -60,7 +40,8 @@ module Store
 
     class DM
       def self.setup db
-        dm = DataMapper.setup(:default, db)
+        dm = DataMapper.setup(:default, db) # TOFU: change from :default to :silo_pool or some such
+        # TODO:  use dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
         DataMapper.finalize
         dm
       end
@@ -158,7 +139,7 @@ module Store
       property  :filesystem,  String, :length => 255, :required => true
       property  :hostname,    String, :length => 127, :required => true
       property  :state,       Enum[ *states  ], :default =>   :disk_master
-      property  :forbidden,   Flag[ *methods ], :default => [ :post, :options ]
+      property  :forbidden,   Flag[ *methods ], :default => [ :delete, :put, :post, :options ]  # :post seems to be a no-op now?
 ###   TODO: add this
 ###   property  :retired,     Boolean, :default  => false
 
@@ -526,7 +507,7 @@ module Store
       property  :size,        Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1      
 
       # remove all records from the database older than +max_reservation+.
-      # +max_reservation+ is expressed in days - a few hours works well.
+      # +max_reservation+ is expressed in days.
 
       def self.cleanout_stale_reservations max_reservation
         ReservedDiskSpace.all(:timestamp.lt => DateTime.now - max_reservation).destroy

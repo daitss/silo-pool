@@ -27,6 +27,10 @@ rescue => e
   raise e
 end
 
+def database_logging? val
+  return false if val.nil?
+  return ['true', 'ok', 'yep', 'sure'].include? val.downcase
+end
 
 configure do
   $KCODE = 'UTF8'
@@ -38,8 +42,8 @@ configure do
   set :environment,  :production             # Get some exceptional defaults.
   set :raise_errors,  false                  # Handle our own errors
 
-  set :tivoli_server, ENV['TIVOLI_SERVER']
-  set :silo_temp,     ENV['SILO_TEMP']       
+  set :tivoli_server,      ENV['TIVOLI_SERVER']
+  set :silo_temp,          ENV['SILO_TEMP']       
 
   Logger.setup('SiloPool', ENV['VIRTUAL_HOSTNAME'])
 
@@ -48,48 +52,19 @@ configure do
   Logger.info "Starting #{Store.version.name}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
   Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
 
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if  ENV['DATABASE_LOGGING']
+  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if database_logging? ENV['DATABASE_LOGGING']
 
   initialize_database(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
 end
 
-
-def log_incoming
-  @started = Time.now
-  Logger.info sprintf('Sinatra: %s %s %s %s "%s%s"',
-                      env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
-                      env["REMOTE_USER"] || "-",
-                      env["SERVER_PROTOCOL"],
-                      env["REQUEST_METHOD"],
-                      env["PATH_INFO"],
-                      env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"])
-end
-
-
-def log_outgoing
-  Logger.info sprintf('Sinatra: %s %s %s %s "%s%s" %d %s %0.4f',
-                      env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
-                      env["REMOTE_USER"] || "-",
-                      env["SERVER_PROTOCOL"],
-                      env["REQUEST_METHOD"],
-                      env["PATH_INFO"],
-                      env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"],
-                      response.status.to_s[0..3],
-                      response.length,
-                      Time.now - @started)
-end
-
-
 before do
-  log_incoming
+  @started = Time.now
   raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?
 end
 
-
 after do
-  log_outgoing 
+  log_end_of_request @started
 end
-
 
 load 'lib/app/helpers.rb'
 load 'lib/app/errors.rb'

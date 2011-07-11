@@ -7,7 +7,7 @@ require 'builder'
 include Store
 
 put '/:partition/data/:name' do |partition, name|
-
+  log_start_of_request
   silo = get_silo(partition)
   silo.put_ok? or raise Http405 
 

@@ -24,6 +24,17 @@
       <%= hostname %>
     </h2>
 
+    <p>
+
+      You may <% if credentials %>	    
+      <a href="/credentials">change the site password</a>
+      <% else %>
+      <a href="/credentials">set a site password</a>
+      <% end %>
+      or add a <a href="/add-silo">new silo</a>.
+    </p>
+
+
     <table id="silos">
       <thead>
 	<tr class="border">
@@ -34,11 +45,6 @@
           <th>Pkgs</th>
           <th colspan="2">Fixity Dates</th>
           <th colspan="2">
-	    <% if credentials %>	    
-   	      <a href="/credentials">Change Site Password</a>
-	    <% else %>
-   	      <a href="/credentials">Set Site Password</a>
-	    <% end %>
 	  </th>
 	</tr>
       </thead>

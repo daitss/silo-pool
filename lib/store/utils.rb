@@ -186,4 +186,41 @@ module StoreUtils
     File.join(dir, $0.split(File::SEPARATOR).pop + '.pid')
   end
 
+  # Purpose here is to provide connections for datamapper using our yaml configuration file + key technique;
+  # This will probably go away.
+
+  def StoreUtils.connection_string yaml_file, key
+
+    oops = "Database setup can't"
+
+    # This looks like excessive error checking, but configuration errors need a lot explanation for new users of DAITSS.
+
+    begin
+      dict = YAML::load(File.open(yaml_file))
+    rescue => e
+      raise "#{oops} parse the configuration file '#{yaml_file}': #{e.message}."
+    end
+
+    raise "#{oops} parse the data in the configuration file '#{yaml_file}'." if dict.class != Hash
+
+    dbinfo = dict[key]
+    raise "#{oops} get any data from the configuration file '#{yaml_file}' using the key '#{key}'"                                     unless dbinfo
+    raise "#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the configuration file '#{yaml_file}' using the key '#{key}'" unless dbinfo.include? 'vendor'
+    raise "#{oops} get the database name from the configuration file '#{yaml_file}' using the key '#{key}'"                            unless dbinfo.include? 'database'
+    raise "#{oops} get the host name from the configuration file '#{yaml_file}' using the key '#{key}'"                                unless dbinfo.include? 'hostname'
+    raise "#{oops} get the user name from the configuration file '#{yaml_file}' using the key '#{key}'"                                unless dbinfo.include? 'username'
+
+    # Example string: 'mysql://root:topsecret@localhost/silos'
+    # TODO: support different ports
+
+    return \
+      dbinfo['vendor']    + '://' +                                   # mysql://
+      dbinfo['username']  +                                           # mysql://fischer
+     (dbinfo['password']  ? ':' + dbinfo['password'] : '') + '@' +    # mysql://fischer:topsecret@  (or mysql://fischer@)
+      dbinfo['hostname']  +
+     (dbinfo['port']      ? ':' + dbinfo['port'].to_s : '')  + '/' +  # mysql://fischer:topsecret@localhost/ (or mysql://fischer:topsecret@localhost:port/)
+      dbinfo['database']                                              # mysql://fischer:topsecret@localhost/store_master
+  end
+
+
 end # of Module StoreUtils

@@ -25,6 +25,10 @@ get '/credentials?' do
   erb :credentials, :locals => { :credentials => DB::Authentication.lookup('admin'), :hostname => hostname, :revision => REVISION}
 end
 
+get '/add-silo?' do
+  erb :add, :locals => {:hostname => hostname, :revision => REVISION}
+end
+
 
 # provide information on the services we supply.  There are two requirements: 
 #   * a URL that we can POST to: it will return a URL that we can PUT a new resource to store.

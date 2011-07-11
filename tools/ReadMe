@@ -40,13 +40,15 @@ FDA specific, no warranties expressed or implied:
    on disk; then does fixity check - if all pass, mark as
    'tape-master'.  If there are no 'disk-idling' silos, selects the
    silo that has the oldest complete fixity check; it is extracted
-   from tivoli and written to a scratch disk.
+   from tivoli and written to a scratch disk.  It is of limited use 
+   to non-FDA systems.
 
  * tivolis-ls
 
    Give it a silo, e.g. /daitssfs/001, and it will list it out - but
-   only for the files you owned when the last backup was made.  Uses
-   options appropriate to our archive/backup strategy.
+   only for the files you owned when the last backup was made: for us,
+   that is the 'silo' user.  Uses options appropriate to our
+   archive/backup strategy; it's of limited use to non-FDA systems.
 
  * tivolis-fetch
   

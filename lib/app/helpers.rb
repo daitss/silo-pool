@@ -214,7 +214,7 @@ helpers do
 
   def needs_authentication?
 
-    return false unless request.put? or request.delete? or request.post?
+    # return false unless request.put? or request.delete? or request.post?
 
     admin_credentials = DB::Authentication.lookup('admin')
 
@@ -246,6 +246,43 @@ helpers do
   rescue => e
     Logger.err "Error when retrieving date information for #{name} from #{silo}: #{e.class} - #{e.message}"
     'error retrieving date'
+  end
+
+  # Stolen, with minor corrections, from Rack::CommonLogger - format request information
+
+  def log_prefix intro = ''
+    intro += ' ' unless intro.empty?
+    sprintf('%s%s %s %s %s "%s%s"',
+            intro,
+            env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
+            env["REMOTE_USER"] || "-",
+            env["SERVER_PROTOCOL"],
+            env["REQUEST_METHOD"],
+            env["PATH_INFO"],
+            env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"])
+  end
+
+  # Rack::CommonLogger works well enough, I guess, but we really need to
+  # log on the beggining of long-running requests to get the sense of
+  # what's happening on our system, which means we provide logging on
+  # the start of a request; this could be done in a before do ... end
+  # block, or in selected routes.
+
+  def log_start_of_request
+    Logger.info log_prefix('Sinatra Starting:')
+  end
+
+  # This is effectively what Rack::CommonLogger does:
+
+  def log_end_of_request time_started
+    line = sprintf('%s %d %s %0.4f', log_prefix('Sinatra:'), response.status.to_s[0..3], response.length, Time.now - time_started)                   
+    if response.status >= 500
+      Logger.err line
+    elsif response.status >= 400
+      Logger.warn line
+    else
+      Logger.info line
+    end
   end
 
 end
