@@ -77,7 +77,7 @@ post '/new-silo?' do
   raise BadFilesystem, "#{new_filesystem} isn't a readable"   unless File.readable? new_filesystem
   raise BadFilesystem, "#{new_filesystem} needs to be owned by #{StoreUtils.user}"  unless StoreUtils.user == StoreUtils.user(new_filesystem)
 
-  rec = Store::SiloDB.create(hostname, new_filesystem)
+  rec = Store::SiloDB.create(hostname, new_filesystem.strip)
 
   raise "Database record for new silo at #{new_filesystem} could not be created: " + rec.errors.full_messages.join('; ') unless rec and rec.saved?
 
