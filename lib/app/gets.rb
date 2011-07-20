@@ -18,7 +18,14 @@ REVISION = Store.version.rev
 get '/'       do;    redirect absolutely('/silos/'), 302;  end
 get '/silos'  do;    redirect absolutely('/silos/'), 301;  end
 get '/silos/' do
-  erb :silos, :locals => { :credentials => DB::Authentication.lookup('admin'), :hostname => hostname, :silos => list_silos, :revision => REVISION}
+  erb :silos, :locals => { 
+    :stale_days => settings.fixity_stale_days,
+    :expired_days => settings.fixity_expired_days,
+    :credentials => DB::Authentication.lookup('admin'), 
+    :hostname => hostname, 
+    :silos => list_silos, 
+    :revision => REVISION
+  }
 end
 
 get '/credentials?' do

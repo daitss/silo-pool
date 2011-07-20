@@ -27,6 +27,21 @@ helpers do
     ts.nil? ? '' : ts.strftime('%Y-%m-%d %X')
   end
 
+  # return one of :ok, :stale, :expired as appropriate - requires that
+  # optional settings fixity_stale_days and fixity_expired_days have
+  # been set, and that there are fixity-checked packages in the silo,
+  # of course. The value :ok is returned if none of these
+  # pre-conditions are met.
+  
+  def fixity_status silo
+    earliest  = silo.oldest_fixity
+    return :ok unless (earliest and settings.fixity_expired_days and settings.fixity_stale_days)  # vacuously OK
+    now = DateTime.now
+    return :expired if  now - earliest  >= settings.fixity_expired_days
+    return :stale   if  now - earliest  >= settings.fixity_stale_days
+  end
+
+
   def mime_type_by_filename name
     # local color:
     return 'application/xml'  if name =~ /\.mets$/i

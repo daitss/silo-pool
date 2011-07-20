@@ -222,5 +222,43 @@ module StoreUtils
       dbinfo['database']                                              # mysql://fischer:topsecret@localhost/store_master
   end
 
+  Struct.new('SiloConfig',
+             :database_connection_string,
+             :fixity_stale_days,
+             :fixity_expired_days,
+             :log_database_queries,
+             :log_syslog_facility,
+             :temp_directory,
+             :tivoli_server,
+             :silo_temp_directory,
+             :virtual_hostname
+             )
+
+  def StoreUtils.read_config yaml_file
+
+    conf = Struct::SiloConfig.new
+
+    begin
+      hash = YAML::load(File.open(yaml_file))
+    rescue => e
+      raise "Can't parse the Silo Pool configuration file '#{yaml_file}': #{e.message}."
+    else
+      raise "Can't parse the data in the Silo Pool configuration file '#{yaml_file}'." if hash.class != Hash
+    end
+
+    conf.members.each { |x| conf[x] = hash[x] }
+
+    # set reasonable defaults for missing values:
+
+    conf.temp_directory       ||= '/var/tmp'
+    conf.silo_temp_directory  ||= '/var/tmp'              # bad idea
+    conf.virtual_hostname     ||= Socket.gethostname
+
+    # conf.fixity_stale_days    ||= 45
+    # conf.fixity_expired_days  ||= 60
+
+    return conf
+  end
+
 
 end # of Module StoreUtils

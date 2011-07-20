@@ -5,35 +5,15 @@ require 'store/silotape'
 
 # TODO: transfer compression in PUT seems to retain files as compressed...fah.
 
-# configure expects some environment variables (typically set up in config.ru, which sets development
-# defaults and may be over-ridden from either the command line or apache SetEnv directives):
-#
-#   DATABASE_CONFIG_FILE   a yaml configuration file that contains database information (see SiloDB)
-#   DATABASE_CONFIG_KEY    a key into a hash provided by the above file
-#   DATABASE_LOGGING       if set to any value, do verbose datamapper logging
-#   LOG_FACILITY           if set, use that value as the syslog facility code;  otherwise stderr (see Logger)
-#   SILO_TEMP              a temporary directory for us to write mini-silos to from tape (see SiloTape).
-#   TIVOLI                 the name of the tape robot (see SiloTape and TsmExecutor).
-
-
-def initialize_database config_file, config_key
-  Store::SiloDB.setup config_file, config_key
-rescue Store::ConfigurationError => e
-  Logger.err e.message
-  raise e
-rescue => e
-  Logger.err e.message
-  e.backtrace.each { |line| Logger.err e.message }
-  raise e
-end
-
-def database_logging? val
-  return false if val.nil?
-  return ['true', 'ok', 'yep', 'sure'].include? val.downcase
+def get_config
+  filename = ENV['SILOPOOL_CONFIG_FILE'] || File.join(File.dirname(__FILE__), 'config.yml')
+  config = StoreUtils.read_config(filename)
 end
 
 configure do
   $KCODE = 'UTF8'
+
+  # boiler plate
 
   disable :logging        # Stop CommonLogger from logging to STDERR, please.
   disable :dump_errors    # Set to true in 'classic' style apps (of which this is one) regardless of :environment; it
@@ -42,20 +22,33 @@ configure do
   set :environment,  :production             # Get some exceptional defaults.
   set :raise_errors,  false                  # Handle our own errors
 
-  set :tivoli_server,      ENV['TIVOLI_SERVER']
-  set :silo_temp,          ENV['SILO_TEMP']       
+  # our app-specific settings:
 
-  Logger.setup('SiloPool', ENV['VIRTUAL_HOSTNAME'])
+  config = get_config
 
-  ENV['LOG_FACILITY'].nil? ? Logger.stderr : Logger.facility  = ENV['LOG_FACILITY']
+  set :tivoli_server, config.tivoli_server
+  set :silo_temp, config.silo_temp_directory
+  set :database_connection_string, config.database_connection_string
+  set :fixity_stale_days, config.fixity_stale_days
+  set :fixity_expired_days, config.fixity_expired_days
 
-  Logger.info "Starting #{Store.version.name}; Tivoli server is #{ENV['TIVOLI_SERVER'] || 'not defined.' }."
-  Logger.info "Connecting to the DB using key '#{ENV['DATABASE_CONFIG_KEY']}' with configuration file #{ENV['DATABASE_CONFIG_FILE']}."
+  Logger.setup 'SiloPool', config.virtual_hostname
 
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if database_logging? ENV['DATABASE_LOGGING']
+  if config.log_syslog_facility
+    Logger.facility = config.log_syslog_facility
+  else
+    Logger.stderr
+  end
 
-  initialize_database(ENV['DATABASE_CONFIG_FILE'], ENV['DATABASE_CONFIG_KEY'])
+  Logger.info "Starting #{Store.version.name}; Tivoli server is #{settings.tivoli_server || 'not defined.' }."
+
+  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
+
+  Store::DB.setup settings.database_connection_string
+
+  ENV['TMPDIR'] = config.temp_directory if config.temp_directory
 end
+
 
 before do
   @started = Time.now

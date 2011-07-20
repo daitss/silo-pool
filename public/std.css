@@ -78,7 +78,7 @@ a:hover, a:active {
 table {
     border: solid;
     border-collapse: collapse;
-    border-width: 1px;
+    border-width: 1px; 
 }
 
 
@@ -86,6 +86,11 @@ td {
     padding: 0.25em 1em 0.25em 1em;
 }
 
+td.tight {
+    padding: 0.25em 0.5em 0 0.5em;
+    text-align: left;
+    vertical-align: bottom;
+}
 
 th {
     font: italic bold 1.0em georgia, sans-serif;
