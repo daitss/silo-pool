@@ -371,7 +371,7 @@ module Store
       begin
         FileUtils.mkdir_p parent_path(name)
       rescue => e
-        raise SiloError, "Parent directory creation for #{describe name} failed: #{e.message}"
+        raise ConfigurationError, "Parent directory creation for #{describe name} failed: #{e.message}"
       end
       lockfile = File.join(parent_path(name), LOCK_FILENAME)
 
@@ -390,7 +390,7 @@ module Store
       begin
         FileUtils.mkdir_p parent_path(name)
       rescue => e
-        raise SiloError, "Parent directory creation for #{describe name} failed: #{e.message}"
+        raise ConfigurationError, "Parent directory creation for #{describe name} failed: #{e.message}"
       end
       lockfile = File.join(parent_path(name), LOCK_FILENAME)
 
