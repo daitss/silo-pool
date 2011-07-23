@@ -146,7 +146,7 @@ helpers do
       when :disk
         silos.push SiloDB.new(hostname, rec.filesystem)
       when :tape
-        silos.push SiloTape.new(hostname, rec.filesystem, settings.silo_temp, settings.tivoli_server)
+        silos.push SiloTape.new(hostname, rec.filesystem, settings.silo_temp_directory, settings.tivoli_server)
       end
     end
     silos
@@ -179,7 +179,7 @@ helpers do
       raise Http404, "The resource #{web_location(partition, name)} does not exist" if name and not silo.exists?(name)
 
     when :tape
-      silo = SiloTape.new(hostname, dir, settings.silo_temp, settings.tivoli_server)
+      silo = SiloTape.new(hostname, dir, settings.silo_temp_directory, settings.tivoli_server)
       raise Http404, "The resource #{web_location(partition, name)} does not exist" if name and not silo.exists?(name)
 
     else

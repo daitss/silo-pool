@@ -26,11 +26,11 @@ configure do
 
   config = get_config
 
-  set :tivoli_server, config.tivoli_server
-  set :silo_temp, config.silo_temp_directory
+  set :tivoli_server,              config.tivoli_server
+  set :silo_temp_directory,        config.silo_temp_directory
   set :database_connection_string, config.database_connection_string
-  set :fixity_stale_days, config.fixity_stale_days
-  set :fixity_expired_days, config.fixity_expired_days
+  set :fixity_stale_days,          config.fixity_stale_days
+  set :fixity_expired_days,        config.fixity_expired_days
 
   Logger.setup 'SiloPool', config.virtual_hostname
 
