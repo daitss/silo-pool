@@ -1,6 +1,17 @@
 # -*- mode: ruby; -*-
 
+require 'socket'
+
 source "http://rubygems.org"
+
+# TODO: make this work for Gemspec.lock file - maybe use development key words?
+
+case Socket.gethostname
+when /romeo-foxtrot/i    
+  gem "datyl", :path => "/Users/fischer/WorkProjects/daitss2/datyl"
+else
+  gem "datyl", :git => "git://github.com/daitss/datyl.git"
+end
 
 gem 'mime-types', :require => 'mime/types'
 gem 'data_mapper',	    '>= 1.1.0'

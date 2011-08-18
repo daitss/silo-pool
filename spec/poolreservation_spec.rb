@@ -42,7 +42,9 @@ describe "pool reservation" do
         File.chmod(0777, filename)
       end
       FileUtils::rm_rf Dir["#{path}/*"]
-      @silos.push SiloDB.create(@hostname, path)
+      silo = SiloDB.create(@hostname, path)
+      silo.allow(:put)
+      @silos.push silo
     end
   end
 

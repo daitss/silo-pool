@@ -141,6 +141,7 @@ helpers do
 
   def list_silos
     silos = []
+
     SiloDB.silos(hostname).sort{ |a,b| a.filesystem <=> b.filesystem }.each do |rec|
       case rec.media_device
       when :disk

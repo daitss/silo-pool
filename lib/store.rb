@@ -32,8 +32,8 @@ module Store
 
   REVISION = get_capistrano_git_revision()
   RELEASE  = get_capistrano_release()
-  VERSION  = '1.1.1'
-  NAME     = 'Silo Service'
+  VERSION  = File.read(File.expand_path("../../VERSION",__FILE__)).strip
+  NAME     = 'Silo-Pool Service'
 
   def self.version
     os = OpenStruct.new("name"   => "#{NAME} Version #{VERSION}, Git Revision #{REVISION}, Capistrano Release #{RELEASE}",

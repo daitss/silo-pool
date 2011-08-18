@@ -32,8 +32,7 @@ module Store
         dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
         dm
       rescue => e
-        raise ConfigurationError,
-              "Failure setting up the #{dbinfo['vendor']} #{dbinfo['database']} database for #{dbinfo['username']} on #{dbinfo['hostname']} (#{dbinfo['password'] ? 'password supplied' : 'no password'}) - used the configuration file #{yaml_file}: #{e.message}"
+        raise ConfigurationError, "Failure setting up the silo-pool database: #{e.message}"
       end
     end
 
@@ -56,6 +55,15 @@ module Store
 
         self.patch_tables
       end
+
+      def self.autoupgrade!
+        SiloRecord.auto_upgrade!
+        PackageRecord.auto_upgrade!
+        HistoryRecord.auto_upgrade!
+        ReservedDiskSpace.auto_upgrade!
+        Authentication.auto_upgrade!
+      end
+
 
       def self.patch_tables
         db = repository(:default).adapter
@@ -140,8 +148,7 @@ module Store
       property  :hostname,    String, :length => 127, :required => true
       property  :state,       Enum[ *states  ], :default =>   :disk_master
       property  :forbidden,   Flag[ *methods ], :default => [ :delete, :put, :post, :options ]  # :post seems to be a no-op now?
-###   TODO: add this
-###   property  :retired,     Boolean, :default  => false
+      property  :retired,     Boolean, :default  => false
 
       has n,    :package_record, :constraint => :destroy
 

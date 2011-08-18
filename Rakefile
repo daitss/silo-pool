@@ -88,6 +88,10 @@ task :ripple   do
   sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/silos       -S who=silo:daitss"
 end
 
+task :retsina   do
+  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/silos       -S who=silo:daitss"
+end
+
 
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."

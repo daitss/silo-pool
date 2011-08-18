@@ -34,9 +34,12 @@ module Store
 
     def initialize(storage_directory_root)
 
-      unless File.directory? storage_directory_root
-        raise SiloError, "File path '#{storage_directory_root}' is not a directory."
-      end
+      # The following caused many errors
+      #
+      # unless File.directory? storage_directory_root
+      #   raise SiloError, "File path '#{storage_directory_root}' is not a directory."
+      # end
+
       @filesystem =  storage_directory_root.gsub(%r{/+$}, '')
     end
 

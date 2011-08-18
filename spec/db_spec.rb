@@ -12,6 +12,7 @@ require 'store/exceptions'
 require 'yaml'
 require 'spec_helpers'
 
+
 include Store
 
 HOME = File.dirname(__FILE__)
@@ -178,13 +179,13 @@ share_examples_for "DataMapper SiloRecord class using any database" do
     rec.state.should == :disk_master
   end
 
-  it "should provide default allowed HTTP methods of :get, :put and :delete" do
+  it "should provide default allowed HTTP methods of :get" do
     rec = DB::SiloRecord.lookup  'example.com', @silo_root
 
-    rec.allowed_methods.length.should            == 3
+    rec.allowed_methods.length.should            == 1
     rec.allowed_methods.include?(:get).should    == true
-    rec.allowed_methods.include?(:put).should    == true
-    rec.allowed_methods.include?(:delete).should == true
+    rec.allowed_methods.include?(:put).should    == false
+    rec.allowed_methods.include?(:delete).should == false
   end
 
   it "should return a media_device of :disk in the default state" do
