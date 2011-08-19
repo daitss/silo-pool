@@ -67,7 +67,7 @@ desc "Reset bundles"
 task :bundle do
   sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.lock"
   sh "mkdir -p #{HOME}/bundle"
-  sh "cd #{HOME}; bundle install --path bundle"
+  sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
 end
 
 # Assumes git pushed out
