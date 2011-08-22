@@ -2,27 +2,32 @@
 
 require 'fileutils'
 require 'rake'
-require 'rake/rdoctask'
+require 'rspec'
+require 'rspec/core/rake_task'
 require 'socket'
-require 'spec/rake/spectask'
+
+HOME    = File.expand_path(File.dirname(__FILE__))
+LIBDIR  = File.join(HOME, 'lib')
+TMPDIR  = File.join(HOME, 'tmp')
+FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
+DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
 # require 'bundler/setup'
 
-spec_dependencies = []
+# These days, bundle is called automatically, if a Gemfile exists, by a lot
+# of different libraries - rack and rspec among them.  Use the development
+# gemfile for those things run from this Rakefile.
 
-begin
-  require 'ci/reporter/rake/rspec' 
-rescue LoadError => e
-else
-  spec_dependencies.push "ci:setup:rspec"
-end  
+ENV['BUNDLE_GEMFILE'] = File.join(HOME, 'Gemfile.development')
 
-task :spec => spec_dependencies
+def dev_host
+  Socket.gethostname =~ /romeo-foxtrot/
+end
 
-Spec::Rake::SpecTask.new do |task|
-  task.libs << 'lib'
-  task.libs << 'spec'
-# task.rcov = true if Socket.gethostname =~ /romeo-foxtrot/   # do coverage tests on my devlopment box
+
+RSpec::Core::RakeTask.new do |task|
+  task.rspec_opts = [ '--color', '--format', 'documentation' ] 
+  ## task.rcov = true if Socket.gethostname =~ /romeo-foxtrot/   # do coverage tests on my devlopment box
 end
 
 begin
@@ -53,22 +58,22 @@ end
 
 task :tags => ["tags:emacs"]
 
-HOME    = File.expand_path(File.dirname(__FILE__))
-LIBDIR  = File.join(HOME, 'lib')
-TMPDIR  = File.join(HOME, 'tmp')
-FILES   = FileList["#{LIBDIR}/**/*.rb", 'config.ru', 'app.rb']         # run yard/hanna/rdoc on these and..
-DOCDIR  = File.join(HOME, 'public', 'internals')                       # ...place the html doc files here.
 
-# Rebuild bundler vendor files for local development (capistrano invokes bundler remotely for production).
-# This will rebuild the Gemfile.lock, which we check in, but place the gems under a local bundle directory
-# that's noit under version control.
+
+# Rebuild bundler vendor files for local development.  This will build
+# both a Gemfile.lock, which we check in, and a
+# Gemfile.development.lock.  The gems go to an installation directory
+# on the development host only.
 
 desc "Reset bundles"
 task :bundle do
-  sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.lock"
+  sh "rm -rf #{HOME}/bundle #{HOME}/.bundle #{HOME}/Gemfile.development.lock #{HOME}/Gemfile.lock"
   sh "mkdir -p #{HOME}/bundle"
   sh "cd #{HOME}; bundle --gemfile Gemfile.development install --path bundle"
+  sh "cd #{HOME}; bundle --gemfile Gemfile install --path bundle"
 end
+
+
 
 # Assumes git pushed out
 
@@ -120,13 +125,13 @@ task :docs do
   end
 end
 
-desc "Maintain the sinatra tmp directory for automated restart (passenger phusion pays attention to tmp/restart.txt) - only restarts if necessary"
+desc "Hit the restart button for apache/passenger, pow servers"
 task :restart do
-  mkdir TMPDIR unless File.directory? TMPDIR
-  restart = File.join(TMPDIR, 'restart.txt')     
-  if not (File.exists?(restart) and `find "#{HOME}" -type f -newer "#{restart}" 2> /dev/null`.empty?)
-    File.open(restart, 'w') { |f| f.write "" }
-  end  
+  sh "touch #{HOME}/tmp/restart.txt"
 end
 
-task :default => [:restart, :tags]
+
+defaults = [:restart, :spec]
+defaults.push :etags   if dev_host
+
+task :default => defaults

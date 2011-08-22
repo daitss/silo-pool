@@ -1,0 +1,7 @@
+
+
+* Column 'retired' added to silos table, default false.
+* Removed utilites and using datyl project instead.
+* Setup alternative development Gemfile - BUNDLE_GEMFILE envar for this is set in .powrc and Rakefile
+* Using new global configuration scheme from datyl project
+* Using rack common logger for reporting request status;  add content-length to pre-logging for selected, long-running routes

@@ -5,6 +5,7 @@ require 'builder'
 
 post '/create/:name' do |name|
   log_start_of_request
+
   # TODO: check if name is unique accross entire set of pools.
   
   raise SiloBadName, "The identifier #{name} does not meet our resource naming convention"    unless good_name name
@@ -100,8 +101,6 @@ post '/credentials?' do
 
   redirect absolutely("/silos/")
 end
-
-
 
 
 post '/:partition/knobs/allowed-states' do |partition|

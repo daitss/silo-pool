@@ -6,8 +6,7 @@ require 'store/exceptions'
 require 'store/silodb'
 require 'store/silotape'
 
-include Datyl   # gets Logger interface
-
+include Datyl   # gets Logger, Config interface (in case of latter, we have a conflict, specify Datyl::Config)
 
 def get_config
 
@@ -18,7 +17,7 @@ def get_config
   
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, :silo)
 
-  raise Store::ConfigurationError, "Database connection string was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config.silo_db
+  raise Store::ConfigurationError, "The database connection string ('silo_db') was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config.silo_db
 
   return config
 end
@@ -40,7 +39,7 @@ configure do
 
   config = get_config
 
-  ENV['TMPDIR'] = config.temp_dir_env if config.temp_dir_env
+  ENV['TMPDIR'] = config.temp_directory if config.temp_directory
 
   set :tivoli_server,              config.tivoli_server
   set :silo_temp_directory,        config.silo_temp_directory   || '/var/tmp'
@@ -55,22 +54,24 @@ configure do
     Logger.stderr
   end
 
+  use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
+
   Logger.info "Starting #{Store.version.name}; Tivoli server is #{settings.tivoli_server || 'not defined.' }."
-  Logger.info "db: #{config.silo_db}"
+  Logger.info "Using temp directory #{config.temp_directory}" if config.temp_directory
+  Logger.info "Using database #{StoreUtils.safen_connection_string(config.silo_db)}"
+
+  # TODO: log rest of config options?
+
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
   Store::DB.setup config.silo_db
 end
-
 
 before do
   @started = Time.now
   raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?
 end
 
-after do
-  log_end_of_request @started
-end
 
 load 'lib/app/helpers.rb'
 load 'lib/app/errors.rb'
