@@ -120,7 +120,7 @@ helpers do
   # we may want to add another column in the silos table to account for the name.
  
   def filesystem_location silo_partition
-    return unless rec = DB::SiloRecord.lookup_by_partition(hostname, silo_partition)
+    return unless rec = DB::SiloRecord.lookup_by_partition(hostname, silo_partition)    
     rec.filesystem
   end
 
@@ -150,6 +150,9 @@ helpers do
         silos.push SiloTape.new(hostname, rec.filesystem, settings.silo_temp_directory, settings.tivoli_server)
       end
     end
+
+    Logger.info "Using hostname '#{hostname}' for silo lookup: #{silos.length} #{silos.length == 1 ? 'silo' : 'silos'} found."
+
     silos
   end
 
@@ -264,28 +267,14 @@ helpers do
     'error retrieving date'
   end
 
-  # Stolen, with minor corrections, from Rack::CommonLogger - format request information
-
-  def log_prefix intro = ''
-    intro += ' ' unless intro.empty?
-    sprintf('%s%s %s %s %s "%s%s"',
-            intro,
-            env['HTTP_X_FORWARDED_FOR'] || env["REMOTE_ADDR"] || "-",
-            env["REMOTE_USER"] || "-",
-            env["SERVER_PROTOCOL"],
-            env["REQUEST_METHOD"],
-            env["PATH_INFO"],
-            env["QUERY_STRING"].empty? ? "" : "?" + env["QUERY_STRING"])
-  end
-
   # Rack::CommonLogger works well enough, I guess, but we really need to
   # log on the begining of long-running requests to get the sense of
   # what's happening on our system, which means we provide logging on
-  # the start of a request; this could be done in a before do ... end
+  # the *start* of a request; this could be done in a before do ... end
   # block, or in selected routes.
 
   def log_start_of_request
-    Logger.info log_prefix('Sinatra Starting:') + (request.content_length ? " #{request.content_length} bytes" :  ' -no content length- ')
+    Logger.info 'Request Received: ' + (request.content_length ? "#{request.content_length}" :  '-'), env
   end
 
 end

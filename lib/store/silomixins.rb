@@ -5,14 +5,14 @@ require 'store/exceptions'
 
 
 module Store
-  module AllowedMethods   ## TODO name of module no longer appropriate.  Maybe KitchenSink?
+  module SiloMixinMethods
 
     # These utility methods (used by SiloDB and SiloTape) respond with
     # the allowed HTTP methods for a particular silo.  They include
     # both administrative limits as well as the inherent capabilities
     # of the different silos.  For instance, when the state of a
-    # SiloDB is :disk_idling, no PUTs are allowed. 
-    # 
+    # SiloDB is :disk_idling, no PUTs are allowed.
+    #
     # Note, however, these are routines are meant for top-level (app)
     # requests.  We often need to use the class-based get/put/delete
     # methods for management tasks in spite of the externally allowed
@@ -47,7 +47,7 @@ module Store
 
     def allowed_states   # return alphabetically sorted, please
 
-      case silo_record.state  
+      case silo_record.state
 
       when :disk_master
         [ :disk_idling, :disk_master ]
@@ -60,13 +60,31 @@ module Store
       end
     end
 
+    # handle retiring of silo;  we leave the data in place, but it won't be reused.
+
+    def retired?
+      silo_record.retired == true
+    end
+
+    def retire
+      silo_record.retired = true
+      silo_record.save or raise DataBaseError, "DB error: wasn't able to retire the silo #{silo_record.filesystem}."
+    end
+
+    def reactivate
+      silo_record.retired = false
+      silo_record.save or raise DataBaseError, "DB error: wasn't able to reactivate the silo #{silo_record.filesystem}."
+    end
+
+
+
     # one of :disk_master, :disk_idling, :tape_master
 
     def state new_state = nil
       return silo_record.state if new_state.nil?
       return if new_state == silo_record.state
 
-      
+
       case new_state
       when :disk_master
         raise StateChangeError, "Not allowed to change silo state to disk_master from tape_master." if silo_record.state == :tape_master
@@ -76,19 +94,19 @@ module Store
       when :disk_idling
         raise StateChangeError, "Can't change silo state to disk_idling since there's no filesystem for #{silo_record.filesystem}." unless silo_directory? silo_record.filesystem
       else
-        raise "Can't change silo state to unknown state #{new_state}." 
+        raise "Can't change silo state to unknown state #{new_state}."
       end
 
       # we need to clean out any forbidden states on state change, or they'll be confusingly reapply on the
       # next state change.
-      
-      silo_record.forbidden = []      
+
+      silo_record.forbidden = []
       silo_record.state = new_state
-      silo_record.save or raise DataBaseError, "DB error: wasn't able to change state from #{silo_record.state} to #{new_state} for silo #{silo_record.filesystem}."
+      silo_record.save or raise DataBaseError, "DB error: wasn't able to change state to #{new_state} for silo #{silo_record.filesystem}."
       new_state
     end
 
-    
+
     def idle
       state :disk_idle
     end
@@ -121,17 +139,17 @@ module Store
       silo_record.allowed_methods.include? :post
     end
 
-    # Because all our silos are under one root, we can use the 
+    # Because all our silos are under one root, we can use the
     # last part of the filesystem as the name of the silo.
 
     def name
       filesystem.split(File::SEPARATOR).pop
     end
 
-  end  # of module AllowedMethods
+  end  # of module SiloMixinMethods
 
-    
-    
+
+
   module Fixity
 
     # Designed for mixing into SiloDB and SiloTape; instance variables
@@ -141,15 +159,15 @@ module Store
     # For all the existing packages on this silo, get the times of the
     # current fixity checks, and return the date of earliest of them.
 
-    def oldest_fixity 
+    def oldest_fixity
       DB::PackageRecord.min(:latest_timestamp, :extant => true, :silo_record => silo_record)
     end
 
-    def newest_fixity 
+    def newest_fixity
       DB::PackageRecord.max(:latest_timestamp, :extant => true, :silo_record => silo_record)
     end
 
-### TODO: these need to be pulled out into different more appropriately named mixin, or just back into DB, maybe:
+    ### TODO: these need to be pulled out into different more appropriately named mixin, or just back into DB, maybe:
 
     def package_count search = nil
       if search
@@ -159,7 +177,7 @@ module Store
       end
     end
 
-### TODO: see above - these three don't really belong here either:
+    ### TODO: see above - these three don't really belong here either:
 
     def package_names
       DB::PackageRecord.list(silo_record).map{ |rec| rec.name }
@@ -167,14 +185,14 @@ module Store
 
     def package_names_by_page page, number_per_page, search = nil
       if search
-        names = DB::PackageRecord.list(silo_record, 
+        names = DB::PackageRecord.list(silo_record,
                                        :order     => [ :initial_timestamp.desc ],
                                        :name.like => "%#{search}%",
                                        :extant    => true,
                                        :limit     => number_per_page,
                                        :offset    => number_per_page * (page - 1))
       else
-        names = DB::PackageRecord.list(silo_record, 
+        names = DB::PackageRecord.list(silo_record,
                                        :order     => [ :initial_timestamp.desc ],
                                        :extant => true,
                                        :limit  => number_per_page,
@@ -183,7 +201,7 @@ module Store
       names.map{ |rec| rec.name }
     end
 
-    
+
     def package_fixity_report name
 
       ### TODO: we're going to extend history records to include sizes, and change package records
@@ -195,26 +213,26 @@ module Store
       fixity_records  = []
       deleted_on      = nil
       created_on      = nil
-      count           = 0 
+      count           = 0
       max_time        = DateTime.parse('1970-01-01')
       min_time        = DateTime.now
       history_records = DB::HistoryRecord.list(silo_record, name)  ### TODO: list raw here, perhaps, for speedup
 
-      history_records.each do |rec|        
+      history_records.each do |rec|
         case rec.action
         when :put
           fixity_records = []
           count = 1
           fixity_records.push({ :action => rec.action,
-                                :md5    => rec.md5, 
-                                :sha1   => rec.sha1, 
+                                :md5    => rec.md5,
+                                :sha1   => rec.sha1,
                                 :size   => pkg.size,            # see TODO above
                                 :time   => rec.timestamp })
         when :fixity
           count += 1
           fixity_records.push({ :action => rec.action,
-                                :md5    => rec.md5, 
-                                :sha1   => rec.sha1, 
+                                :md5    => rec.md5,
+                                :sha1   => rec.sha1,
                                 :time   => rec.timestamp,
                                 :size   => pkg.size,            # see TODO above
                                 :status => (rec.md5 == pkg.initial_md5 and rec.sha1 == pkg.initial_sha1) ? :ok : :fail })
@@ -227,10 +245,10 @@ module Store
         min_time = rec.timestamp < min_time ? rec.timestamp : min_time
       end
 
-      OpenStruct.new(:filesystem         => filesystem, 
-                     :hostname           => hostname, 
+      OpenStruct.new(:filesystem         => filesystem,
+                     :hostname           => hostname,
                      :package            => name,
-                     :fixity_records     => fixity_records, 
+                     :fixity_records     => fixity_records,
                      :fixity_check_count => count,
                      :first_fixity_check => min_time,
                      :last_fixity_check  => max_time,
@@ -253,10 +271,10 @@ module Store
       min_time       = DateTime.now
 
       DB::PackageRecord.raw_list(silo_record, :extant => true).each do |rec|
-        fixity_records.push({ :name   => rec.name, 
+        fixity_records.push({ :name   => rec.name,
                               :status => (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1) ? :ok : :fail,
-                              :md5    => rec.latest_md5, 
-                              :sha1   => rec.latest_sha1, 
+                              :md5    => rec.latest_md5,
+                              :sha1   => rec.latest_sha1,
                               :size   => rec.size,                  # see TODO above about renaming these fields to intial_ and latest_ size
                               :time   => rec.latest_timestamp })
 
@@ -265,11 +283,11 @@ module Store
         count   += 1
       end
 
-      OpenStruct.new(:filesystem         => filesystem, 
-                     :hostname           => hostname, 
-                     :fixity_records     => fixity_records, 
+      OpenStruct.new(:filesystem         => filesystem,
+                     :hostname           => hostname,
+                     :fixity_records     => fixity_records,
                      :fixity_check_count => count,
-                     :first_fixity_check => min_time, 
+                     :first_fixity_check => min_time,
                      :last_fixity_check  => max_time)
 
     end

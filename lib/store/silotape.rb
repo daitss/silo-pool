@@ -16,7 +16,7 @@ module Store
   class SiloTape
 
     include Fixity
-    include AllowedMethods
+    include SiloMixinMethods
 
     DAYS_TO_CACHE = 2   # how long we should keep retrieved packages around (silo.delete will clear cache as well)
 

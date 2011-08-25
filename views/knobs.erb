@@ -76,6 +76,39 @@
       </fieldset>
       </form>
 
+      <form method="post" action="retire-silo">
+      <fieldset>
+	<legend>
+	  Retire Entire Silo
+	</legend>
+
+	<table class="expansive" style="border: none;">
+	  <tr>
+	    <td class="bl">
+
+	      <ul>
+		<li> 
+		  <% id.succ! %>
+		  <input id="<%= id %>" type="radio" name="retire" value="true" <%= silo.retired? ? 'checked="checked"' : ''  %>>
+		  <label for="<%= id %>">retired</label>
+		</li>
+		<li> 
+		  <% id.succ! %>
+		  <input id="<%= id %>" type="radio" name="retire" value="false" <%= silo.retired? ? '' : 'checked="checked"'  %>>
+		  <label for="<%= id %>">active</label>
+		</li>
+	      </ul>
+
+	    </td>
+	    <td class="br">
+	      <input type="submit" value="proceed">
+	    </td>
+	  </tr>
+	</table>
+	
+      </fieldset>
+      </form>
+
       <form method="get" name="cancel" action="/silos/">
       <div style="margin:20px;">
 	<input type="submit" value="cancel">

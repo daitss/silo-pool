@@ -13,7 +13,15 @@ gem 'open4',                '>= 1.0.1'
 gem 'sinatra',              '>= 1.2.1' 
 gem 'rack',                 '>= 1.2.3' 
 gem 'sys-filesystem',       '>= 0.3.2'
+
 gem "datyl", :git => "git://github.com/daitss/datyl.git"
+
+# development
+
+gem 'rake'
+gem 'rcov'
+gem 'cucumber'
+gem 'rspec'
 
 
 

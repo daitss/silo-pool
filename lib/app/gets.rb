@@ -73,7 +73,6 @@ end
 
 get '/:partition/data/' do |partition|
   silo = get_silo(partition)
-  silo.get_ok? or raise Http405 
 
   page   = params[:page].nil?   ?   1   : safe_number(params[:page])
   search = (params[:search].nil? or params[:search] == '') ?  nil : params[:search]
@@ -163,7 +162,6 @@ end
 
 get '/:partition/fixity/' do |partition|
   silo   = get_silo(partition)
-  silo.get_ok? or raise Http405
 
   fixity = silo.fixity_report
 
@@ -193,9 +191,7 @@ get '/:partition/fixity/' do |partition|
 end
 
 get '/:partition/fixity/:name' do |partition, name|
-
   silo = get_silo(partition, name)
-  silo.get_ok? or raise Http405 
 
   fixity = silo.fixity_report(name)
 

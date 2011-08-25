@@ -121,7 +121,6 @@ module Store
         Digest::MD5.hexdigest(self.salt + password) == self.password_hash
       end
 
-
       def self.clear
         Authentication.destroy
       end
@@ -214,15 +213,17 @@ module Store
       end
 
       def possible_methods
-        case state
-        when :disk_master                         # Now a disk-based silo can do any of these: GET, PUT, DELETE
-          [ :delete, :get, :put ]
-        when :disk_idling, :disk_copied           # While here we're in the process of copying to tape; no changes permitted (GETs OK)
+        case 
+        when retired == true
           [ :get ]
-        when :tape_master                         # When entirely using tape we only allow individual GETs and DELETEs.
+        when state == :disk_master           # Now a disk-based silo can do any of these: GET, PUT, DELETE
+          [ :delete, :get, :put ]
+        when state == :disk_idling           # While here we're in the process of copying to tape; no changes permitted (GETs OK)
+          [ :get ]
+        when state == :tape_master           # When entirely using tape we only allow individual GETs and DELETEs.
           [ :delete, :get ]
         else
-          Raise "Unhandled state #{state} for silo #{self.hostname}:#{self.filesystem}."
+          Raise "Unhandled condition for determining possible methods for silo #{self.hostname}:#{self.filesystem}."
         end
       end
 
@@ -253,6 +254,8 @@ module Store
       end
 
     end # of class SiloRecord
+
+    # TODO: need to add an AWOL event
 
     # PackageRecord keeps three kinds of records; PUT, DELETE, FIXITY.
 

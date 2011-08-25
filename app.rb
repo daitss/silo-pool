@@ -67,6 +67,7 @@ configure do
   Store::DB.setup config.silo_db
 end
 
+
 before do
   @started = Time.now
   raise Http401, 'You must provide a basic authentication username and password' if needs_authentication?

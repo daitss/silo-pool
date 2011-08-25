@@ -11,7 +11,7 @@ module Store
   class SiloDB < Silo
 
     include Fixity
-    include AllowedMethods
+    include SiloMixinMethods
 
     attr_reader :silo_record, :hostname, :filesystem
 

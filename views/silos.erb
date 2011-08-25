@@ -62,7 +62,7 @@
 	  </td>
 
           <td>
-	    <a href="/<%= silo.name %>/knobs/"><%= state_to_text(silo.state) %></a>
+	    <a href="/<%= silo.name %>/knobs/"><%= 'retired ' if silo.retired? %><%= state_to_text(silo.state) %></a>
 	  </td>
 
           <td>

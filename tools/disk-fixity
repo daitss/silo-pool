@@ -126,7 +126,7 @@ end
 # Order the disk silos by oldest completed fixity time, latest first; if silos have been specified on the command line, restrict our list to just those.
 
 def select_silos config, reporter
-  silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| s.state == :disk_master }.map{ |rec| Store::SiloDB.new(rec.hostname, rec.filesystem) }
+  silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| not s.retired? and s.state == :disk_master }.map{ |rec| Store::SiloDB.new(rec.hostname, rec.filesystem) }
   candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
   silos = silos.select { |s| candidates.include? s.filesystem } unless candidates.empty?
   silos = silos.select { |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }

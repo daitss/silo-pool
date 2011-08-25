@@ -1,7 +1,25 @@
+v1.1.2 - 2001-08-25
 
+ * Column 'retired' added to silos table, default false.
 
-* Column 'retired' added to silos table, default false.
-* Removed utilites and using datyl project instead.
-* Setup alternative development Gemfile - BUNDLE_GEMFILE envar for this is set in .powrc and Rakefile
-* Using new global configuration scheme from datyl project
-* Using rack common logger for reporting request status;  add content-length to pre-logging for selected, long-running routes
+ * User interface for setting/clearing retiring of silos
+
+ * Scripts tape-fixity and disk-fixity leave retired silos alone.
+
+ * Removed store/utilities code; using a separate github-based datyl project instead.
+
+ * Using new global configuration scheme from datyl project
+
+ * Use rack common logger for reporting request status, rather than our own.
+
+ * Add content-length to pre-logging for selected, long-running routes
+
+ * Add selected development tools to default Gemfile; rebuild bundler files for most recent compatible gems
+
+ * Removing GET access to a silo no longer stops listing packages, only retrieving them
+
+ * Removing GET access to a silo no longer stops getting a fixity report
+
+ * Killed log_prefix, removed dead code (makes more use of Datyl::Logger's functionality)
+
+ 

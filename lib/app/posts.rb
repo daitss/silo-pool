@@ -114,3 +114,24 @@ post '/:partition/knobs/allowed-states' do |partition|
   redirect absolutely("/silos/")
 end
 
+
+post '/:partition/knobs/retire-silo' do |partition|
+
+  silo      = get_silo(partition)
+  do_retire = params[:retire] == 'true'
+
+  redirect absolutely("/silos/") if (do_retire and silo.retired?) or (not do_retire and not silo.retired?)
+
+  if do_retire
+    Logger.warn "Request from #{@env['REMOTE_ADDR']} to retire #{silo.filesystem}." 
+    silo.retire
+  else
+    Logger.warn "Request from #{@env['REMOTE_ADDR']} to un-retire #{silo.filesystem}." 
+    silo.reactivate    
+  end
+
+  redirect absolutely("/silos/")   
+end
+
+
+
