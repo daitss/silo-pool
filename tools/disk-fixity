@@ -5,7 +5,7 @@
 $LOAD_PATH.unshift      File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 # This program trundles through one or more disk-based silos and does md5 and sha1 checksums,
-# adding them to thea SiloDB/SiloTape  database.
+# adding them to the SiloDB/SiloTape  database.
 
 # TODO: extend DB to allow recording current size, as well
 
@@ -16,6 +16,8 @@ require 'digest/sha1'
 require 'optparse'
 require 'store/silodb'
 require 'store/utils'
+
+include Datyl
 
 # Get options from the command line; here's what we're shooting for:
 #

@@ -36,6 +36,12 @@ require 'store/silodb'
 require 'store/silotape'
 require 'store/tsmexecutor'
 
+require 'datyl/logger'
+require 'datyl/reporter'
+
+include Datyl
+
+
 Struct.new('Options', :fixity_disk, :db_config_file, :db_config_key, :web_server, :syslog_facility, :tape_server, :user, :grace_period, :fresh_enough, :pid_directory)
 
 # The defaults defined here pretty good; you may want to specify the syslog.
@@ -174,8 +180,8 @@ def setup config
   Kernel.trap('HUP')  { teardown(config); exit }             # do a clean shutdown with these:
   Kernel.trap('PIPE') { teardown(config); exit } 
 
-  Datyl::Reporter.max_lines_to_write = 2000    # each report will have at most these lines, though everything will go to syslog
-  return Datyl::Reporter.new('Tape Fixity Checks')
+  Reporter.max_lines_to_write = 2000    # each report will have at most these lines, though everything will go to syslog
+  return Reporter.new('Tape Fixity Checks')
 
 rescue => e
   raise Store::FatalFixityError, "#{e.class}: #{e.message}" 

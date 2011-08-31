@@ -255,8 +255,7 @@ end
 
 
 get '/status' do
-  content_type 'text/plain'
-  ''
+  [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]
 end
 
 

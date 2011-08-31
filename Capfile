@@ -13,7 +13,7 @@ set :use_sudo,     false
 set :user,         "silo"
 set :group,        "daitss" 
 
-set :keep_releases, 5   # default is 5
+set :keep_releases, 4   # default is 5
 
 set :bundle_flags,       "--deployment"   # --deployment is one of the defaults, we explicitly set it to remove --quiet
 set :bundle_without,      []
