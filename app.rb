@@ -11,11 +11,12 @@ include Datyl   # gets Logger, Config interface (in case of latter, we have a co
 def get_config
 
   raise Store::ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise ConfigurationError, "The VIRTUAL_HOSTNAME environment variable has not been set"                                                      unless ENV['VIRTUAL_HOSTNAME']
   raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
   raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
   raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
   
-  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, :silo)
+  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, :database, ENV['VIRTUAL_HOSTNAME'])
 
   raise Store::ConfigurationError, "The database connection string ('silo_db') was not found in the configuration file #{ENV['DAITSS_CONFIG']}" unless config.silo_db
 
@@ -46,13 +47,14 @@ configure do
   set :fixity_stale_days,          config.fixity_stale_days     || 45
   set :fixity_expired_days,        config.fixity_expired_days   || 60
 
-  Logger.setup 'SiloPool', (config.virtual_hostname || Socket.gethostname)
+  Logger.setup 'SiloPool', ENV['VIRTUAL_HOSTNAME']
 
-  if config.log_syslog_facility
-    Logger.facility = config.log_syslog_facility
-  else
+  if not (config.log_filename or config.log_syslog_facility)
     Logger.stderr
   end
+
+  Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Logger.filename = config.log_filename         if config.log_filename
 
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our will...
 
