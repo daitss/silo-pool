@@ -6,7 +6,7 @@ require 'bundler/capistrano'
 require 'socket'
 
 set :scm,          "git"
-set :repository,   "git://github.com/grf/silo-pool.git"
+set :repository,   "git://github.com/daitss/silo-pool.git"
 set :branch,       "master"
 
 set :use_sudo,     false
