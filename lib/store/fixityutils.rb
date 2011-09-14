@@ -217,11 +217,11 @@ def restore_to_scratch_disk tape_server, silo, destination_directory, reporter
       reporter.err "Tivoli output log follows:"
       tsm.output.each { |line| reporter.err line.chomp }
     end
-    reporter.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
+    reporter.err "An error occurred in Tivoli processing. Giving up on fixity checking this tape."
     raise Store::FatalFixityError, "Can't continue - Tivloi reported errors"
 
   elsif tsm.status > 4
-    reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
+    reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occurred.  Check the following Tivoli log messages if fixity errors occur."
     if not tsm.errors.empty?
       reporter.warn "Tivoli error log follows:"
       tsm.errors.each { |line| reporter.warn line.chomp }
@@ -292,11 +292,11 @@ class TsmStream < ArrayBasedStream
         reporter.err "Tivoli output log follows:"
         tsm.output.each { |line| reporter.err line.chomp }
       end
-      reporter.err "An error occured in Tivoli processing. Giving up on fixity checking this tape."
+      reporter.err "An error occurred in Tivoli processing. Giving up on fixity checking this tape."
       raise Store::FatalFixityError, "Can't continue - Tivloi reported errors"
 
     elsif tsm.status > 4
-      reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occured.  Check the following Tivoli log messages if fixity errors occur."
+      reporter.warn "Command '#{tsm.command}', exited with status #{tsm.status}. Some warnings occurred.  Check the following Tivoli log messages if fixity errors occur."
       if not tsm.errors.empty?
         reporter.warn "Tivoli error log follows:"
         tsm.errors.each { |line| reporter.warn line.chomp }

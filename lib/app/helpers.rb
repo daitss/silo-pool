@@ -98,7 +98,7 @@ helpers do
     @env['SERVER_PORT'].to_s
   end
 
-  # HTTP_HOST can be borken - comes with port attached!
+  # HTTP_HOST may have a port attached
 
   def hostname
     (@env['HTTP_HOST'] || @env['SERVER_NAME']).gsub(/:\d+$/, '')
