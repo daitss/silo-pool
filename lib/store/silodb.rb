@@ -24,9 +24,6 @@ module Store
       super filesystem
     end
 
-    def self.setup(config_file, key)
-      DB.setup(config_file, key)
-    end
 
     def self.create(hostname, filesystem)
       filesystem = filesystem.sub(%r{/+$}, '')

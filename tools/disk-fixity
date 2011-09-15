@@ -9,75 +9,28 @@ $LOAD_PATH.unshift      File.expand_path(File.join(File.dirname(__FILE__), '..',
 
 # TODO: extend DB to allow recording current size, as well
 
+require 'datyl/config'
 require 'datyl/logger'
 require 'datyl/reporter'
 require 'digest/md5'
 require 'digest/sha1'
 require 'optparse'
+require 'store/exceptions'
 require 'store/silodb'
 require 'store/utils'
 
-include Datyl
 
-# Get options from the command line; here's what we're shooting for:
-#
-# Usage: disk-fixity [ --options ] [ /silo/001 .. ]
-#        without an explicit list of disk silos, do checks on all of them. Write a simple report of results when done.
-#         --hostname HOST              Required, the name of the host this silo is associated with (usually a virtual host)
-#         --fresh-enough DAYS          If a fixity check has been done in less than the supplied DAYS, don't do another (defaults to 7)
-#         --pid-directory PATH         Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon
-#         --db-config-file PATH        A database yaml configuration file, defaults to /opt/fda/etc/db.yml
-#         --db-config-key KEY          The key for the database information in the database yaml configuration file /opt/fda/etc/db.yml
-#         --syslog-facility FACILITY   The facility in syslog to log to, otherwise log to STDERR
-#         --randomize                  Randomize the order of silos checked. Normally silos are sorted by the time of the last completed fixity check
-
-def get_options args
-  conf = OpenStruct.new(:hostname => nil, :syslog_facility => nil, :db_config_key => nil, :db_config_file => '/opt/fda/etc/db.yml', :fresh_enough => 7, :pid_directory => nil, :randomize => false)
-
-  opts = OptionParser.new do |opts|
-
-    opts.banner = "Usage: #{$0.sub(%r{.*/}, '')} [ --options ] [ /silo/001 .. ]\n" +
-                  "       without an explicit list of disk silos, do checks on all of them."
-
-    opts.on("--hostname HOST",   String, "Required, the name of the host this silo is associated with (usually a virtual host)") do |hostname|
-      conf.hostname = hostname.downcase
-    end
-
-    opts.on("--fresh-enough DAYS",  Integer, "If a fixity check has been done in less than the supplied DAYS, don't do another (defaults to #{conf.fresh_enough})") do |days|
-      conf.fresh_enough = days
-    end
-
-    opts.on("--pid-directory PATH", String, "Optionally, a directory for storing this scripts PID for external moitoring agents, such as xymon") do |path|
-      conf.pid_directory = path
-    end
-    
-    opts.on("--db-config-file PATH",  String, "A database yaml configuration file, defaults to #{conf.db_config_file}") do |path|
-      conf.db_config_file = path
-    end
-    
-    opts.on("--db-config-key KEY",  String, "The key for the database information in the database yaml configuration file #{conf.db_config_file}") do |key|
-      conf.db_config_key = key
-    end
-
-    opts.on("--syslog-facility FACILITY",  String, "The facility in syslog to log to, otherwise log to STDERR") do |facility|
-      conf.syslog_facility = facility
-    end
-
-    opts.on("--randomize",  "Randomize the order of silos checked. Normally silos are sorted by the time of the last completed fixity check") do |rnd|
-      conf.randomize = rnd
-    end
-  end
-  opts.parse!(args) 
-  raise "No hostname provided"  unless conf.hostname
-  raise "No key into the DB configuration file (#{conf.db_config_file}) provided" unless conf.db_config_key
-  raise "Default yaml file #{conf.db_config_file} not found" unless File.exists?   conf.db_config_file
-  raise "Default yaml file #{conf.db_config_file} not readable" unless File.readable? conf.db_config_file
+def get_config
+  raise Store::ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
+  raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
+  raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
   
-rescue => e
-  STDERR.puts e, opts
-  exit 1
-else
-  return conf
+  config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database', 'disk-fixity')
+
+  raise Store::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the 'hostname' option" unless config.hostname
+
+  return config
 end
 
 
@@ -87,13 +40,15 @@ def setup config
 
   $0 = 'disk-fixity'
 
-  Logger.setup('DiskFixity', config.hostname)
+  Datyl::Logger.setup('DiskFixity', config.hostname)
 
-  if config.syslog_facility
-    Logger.facility  = config.syslog_facility 
-  else
-    Logger.stderr   
+
+  if not (config.log_filename or config.log_syslog_facility)
+    Datyl::Logger.stderr
   end
+
+  Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Datyl::Logger.filename = config.log_filename         if config.log_filename
 
   if config.pid_directory
     pid_path = StoreUtils.pid_file(config.pid_directory)
@@ -101,14 +56,16 @@ def setup config
     File.open(pid_path, 'w') { |file|  file.puts $$ }
   end
 
+  DataMapper::Logger.new(Datyl::Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
+
   begin
-    Store::SiloDB.setup config.db_config_file, config.db_config_key
+    Store::DB.setup config.silo_db
   rescue => e
-    Logger.err e.message
+    Datyl::Logger.err e.message
     exit
   end
 
-  Kernel.trap('INT')  { Logger.err "Interrupted"  ; exit }  # leaves the pid file, if one is being used
+  Kernel.trap('INT')  { Datyl::Logger.err "Interrupted"  ; exit }  # leaves the pid file, if one is being used
   Kernel.trap('HUP')  { teardown(config); exit }             # do a clean shutdown with these:
   Kernel.trap('PIPE') { teardown(config); exit } 
 
@@ -149,7 +106,7 @@ class Counter
   end
 end
   
-config   = get_options(ARGV)
+config   = get_config
 reporter = setup(config)
 
 reporter.info  "DiskFixity started at #{Time.now}"
@@ -163,7 +120,7 @@ if silos.empty?                                                   # TODO: pretti
 else
   reporter.info "Checking the following silos for #{config.hostname} by last fixity check date:" 
   silos.each { |silo| reporter.info "  * #{silo.filesystem} - #{silo.oldest_fixity.strftime('%A, %B %d, %Y at %r')}" }
-  reporter.info "Will skip packages if checked within #{config.fresh_enough} days." if config.fresh_enough > 0   # TODO plural check, commify
+  reporter.info "Will skip packages if checked within #{config.fresh_enough} days." if config.fresh_enough and config.fresh_enough > 0   # TODO plural check, commify
 end
 
 silos.each do |silo|

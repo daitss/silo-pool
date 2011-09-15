@@ -10,15 +10,17 @@
 
 defaults:
      temp_directory:             /var/tmp
+     fixity_expired_days:	 60
+     fixity_stale_days:          45
 
 database:
      silo_db:                    postgres://silos:topsecret@localhost/my_silo_db
 
 # We normally name sections after the virtual hostname used by an
-# applcation (this is so one physical host can run multiple services
+# web server (this is so one physical host can run multiple services
 # of the same kind).  An application's configuration code typically
 # checks the VIRTUAL_HOSTNAME environment variable to determine the
-# appropriate section to load.  Typically VIRTUAL_HOSTNAME is set in
+# appropriate section to load.  Usually VIRTUAL_HOSTNAME is set in
 # the same place that the DAITSS_CONFIG environment is set.
 
 silo-pool.example.org:
@@ -30,12 +32,41 @@ silo-pool.example.org:
      fixity_expired_days:        60
      fixity_stale_days:          30
 
+
+disk-fixity:
+     hostname:                   silo-pool.example.org
+     pid_directory:              /var/run/fixty
+     log_syslog_facility:        LOG_LOCAL2   
+     log_filename:               /path/to/disk-fixity.com
+     fresh_enough:               7
+     log_database_queries:       false
+
+
 # defaults:temp_directory
 # -----------------------
 # Where should temporary files be created? This should be at least
 # twice the size of the largest package you plan to ingest, plus
 # headroom.  Defaults to system-defined temp directory (typically
 # /tmp/)
+#
+# default:fixity_expired_days
+# ---------------------------
+# The number of days after which fixity check data will
+# be reported as out-of-date.  Defaults to 60 days. Used
+# by some of the fixity scripts
+#
+# default:fixity_stale_days
+# -------------------------
+# The number of days after which fixity check data will
+# be recalulated. Defaults to 45 days. Used by some of the
+# fixty scripts
+
+
+
+# database
+# ========
+# There are three postgres databases used by DAITSS, this file
+# shows
 #
 # database:silo_db
 # -----------------------
@@ -53,23 +84,32 @@ silo-pool.example.org:
 # N.B.  This means that this config file should have read permissions
 # retricted to the user running the service, or an appropriately
 # restricted group.
+
+
+# silo-pools.example.org
+# ======================
+#
+# This section sets the variables specific to the silo-pool web
+# service.
 #
 # silo:log_database_queries
 # -------------------------
-# Should we log database queries? defaults to false.  These generate
-# very large logs, so it's only recommended for troubleshooting and
-# learning.
+# Should we log database queries? defaults to false.  These can
+# generate very large logs, so it's only recommended for
+# troubleshooting and learning.
+#
+# silo:log_filename
+# -----------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.  log_filename should
+# be unique to this service.  If you want to share output from
+# multiple services to one file, use syslog.
 #
 # silo:log_syslog_facility
-# -------------------------------
+# ------------------------
 # If set, direct log information to this syslog facility (see
 # /etc/syslog.conf). If neither log_filename nor log_syslog_facility
 # are set, log to STDERR.
-#
-# silo:log_filename
-# -------------------------------
-# If set, direct log information to this file. If neither log_filename
-# nor log_syslog_facility are set, log to STDERR.
 #
 # silo:required_pools
 # -------------------
@@ -77,25 +117,55 @@ silo-pool.example.org:
 # 2. Use zero for a 'stub server' for testing - in that case, nothing
 # will actually be stored.
 #
-# silo_temp_directory
-# -------------------
+# silo:silo_temp_directory
+# ------------------------
 # A temporary directory for caching data from Tivoli
 # data storage - only used with the FDA style of tape
 # storage. Defaults to /tmp/
 #
-# tivoli_server
-# -------------
+# silo:tivoli_server
+# ------------------
 # The name of the Tivolo tape server, if you are using
 # DAITSS with the FDA style of tape storage. No defaults.
-#
-# fixity_expired_days
-# -------------------
-# The number of days after which fixity check data will
-# be reported as out-of-date.  Defaults to 60 days.
-#
-# fixity_stale_days
-# -----------------
-# The number of days after which fixity check data will
-# be recalulated. Defaults to 45 days.
 
 
+# disk-fixity
+# ===========
+#
+# This section sets specific variables for the disk-fixity script.
+# disk-fixity also uses database settings and the default fixity_stale_days
+# and fixity_expired_days variables (several scripts use these latter).
+#
+# disk-fixity:fresh_enough
+# ------------------------
+# The number of days before which we will not repeat a fixity check.
+# Defaults to zero (will always perform a fixity check).
+#
+# disk-fixity:hostname
+# --------------------
+# The hostname we're checking: packages in the silo database
+# are associated with a particular hostname.
+#
+# disk-fixity:log_syslog_facility
+# -------------------------------
+# If set, direct log information to this syslog facility (see
+# /etc/syslog.conf). If neither log_filename nor log_syslog_facility
+# are set, log to STDERR.
+#
+# disk-fixity:log_filename
+# ------------------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.  log_filename should
+# be unique to this service.  If you want to share output from
+# multiple services to one file, use syslog.
+#
+# disk-fixity:log_database_queries
+# --------------------------------
+# If set, log database queries. Can generate very large logs and
+# degrade performance.
+#
+# disk-fixity:pid_directory
+# -------------------------
+# If pid_directory is set, use it to write a lock file so that
+# there cannot be multiple copies of the script running. If
+# not present no locking will be done
