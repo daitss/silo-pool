@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 
-# TODO:  print out all configuration information in log
-
 $LOAD_PATH.unshift      File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 
 # This program trundles through one or more disk-based silos and does md5 and sha1 checksums,
@@ -28,7 +26,11 @@ def get_config
   
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database', 'disk-fixity')
 
-  raise Store::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the 'hostname' option" unless config.hostname
+  config['fresh_enough'] = 0 unless config['fresh_enough']
+
+  [ 'hostname', 'silo_db' ].each do |option|
+    raise Store::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
+  end
 
   return config
 end
@@ -42,13 +44,25 @@ def setup config
 
   Datyl::Logger.setup('DiskFixity', config.hostname)
 
-
   if not (config.log_filename or config.log_syslog_facility)
     Datyl::Logger.stderr
   end
 
   Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
   Datyl::Logger.filename = config.log_filename         if config.log_filename
+
+  config.keys.sort.each do |option|
+
+    next unless ['fixity_expired_days', 'fixity_stale_days', 'fresh_enough', 
+                 'hostname', 'log_database_queries', 'log_filename', 'log_syslog_facility', 
+                 'pid_directory', 'silo_db', 'silo_user', 'tivoli_server'].include? option
+
+    if option =~ /_db$/
+      Datyl::Logger.info "Disk Fixity Configuration: #{option} =>  #{StoreUtils.safen_connection_string(config[option])}"
+    else
+      Datyl::Logger.info "Disk Fixity Configuration: #{option} =>  #{config[option]}"
+    end
+  end
 
   if config.pid_directory
     pid_path = StoreUtils.pid_file(config.pid_directory)
@@ -61,15 +75,15 @@ def setup config
   begin
     Store::DB.setup config.silo_db
   rescue => e
-    Datyl::Logger.err e.message
-    exit
+    Datyl::Logger.err "Failed setting up the database: #{e.class} #{e.message}"
+    exit 1
   end
 
   Kernel.trap('INT')  { Datyl::Logger.err "Interrupted"  ; exit }  # leaves the pid file, if one is being used
   Kernel.trap('HUP')  { teardown(config); exit }             # do a clean shutdown with these:
   Kernel.trap('PIPE') { teardown(config); exit } 
 
-  Datyl::Reporter.max_lines_to_write = 2000    # each report will have at most these lines, though everything will go to syslog
+  Datyl::Reporter.max_lines_to_write = 2000    # each report will have at most these lines, though everything will go to logger
   return Datyl::Reporter.new('Disk Fixity Checks')
 end
 
@@ -120,7 +134,7 @@ if silos.empty?                                                   # TODO: pretti
 else
   reporter.info "Checking the following silos for #{config.hostname} by last fixity check date:" 
   silos.each { |silo| reporter.info "  * #{silo.filesystem} - #{silo.oldest_fixity.strftime('%A, %B %d, %Y at %r')}" }
-  reporter.info "Will skip packages if checked within #{config.fresh_enough} days." if config.fresh_enough and config.fresh_enough > 0   # TODO plural check, commify
+  reporter.info "Will skip packages if checked within #{config.fresh_enough} days." if config.fresh_enough > 0   # TODO plural check, commify
 end
 
 silos.each do |silo|

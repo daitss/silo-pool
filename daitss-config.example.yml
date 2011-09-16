@@ -41,6 +41,17 @@ disk-fixity:
      fresh_enough:               7
      log_database_queries:       false
 
+tape-fixity:
+     fixity_disk:                /path/to/large/filesystem/
+     fresh_enough:               0
+     hostname:                   silo-pool.example.org
+     log_database_queries:       false
+     log_filename:               /path/to/tape-fixity.com
+     log_syslog_facility:        LOG_LOCAL2   
+     pid_directory:              /var/run/fixty
+     silo_user:			 silo
+     tivoli_server:              TIVOLI
+     
 
 # defaults
 # ========
@@ -125,7 +136,7 @@ disk-fixity:
 # ------------------------
 # A temporary directory for caching data from Tivoli
 # data storage - only used with the FDA style of tape
-# storage. Defaults to /tmp/
+# storage. Defaults to /var/tmp/
 #
 # silo:tivoli_server
 # ------------------
@@ -143,7 +154,7 @@ disk-fixity:
 # disk-fixity:fresh_enough
 # ------------------------
 # The number of days before which we will not repeat a fixity check.
-# Defaults to zero (will always perform a fixity check).
+# Defaults to zero (i.e., always perform a fixity check).
 #
 # disk-fixity:hostname
 # --------------------
@@ -170,6 +181,69 @@ disk-fixity:
 #
 # disk-fixity:pid_directory
 # -------------------------
-# If pid_directory is set, use it to write a lock file so that
-# there cannot be multiple copies of the script running. If
-# not present no locking will be done
+# If pid_directory is set, use it to write a lock file (named
+# disk-fixity.pid) so that there cannot be multiple copies of the
+# script running. If not present no locking will be done
+
+
+
+# tape-fixity
+# ===========
+#
+# This section sets specific variables for the tape-fixity script.
+# tape-fixity also uses database settings and the default:fixity_stale_days
+# variables (several scripts use these).
+#
+# tape-fixity:fixity_disk
+# -----------------------
+# The path to the scratch disk where we'll write copies of tape data
+# to perform fixity checks. The FDA batches these up in 2-Terrabyte
+# chunks. Note that all contents of this entire directory tree will be
+# removed.
+#
+# tape-fixity:fresh_enough
+# ------------------------
+# The number of days before which we will not repeat a fixity check.
+# Defaults to zero (will always perform a fixity check).
+#
+# tape-fixity:hostname
+# --------------------
+# The hostname we're checking: packages in the silo database
+# are associated with a particular hostname.
+#
+# tape-fixity:log_syslog_facility
+# -------------------------------
+# If set, direct log information to this syslog facility (see
+# /etc/syslog.conf). If neither log_filename nor log_syslog_facility
+# are set, log to STDERR.
+#
+# tape-fixity:log_filename
+# ------------------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.  log_filename should
+# be unique to this service.  If you want to share output from
+# multiple services to one file, use syslog.
+#
+# tape-fixity:log_database_queries
+# --------------------------------
+# If set, log database queries. Can generate very large logs and
+# degrade performance.
+#
+# tape-fixity:pid_directory
+# -------------------------
+# If pid_directory is set, use it to write a lock file (named
+# tape-fixity.pid) so that there cannot be multiple copies of the
+# script running. If not present no locking will be done
+#
+# tape-fixity:silo_user
+# ---------------------
+# The name of the user that's allowed to access the tape library.
+# We use this to do an up-front sanity check to make sure we'll 
+# be able to extract the tape data (otherwise, we'll fail to 
+# find anything from the tivoli listing)
+#
+# tape-fixity:tivoli_server
+# -------------------------
+# The name of the Tivoli server that controls the tape library
+# we're queryting
+# 

@@ -43,14 +43,14 @@ FDA specific, no warranties expressed or implied:
    from tivoli and written to a scratch disk.  It is of limited use 
    to non-FDA systems.
 
- * tivolis-ls
+ * tivoli-ls
 
    Give it a silo, e.g. /daitssfs/001, and it will list it out - but
    only for the files you owned when the last backup was made: for us,
    that is the 'silo' user.  Uses options appropriate to our
    archive/backup strategy; it's of limited use to non-FDA systems.
 
- * tivolis-fetch
+ * tivoli-fetch
   
    Needs to be fleshed out, as the above. Meant to fetch a sub-directory
    of a tape-based silo.
@@ -61,4 +61,4 @@ FDA specific, no warranties expressed or implied:
 
   * favicon/  
  
-   Favicon hacks; we are actually using one produced by Tenille.
+   Favicon hacks; we are actually using a better one produced by Tenille Herron.
