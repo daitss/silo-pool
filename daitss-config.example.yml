@@ -10,7 +10,7 @@
 
 defaults:
      temp_directory:             /var/tmp
-     fixity_expired_days:	 60
+     fixity_expired_days:        60
      fixity_stale_days:          45
 
 database:
@@ -32,7 +32,6 @@ silo-pool.example.org:
      fixity_expired_days:        60
      fixity_stale_days:          30
 
-
 disk-fixity:
      hostname:                   silo-pool.example.org
      pid_directory:              /var/run/fixty
@@ -49,7 +48,7 @@ tape-fixity:
      log_filename:               /path/to/tape-fixity.com
      log_syslog_facility:        LOG_LOCAL2   
      pid_directory:              /var/run/fixty
-     silo_user:			 silo
+     silo_user:                  silo
      tivoli_server:              TIVOLI
      
 
@@ -96,9 +95,10 @@ tape-fixity:
 #
 #   vendor://username:password@hostname:port/database
 #
-# N.B.  This means that this config file should have read permissions
-# retricted to the user running the service, or an appropriately
-# restricted group.
+#
+# N.B.  Because we have a password in this config file, this file
+# should have read permissions retricted to the user running the
+# service, or an appropriately restricted group.
 
 
 # silo-pools.example.org
@@ -148,8 +148,9 @@ tape-fixity:
 # ===========
 #
 # This section sets specific variables for the disk-fixity script.
-# disk-fixity also uses database settings and the default fixity_stale_days
-# and fixity_expired_days variables (several scripts use these latter).
+# disk-fixity also uses database settings and the default
+# fixity_stale_days and fixity_expired_days variables (several scripts
+# use these latter).
 #
 # disk-fixity:fresh_enough
 # ------------------------
