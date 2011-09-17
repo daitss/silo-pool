@@ -1,12 +1,12 @@
 require 'datyl/reporter'
-require 'datyl/streams'
+require 'store/deprecated-streams'  # an earlier version of streams, only fixityutils uses this (and by extension, only tape-fixities uses it)
 require 'store/exceptions'
 require 'store/silo'
 require 'store/silodb'
 require 'store/silotape'
 require 'store/tsmexecutor'
 
-# TODO: This is used entirely by tape-fixity,  and could be refactored to use the  disk-fixity stuff.
+# TODO: This is used entirely by tape-fixity,  and needs to be refactored to use the  disk-fixity stuff.
 
 # check_package_fixities CONF
 #

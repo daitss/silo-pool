@@ -296,7 +296,7 @@ def do_tape_master_fixity_check silo, config, reporter
 
   # At this point we know the Tivoli file list matches the on-disk
   # silo for names, modification dates, and sizes.  Before we do any
-  # restoring, let's check that the on-disk data is consistent with
+  # restoring, we'll check that the on-disk data is consistent with
   # our database (takes a few minutes).
 
   info = check_for_missing(config.hostname, silo, silo, reporter)
@@ -310,14 +310,14 @@ def do_tape_master_fixity_check silo, config, reporter
 
   restore_to_scratch_disk(config.tape_server, silo, config.fixity_disk, reporter)
 
-  # At this point Tivoli has restored from tape to scratch disk
-  # without reporting errors.  We make sure the files on scratch disk
-  # jibe with what the DB says should be there, just as we did for the
-  # silo on-disk packages, above. We've then established DISK <=> DB
-  # <=> TAPE where "<=>" means "same packages present". (Note that
-  # here we are most interested in preserved packages, excluding
-  # aliens and ghosts.  While aliens and ghosts should not be there
-  # when we're mastering, we expect them to accumulate over time.)
+  # Now Tivoli has restored from tape to scratch disk without error.
+  # We make sure the files on scratch disk jibe with what the DB says
+  # should be there, just as we did for the silo on-disk packages,
+  # above. We've then established DISK <=> DB <=> TAPE where "<=>"
+  # means "same packages present". (Note that here we are most
+  # interested in preserved packages, excluding aliens and ghosts.
+  # While aliens and ghosts should not be there when we're mastering,
+  # we expect them to accumulate over time.)
 
   info = check_for_missing(config.hostname, silo, config.fixity_disk, reporter)
 
@@ -329,17 +329,19 @@ def do_tape_master_fixity_check silo, config, reporter
     raise Store::FatalFixityError, "While tape-mastering, the restored silo #{silo} on filesystem #{config.fixity_disk} was inconsistent (see log for details); can't sign off on this silo until these issues are resolved."
   end
 
-  # Fixity check the packages on the restored silo; if successful, we're done.
+  # Fixity check the packages on the restored silo.
 
   if not check_package_fixities(config.hostname, silo, config.fixity_disk, 0, reporter)
     raise Store::FatalFixityError, "While tape-mastering, one or more of the packages for #{silo} restored to #{config.fixity_disk} failed the fixity check (see log for details); can't sign off on this silo until these issues are resolved."
   end
 
-  # Looks great; we're done
+  # Looks great: we're done
 
   set_to_tape_master(config.hostname, silo)
 end
 
+
+# MAIN:
 
 begin
   config   = get_config
