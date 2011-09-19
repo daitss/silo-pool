@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join('/opt/web-services/sites/silos/current/lib')
+
+require 'store/db'
+
+DataMapper::Logger.new(STDERR, :debug)
+Store::DB.setup('postgres://silo:topsecret@localhost:6432/store_db')
+Store::DB::DM.autoupgrade!
+
+

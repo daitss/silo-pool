@@ -79,8 +79,8 @@ tape-fixity:
 # database
 # ========
 #
-# There are three postgres databases used by DAITSS, this file
-# shows
+# There are three postgres databases used by DAITSS; this abbreviated
+# example lists only the one for the silo-pool server and scripts.
 #
 # database:silo_db
 # -----------------------
@@ -125,12 +125,6 @@ tape-fixity:
 # If set, direct log information to this syslog facility (see
 # /etc/syslog.conf). If neither log_filename nor log_syslog_facility
 # are set, log to STDERR.
-#
-# silo:required_pools
-# -------------------
-# How many pool servers are we required to connect to?  Defaults to
-# 2. Use zero for a 'stub server' for testing - in that case, nothing
-# will actually be stored.
 #
 # silo:silo_temp_directory
 # ------------------------
@@ -184,7 +178,7 @@ tape-fixity:
 # -------------------------
 # If pid_directory is set, use it to write a lock file (named
 # disk-fixity.pid) so that there cannot be multiple copies of the
-# script running. If not present no locking will be done
+# script running. If not present no locking will be done.
 
 
 
@@ -246,5 +240,5 @@ tape-fixity:
 # tape-fixity:tivoli_server
 # -------------------------
 # The name of the Tivoli server that controls the tape library
-# we're queryting
-# 
+# we're querying.
+

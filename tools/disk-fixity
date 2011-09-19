@@ -19,6 +19,7 @@ require 'store/utils'
 
 
 def get_config
+
   raise Store::ConfigurationError, "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
   raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
   raise Store::ConfigurationError, "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
@@ -26,7 +27,7 @@ def get_config
   
   config = Datyl::Config.new(ENV['DAITSS_CONFIG'], 'defaults', 'database', 'disk-fixity')
 
-  config['fresh_enough'] = 0 unless config['fresh_enough']
+  config['fresh_enough'] = 0 unless config.keys.include? 'fresh_enough'
 
   [ 'hostname', 'silo_db' ].each do |option|
     raise Store::ConfigurationError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
@@ -36,7 +37,7 @@ def get_config
 end
 
 
-# setup(config) initializes logging and reporting, connects to the database, sets up signal handlers, and writes a process id to a run-file, if so configured.
+# setup(config) initializes logging and reporting, connects to the database, sets up signal handlers, and optionally writes a process id to a run-file.
 
 def setup config
 
@@ -44,12 +45,9 @@ def setup config
 
   Datyl::Logger.setup('DiskFixity', config.hostname)
 
-  if not (config.log_filename or config.log_syslog_facility)
-    Datyl::Logger.stderr
-  end
-
   Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
   Datyl::Logger.filename = config.log_filename         if config.log_filename
+  Datyl::Logger.stderr     unless (config.log_filename or config.log_syslog_facility)
 
   config.keys.sort.each do |option|
 
@@ -80,7 +78,7 @@ def setup config
   end
 
   Kernel.trap('INT')  { Datyl::Logger.err "Interrupted"  ; exit }  # leaves the pid file, if one is being used
-  Kernel.trap('HUP')  { teardown(config); exit }             # do a clean shutdown with these:
+  Kernel.trap('HUP')  { teardown(config); exit }                   # do a clean shutdown with these:
   Kernel.trap('PIPE') { teardown(config); exit } 
 
   Datyl::Reporter.max_lines_to_write = 2000    # each report will have at most these lines, though everything will go to logger

@@ -46,7 +46,7 @@ def get_config
 
   config['fresh_enough'] = 0 unless config['fresh_enough']
 
-  [ 'silo_user', 'hostname', 'fixity_stale_days', 'fixity_disk', 'tivoli_server', 'silo_db' ].each do |options|
+  [ 'silo_user', 'hostname', 'fixity_stale_days', 'fixity_disk', 'tivoli_server', 'silo_db' ].each do |option|
     raise Store::FatalFixityError, "The daitss configuration file #{ENV['DAITSS_CONFIG']} did not set the '#{option}' option" unless config[option]
   end
 
@@ -69,16 +69,14 @@ def setup config
 
   $0 = 'tape-fixity'            # At FDA, xymon is checking this process name
 
-  ENV['LANG'] = 'en_US.UTF-8'   # Need to set this for the tivoli binary, to get output formatted in an expected manner.
+  ENV['LANG'] = 'en_US.UTF-8'   # Need to set this for the tivoli program, to get output formatted in a particular manner.
 
   Datyl::Logger.setup('TapeFixity', config.hostname)
 
-  if not (config.log_filename or config.log_syslog_facility)
-    Datyl::Logger.stderr
-  end
-
   Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
   Datyl::Logger.filename = config.log_filename         if config.log_filename
+  Datyl::Logger.stderr     unless (config.log_filename or config.log_syslog_facility)
+
 
   config.keys.sort.each do |option|
     next unless [ 'fixity_disk', 'fixity_expired_days', 'fixity_stale_days', 'fresh_enough', 
@@ -101,12 +99,6 @@ def setup config
     end
 
     File.open(pid_path, 'w') { |file|  file.puts $$ }
-  end
-
-  if config.syslog_facility
-    Datyl::Logger.facility = config.syslog_facility
-  else
-    Datyl::Logger.stderr
   end
 
   me = Etc.getpwuid(Process.uid).name
@@ -343,10 +335,10 @@ end
 
 # MAIN:
 
-begin
-  config   = get_config
-  reporter = setup(config)
+config   = get_config
+reporter = setup(config)
 
+begin
   reporter.info "Starting Tape Mastering/Fixity Checking at #{Time.now}"
 
   silodata = nil
