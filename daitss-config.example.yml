@@ -9,7 +9,6 @@
 # Please don't use tabs in this file.
 
 defaults:
-     temp_directory:             /var/tmp
      fixity_expired_days:        60
      fixity_stale_days:          45
 
@@ -54,13 +53,6 @@ tape-fixity:
 
 # defaults
 # ========
-#
-# defaults:temp_directory
-# -----------------------
-# Where should temporary files be created? This should be at least
-# twice the size of the largest package you plan to ingest, plus
-# headroom.  Defaults to system-defined temp directory (typically
-# /tmp/)
 #
 # default:fixity_expired_days
 # ---------------------------
