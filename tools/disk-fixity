@@ -122,12 +122,12 @@ config   = get_config
 reporter = setup(config)
 
 reporter.info  "DiskFixity started at #{Time.now}"
+config.keys.sort.each { |key| reporter.info "Configuration options: #{key} => #{StoreUtils.safen_connection_string(config[key].to_s)}." }
 
 silos    = select_silos(config, reporter)
 
 if silos.empty?                                                   # TODO: prettier output here
   reporter.warn "There were no silos available to process for #{config.hostname}."
-  reporter.warn "Configuration options: #{config.inspect}."
   reporter.warn "Silos specified on the command line: #{ARGV * ', '}." unless ARGV.empty?
 else
   reporter.info "Checking the following silos for #{config.hostname} by last fixity check date:" 
