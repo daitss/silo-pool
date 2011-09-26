@@ -34,7 +34,7 @@ silo-pool.example.org:
 
 disk-fixity:
      hostname:                   silo-pool.example.org
-     pid_directory:              /var/run/fixty
+     pid_directory:              /var/run/fixity
      log_syslog_facility:        LOG_LOCAL2   
      log_filename:               /path/to/disk-fixity.com
      fresh_enough:               7
@@ -47,7 +47,7 @@ tape-fixity:
      log_database_queries:       false
      log_filename:               /path/to/tape-fixity.com
      log_syslog_facility:        LOG_LOCAL2   
-     pid_directory:              /var/run/fixty
+     pid_directory:              /var/run/fixity
      silo_user:                  silo
      tivoli_server:              TIVOLI
      
@@ -72,7 +72,7 @@ tape-fixity:
 # -------------------------
 # The number of days after which fixity check data will
 # be recalulated. Defaults to 45 days. Used by some of the
-# fixty scripts
+# fixity scripts
 
 
 
