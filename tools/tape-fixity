@@ -263,7 +263,7 @@ end
 
 def do_tape_silo_fixity_check silo, config, reporter
 
-  restore_to_scratch_disk(config.tape_server, silo, config.fixity_disk, reporter)
+  restore_to_scratch_disk(config.tivoli_server, silo, config.fixity_disk, reporter)
 
   if not check_package_fixities(config.hostname, silo, config.fixity_disk, config.fresh_enough, reporter)
     reporter.err "One or more fixity checks failed for the tape silo #{silo} restored to filesystem #{config.fixity_disk} (see log for all files)."
@@ -282,7 +282,7 @@ end
 
 def do_tape_master_fixity_check silo, config, reporter
 
-  if not check_tivoli_file_list(config.hostname, config.tape_server, silo, reporter)
+  if not check_tivoli_file_list(config.hostname, config.tivoli_server, silo, reporter)
     raise Store::FatalFixityError, "The file listing for the on-disk silo #{silo} doesn't match the listing provided by Tivoli; this is OK if a file was recently changed on the disk and Tivoli hasn't had a chance to update its tapes yet."
   end
 
@@ -300,7 +300,7 @@ def do_tape_master_fixity_check silo, config, reporter
     raise Store::FatalFixityError, "The on-disk silo #{silo} is inconsistent (see log); we can't proceed with tape-mastering until these issues are resolved."
   end
 
-  restore_to_scratch_disk(config.tape_server, silo, config.fixity_disk, reporter)
+  restore_to_scratch_disk(config.tivoli_server, silo, config.fixity_disk, reporter)
 
   # Now Tivoli has restored from tape to scratch disk without error.
   # We make sure the files on scratch disk jibe with what the DB says
@@ -345,7 +345,7 @@ begin
 
   clean_up_scratch_disk(config.fixity_disk, reporter)
 
-  silodata = select_silo(config.hostname, config.tape_server, config.fixity_stale_days, reporter)
+  silodata = select_silo(config.hostname, config.tivoli_server, config.fixity_stale_days, reporter)
 
   if silodata.nil?
     reporter.info "No silos need checking."
