@@ -6,7 +6,9 @@ require 'store/silodb'
 require 'store/silotape'
 require 'store/tsmexecutor'
 
-# TODO: This is used entirely by tape-fixity,  and needs to be refactored to use the  disk-fixity stuff.
+# TODO: This is used entirely by tape-fixity,  and needs to be refactored to use the disk-fixity stuff instead.
+#
+
 
 # check_package_fixities CONF
 #
@@ -40,12 +42,10 @@ def check_package_fixities web_server, silo_name, filesystem, fresh_enough, repo
      end
       md5  = md5.hexdigest
       sha1 = sha1.hexdigest
-    rescue => e              # We attempt to continue from a single package error
+    rescue => e          # We attempt to continue from a single package error
       reporter.err "Fixity failure for package #{package} on #{filesystem}: #{e.message}."
       success = false
     else
-
-      ### TODO: we've seen a failure here with non-silo package left on disk..., protect..
 
       Store::DB::HistoryRecord.fixity(silo_record, package, :md5 => md5, :sha1 => sha1)   
       errors = []

@@ -53,8 +53,6 @@ module Store
 
     # Organize exceptions and report potential orphans.
 
-    #### TODO: bug here. Need to unsnarl puts on failed DB
-
     def put name, data, type=nil
       type ||= 'application/octet-stream'
       super name, data, type
@@ -72,12 +70,53 @@ module Store
       DB::HistoryRecord.fixity(silo_record, name, options)
     end
 
+    def missing name
+      DB::HistoryRecord.missing(silo_record, name)
+    end
+
+    # exists? does more than simply checks if a package exists on disk/tape - it
+    # raises exceptions if the db/filesystem is inconsistent.
+
     def exists? name
       on_disk = super name
+
       rec = DB::PackageRecord.lookup(silo_record, name)
-      in_db = (rec.nil? ? false : rec.extant)
-      raise "database/disk inconsistency on #{hostname}:#{filesystem} discovered when running exists?(#{name}): it is #{on_disk ? 'on' : 'not on'} disk, but database says it #{in_db ? 'should' : 'should not'} be." if in_db != on_disk
-      on_disk
+
+      # Let's check for potential problems with a missing DB record
+
+      # This is an alien package; we'll rarely find alien packages by iterating through each, by the way.
+
+      if on_disk and rec.nil?
+        raise AlienPackage, "Alien package #{name}: database/disk inconsistency on #{hostname}:#{filesystem} - package found on disk, but never recorded in silo db"
+      end
+
+      # The case of some random name we're being queried for that we've never, ever, heard of.
+
+      if not on_disk and rec.nil?
+        return false
+      end
+
+      # Now we take care of cases were the record exists in the DB, so we check consistency against the file system.
+      #
+      # There are four cases (extant: t/f) * (on_disk: t/f);
+
+      case
+
+      when (on_disk and rec.extant):
+        return true
+
+      when (on_disk and not rec.extant):
+        raise GhostPackage, "Ghost package #{name}: database/disk inconsistency on #{hostname}:#{filesystem}: the silo db says package should not be on disk, but it's still there"
+
+      when (not on_disk and rec.extant):
+        raise MissingPackage, "Missing package #{name}: database/disk inconsistency on #{hostname}:#{filesystem}: the silo db says package should be on disk, but it's not"
+
+      when (not on_disk and not rec.extant):
+        return false
+      end
+      
+
+      raise "exists? somehow missed a test condition for #{name} on #{hostname}:#{filesystem}: DB record is '#{rec.inspect}'"
     end
 
     # TODO, perhaps:

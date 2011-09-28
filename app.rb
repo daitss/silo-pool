@@ -49,7 +49,7 @@ configure do
   use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our logging system
 
   Logger.info "Starting #{Store.version.name}; Tivoli server is #{settings.tivoli_server || 'not defined.' }."
-  Logger.info "Using temp directory #{ENV['TMPDIR']}"
+  Logger.info "Using #{ENV['TMPDIR'] || 'default setting'} for temp directory" 
   Logger.info "Using database #{StoreUtils.safen_connection_string(config.silo_db)}"
 
   DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries

@@ -16,6 +16,14 @@ require 'time'
 module Store
   module DB
 
+
+    # The following MISSING_*  are used as sentinel values in the PackageRecord records to 
+    # indicate a missing value.
+
+    MISSING_MD5  = 'd41d8cd98f00b204e9800998ecf8427e'
+    MISSING_SHA1 = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
+
+
     # We are especially careful with the setup since this is where
     # operations staff could get confused about what is required,
     # especially since very little reporting machinery can be set up
@@ -255,9 +263,31 @@ module Store
 
     end # of class SiloRecord
 
-    # TODO: need to add an AWOL event
 
-    # PackageRecord keeps three kinds of records; PUT, DELETE, FIXITY.
+    # PackageRecord keeps track of the current state of a package, so
+    # we can get the most recent PUT, DELETE, and FIXITY events for a
+    # package.  The complete list of records are kept in the
+    # HistoryRecord table.
+    #
+    # In point of fact, PackageRecords are normally populated by
+    # side-effect, when a HistoryRecord is updated.
+    #
+    # PUTs are recorded using the :initial_timestamp, :initial_sha1,
+    # :initial_md5 columns.
+    #
+    # DELETEs are indicated by the :extant column set to false (no
+    # date information - see the histories table for that).  This is
+    # because, generally speaking, only lists of extant packages are
+    # returned.  NOTE: :extant is never used to indicate a missing
+    # package.
+    #
+    # FIXITYs are recorded using the :latest_* columns.
+    #
+    # There is a special case of fixity event: missing. In that case,
+    # the sentinal values MISSING_MD5 and MISSING_SHA1 are used (these
+    # are the checksums for zero-length files)
+    
+
 
     class PackageRecord
       include DataMapper::Resource
@@ -273,6 +303,9 @@ module Store
 
       property   :size,               Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1
       property   :type,               String,   :required => true
+
+
+      # if missing, the following will use the sentinel values MISSING_MD5 and MISSING_SHA1
 
       property   :latest_sha1,        String,   :length => (40..40), :index => true        # latest FIXITY
       property   :latest_md5,         String,   :length => (32..32), :index => true
@@ -297,6 +330,10 @@ module Store
 
       def datetime
         initial_timestamp
+      end
+
+      def missing?
+        latest_sha1 == MISSING_SHA1 and latest_md5 == MISSING_MD5
       end
 
       def url port = 80, scheme = 'http'
@@ -391,8 +428,9 @@ module Store
     ### mixins for that....
 
     class HistoryRecord
+
       def self.actions
-        [ :put, :fixity, :delete ]    # implicity ordering historical workflow here.
+        [ :put, :fixity, :delete, :missing ]    # implicity ordering historical workflow here.
       end
 
       include DataMapper::Resource
@@ -503,6 +541,24 @@ module Store
           history_record
         end
       end
+
+      def self.missing *args  # (package_record) or (silo_record, package_name)
+        HistoryRecord.transaction do
+          package_record = (args.length == 1) ?  args[0] : PackageRecord.lookup(*args)
+
+          raise "HistoryRecord - missing - can't look up the package based on arguments (#{args.join(', ')})." unless package_record.class == PackageRecord
+          history_record = HistoryRecord.new
+          now = Time.now
+          history_record.attributes = { :package_record => package_record, :action => :missing, :md5 => MISSING_MD5, :sha1 => MISSING_SHA1, :timestamp => now }
+
+          raise "HistoryRecord - missing - can't create a new MISSING record for package #{package_record} - #{history_record.errors.full_messages.join('; ')}." unless history_record.save
+          package_record.attributes = {:latest_sha1 => MISSING_SHA1, :latest_md5 => MISSING_MD5, :latest_timestamp => now }
+          raise "HistoryRecord - missing - can't update the existence field for package #{package_record} - #{package_record.errors.full_messages.join('; ')}." unless package_record.save
+          history_record
+        end
+      end
+
+
     end # of class HistoryRecord
 
     

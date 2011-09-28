@@ -26,7 +26,6 @@ silo-pool.example.org:
      log_database_queries:       false
      log_syslog_facility:        LOG_LOCAL0
      log_filename:               /path/to/name/of/file.log
-     silo_temp_directory:        /tmp
      tivoli_server:              TIVOLI
      fixity_expired_days:        60
      fixity_stale_days:          30
@@ -117,12 +116,6 @@ tape-fixity:
 # If set, direct log information to this syslog facility (see
 # /etc/syslog.conf). If neither log_filename nor log_syslog_facility
 # are set, log to STDERR.
-#
-# silo:silo_temp_directory
-# ------------------------
-# A temporary directory for caching data from Tivoli
-# data storage - only used with the FDA style of tape
-# storage. Defaults to /var/tmp/
 #
 # silo:tivoli_server
 # ------------------

@@ -194,6 +194,10 @@ module Store
 
   class SiloError < StorageError; end
 
+  class AlienPackage < SiloError;   end   # a package on disk/tape but never entered in DB (someone slipped a package into the silo)
+  class GhostPackage < SiloError;   end   # a package on disk/tape but marked on DB as deleted (this is OK for packages on the older tapes, though we don't allow it when tape-mastering)
+  class MissingPackage < SiloError; end   # a package should exist by the db record, but not on disk/tape (serious error)
+
        
   class TsmError < StorageError; end       # usually, these are various tivoli execution errors 
   class TsmTimeout < TsmError; end         # normally, timeout occurred during execution, but see next

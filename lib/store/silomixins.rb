@@ -204,7 +204,7 @@ module Store
 
     def package_fixity_report name
 
-      ### TODO: we're going to extend history records to include sizes, and change package records
+      ### TODO: we'd like to extend history records to include sizes, and change package records
       ### to have initial_size and latest_size.  Step one of the refactoring is to use the 'size'
       ### record from the host
 
@@ -217,6 +217,13 @@ module Store
       max_time        = DateTime.parse('1970-01-01')
       min_time        = DateTime.now
       history_records = DB::HistoryRecord.list(silo_record, name)  ### TODO: list raw here, perhaps, for speedup
+
+      
+      # iterate through all of the history records - when we
+      # encouinter a delete, truncate the list and start over (this
+      # handles a case where we've deleted a package by name and
+      # resubmitted it.
+
 
       history_records.each do |rec|
         case rec.action
@@ -236,6 +243,15 @@ module Store
                                 :time   => rec.timestamp,
                                 :size   => pkg.size,            # see TODO above
                                 :status => (rec.md5 == pkg.initial_md5 and rec.sha1 == pkg.initial_sha1) ? :ok : :fail })
+        when :missing
+          count += 1
+          fixity_records.push({ :action => rec.action,
+                                :md5    => '',
+                                :sha1   => '',
+                                :time   => rec.timestamp,
+                                :size   => 0,
+                                :status => :missing })
+
         when :delete
           count = 0
           fixity_records = []   # start over
@@ -256,6 +272,7 @@ module Store
                      :deleted            => deleted_on)
     end
 
+
     # Here's the sort of serializations that fixity needs to support (XML here, but JSON and CSV possible):
     #
     # <SILOCHECK silo="/daitssfs/016" host="fclnx31.fcla.edu" fixity_check_count="4507" first_fixity_check="2010-02-24T11:21:52-05:00" last_fixity_check="2010-03-24T10:02:25-04:00">
@@ -272,7 +289,14 @@ module Store
 
       DB::PackageRecord.raw_list(silo_record, :extant => true).each do |rec|
         fixity_records.push({ :name   => rec.name,
-                              :status => (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1) ? :ok : :fail,
+                              :status => case
+                                         when (rec.latest_md5 == DB::MISSING_MD5 and rec.latest_sha1 == DB::MISSING_SHA1):
+                                           :missing
+                                         when (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1):
+                                           :ok
+                                         else 
+                                           :fail
+                                         end,
                               :md5    => rec.latest_md5,
                               :sha1   => rec.latest_sha1,
                               :size   => rec.size,                  # see TODO above about renaming these fields to intial_ and latest_ size
