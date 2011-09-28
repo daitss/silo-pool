@@ -101,7 +101,6 @@ def select_silos config, reporter
   candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
   silos = silos.select { |s| candidates.include? s.filesystem } unless candidates.empty?
   silos = silos.select { |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
-  return silos.sort { rand } if config.randomize
   return silos
 rescue => e
   reporter.error "Failed selecting the list of silos to process:"
@@ -156,10 +155,25 @@ silos.each do |silo|
       end
       md5   = md5.hexdigest
       sha1  = sha1.hexdigest
+
+    rescue Store::MissingPackage => e
+      reporter.err "Missing package #{package.name} on silo #{silo.filesystem}"
+      counter.errors += 1 
+      silo.missing(package.name)
+
+    rescue Store::AlienPackage => e
+      reporter.err "Alien package #{package.name} on silo #{silo.filesystem}: unknown package on disk"
+      counter.errors += 1
+
+    rescue Store::GhostPackage => e
+      reporter.err "Ghost package #{package.name} on silo #{silo.filesystem}: was deleted, but still on disk"
+      counter.errors += 1
+
     rescue => e    
       reporter.err "Unexpected error checking #{package.name} on silo #{silo.filesystem}:"
       reporter.err "  #{e.class}: #{e.message}"
       counter.errors += 1
+
     else
       silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
       errors = []
