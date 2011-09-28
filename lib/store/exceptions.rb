@@ -186,17 +186,25 @@ module Store
   class FatalFixityError          < Http500;  end
   class BadPassword               < Http400;  end   # empty or bad password
 
-  class TarReaderError < Http500 ; end
+  class TarReaderError            < Http500;  end
 
-  # TODO investigate how each of these are used and get them subclassed into the HTTP classed errors as above
+  class PackageRetrievalError     < Http500;  end
+
+
+  class AlienPackage < PackageRetrievalError;   end   # a package on disk/tape but never entered in DB (someone slipped a package into the silo)
+  class GhostPackage < PackageRetrievalError;   end   # a package on disk/tape but marked on DB as deleted (this is OK for packages on the older tapes, though we don't allow it when tape-mastering)
+  class MissingPackage < PackageRetrievalError; end   # a package should exist by the db record, but not on disk/tape (serious error)
+
+
+
+
+  # TODO - refactor these old errors; investigate how each of these
+  # are used and get them subclassed into the HTTP classed errors as
+  # above
   
   class StorageError < StandardError; end
 
   class SiloError < StorageError; end
-
-  class AlienPackage < SiloError;   end   # a package on disk/tape but never entered in DB (someone slipped a package into the silo)
-  class GhostPackage < SiloError;   end   # a package on disk/tape but marked on DB as deleted (this is OK for packages on the older tapes, though we don't allow it when tape-mastering)
-  class MissingPackage < SiloError; end   # a package should exist by the db record, but not on disk/tape (serious error)
 
        
   class TsmError < StorageError; end       # usually, these are various tivoli execution errors 
