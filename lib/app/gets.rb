@@ -146,6 +146,8 @@ get '/:partition/data/:name/*' do |partition, name, path|
   [ 200, { 'Content-Type' => mime_type_by_filename(filename) },  body ]
 end
 
+
+
 get '/fixity.xml' do
   [ 200, {'Content-Type'  => 'application/xml'}, Store::PoolFixityXmlReport.new(hostname, port) ]
 end
@@ -206,8 +208,9 @@ get '/:partition/fixity/:name' do |partition, name|
           'first_fixity_check="'  + fixity.first_fixity_check.to_s             + '" ' +
            'last_fixity_check="'  + fixity.last_fixity_check.to_s              + '">'
   
-  # From package level reports we only get information since the last PUT - so there
-  # is never a delete record shown this way.
+  # From package level reports we only get information since the last
+  # PUT - so there is never a delete record shown this way.  Also,
+  # currently :missing won't show since we ge an error exception.
  
   fixity.fixity_records.each do |rec|
     case rec[:action]
