@@ -27,8 +27,6 @@ silo-pool.example.org:
      log_syslog_facility:        LOG_LOCAL0
      log_filename:               /path/to/name/of/file.log
      tivoli_server:              TIVOLI
-     fixity_expired_days:        60
-     fixity_stale_days:          30
 
 disk-fixity:
      hostname:                   silo-pool.example.org
