@@ -9,14 +9,14 @@ error do
   rewind_maybe
 
   # The Store::HttpError classes carry along their own messages and
-  # HTTP status codes.
+  # HTTP status codes, so we won't need a backtrace:
 
   if e.is_a? Store::Http401
     Logger.warn e.client_message, @env
     response['WWW-Authenticate'] = "Basic realm=\"Password-Protected Pool for\ #{hostname}\""
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
 
-  elsif e.is_a? Store::Http400Error
+  elsif e.is_a? Store::Http400Error   # see not_found below
     Logger.warn e.client_message, @env
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
 
@@ -33,13 +33,13 @@ error do
 
   elsif e.is_a? Store::HttpError
     Logger.err e.client_message, @env
-    halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message
+    halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message)
     
   # Anything else we catch here, log a back trace as well - minimal
-  # information is provided in the browser.  In the limit, we'll
-  # classify and catch all of these above. (Wherever you find "raise
-  # 'message...'" sprinked in the code now, it awaits your shrewd
-  # refactoring.)
+  # information is provided in the browser, to avoid leaking
+  # security-sensitive information.  In the limit, we'll classify and
+  # catch all of these above. (Wherever you find "raise 'message...'"
+  # sprinked in the code now, it awaits your shrewd refactoring.)
 
   else
     Logger.err "Internal Server Error - #{e.class} #{e.message}", @env
@@ -48,7 +48,8 @@ error do
   end
 end
 
-# Urg.  The not_found method fields (overrides?) the halt(404) handler above, repeat.
+# Urg.  The default not_found method seems to intercept 404 errors, so
+# repeat what the 4** handler above does for this one case.
 
 
 not_found  do
