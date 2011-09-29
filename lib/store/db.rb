@@ -16,14 +16,6 @@ require 'time'
 module Store
   module DB
 
-
-    # The following MISSING_*  are used as sentinel values in the PackageRecord records to 
-    # indicate a missing value.
-
-    MISSING_MD5  = 'd41d8cd98f00b204e9800998ecf8427e'
-    MISSING_SHA1 = 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
-
-
     # We are especially careful with the setup since this is where
     # operations staff could get confused about what is required,
     # especially since very little reporting machinery can be set up
@@ -291,8 +283,7 @@ module Store
     # FIXITYs are recorded using the :latest_* columns.
     #
     # There is a special case of fixity event: missing. In that case,
-    # the sentinal values MISSING_MD5 and MISSING_SHA1 are used (these
-    # are the checksums for zero-length files)
+    # the latest_sha1 and latest_md5 fields are nil.
     
 
 
@@ -312,7 +303,7 @@ module Store
       property   :type,               String,   :required => true
 
 
-      # if missing, the following will use the sentinel values MISSING_MD5 and MISSING_SHA1
+      # if missing, the following checksums will be null:
 
       property   :latest_sha1,        String,   :length => (40..40), :index => true        # latest FIXITY
       property   :latest_md5,         String,   :length => (32..32), :index => true
@@ -340,7 +331,7 @@ module Store
       end
 
       def missing?
-        latest_sha1 == MISSING_SHA1 and latest_md5 == MISSING_MD5
+        latest_sha1.nil? and latest_md5.nil?
       end
 
       def url port = 80, scheme = 'http'
@@ -437,7 +428,7 @@ module Store
     class HistoryRecord
 
       def self.actions
-        [ :put, :fixity, :delete, :missing ]    # implicity ordering historical workflow here.
+        [ :put, :fixity, :delete ]    # implicity ordering historical workflow here.
       end
 
       include DataMapper::Resource
@@ -549,6 +540,8 @@ module Store
         end
       end
 
+      # just like self.fixity, but with null md5 and sha1 values
+
       def self.missing *args  # (package_record) or (silo_record, package_name)
         HistoryRecord.transaction do
           package_record = (args.length == 1) ?  args[0] : PackageRecord.lookup(*args)
@@ -556,10 +549,10 @@ module Store
           raise "HistoryRecord - missing - can't look up the package based on arguments (#{args.join(', ')})." unless package_record.class == PackageRecord
           history_record = HistoryRecord.new
           now = Time.now
-          history_record.attributes = { :package_record => package_record, :action => :missing, :md5 => MISSING_MD5, :sha1 => MISSING_SHA1, :timestamp => now }
+          history_record.attributes = { :package_record => package_record, :action => :fixity, :md5 => nil, :sha1 => nil, :timestamp => now }
 
           raise "HistoryRecord - missing - can't create a new MISSING record for package #{package_record} - #{history_record.errors.full_messages.join('; ')}." unless history_record.save
-          package_record.attributes = {:latest_sha1 => MISSING_SHA1, :latest_md5 => MISSING_MD5, :latest_timestamp => now }
+          package_record.attributes = {:latest_sha1 => nil, :latest_md5 => nil, :latest_timestamp => now }
           raise "HistoryRecord - missing - can't update the existence field for package #{package_record} - #{package_record.errors.full_messages.join('; ')}." unless package_record.save
           history_record
         end

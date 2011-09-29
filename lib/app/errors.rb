@@ -33,7 +33,7 @@ error do
 
   elsif e.is_a? Store::HttpError
     Logger.err e.client_message, @env
-    halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message)
+    halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message
     
   # Anything else we catch here, log a back trace as well - minimal
   # information is provided in the browser, to avoid leaking

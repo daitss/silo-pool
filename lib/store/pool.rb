@@ -62,6 +62,8 @@ module Store
       end
     end
 
+
+
     def each
       package_chunks do |packages|  # get each sublist (of CHUNK_SIZE)        
         packages.each do |pkg|      # and process it
@@ -72,16 +74,43 @@ module Store
                                     # next sublist is generated.  We use a timestamp in the above list to 
                                     # avoid the converse case, a package insert.
 
+
+          # N.B. the following special-casing for the missing case,
+          # using nil-valued latest_md5/sha1, is repeated in db.rb and
+          # silomixins.rb - all this needs to be refactored into one
+          # place and made explicit.
+
+          case
+          when (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) then
+            status = :ok
+            md5    = pkg.latest_md5
+            sha1   = pkg.latest_sha1
+            size   = pkg.size
+          when (pkg.latest_md5.nil? and pkg.latest_sha1.nil?) then
+            status = :missing
+            md5    = ""
+            sha1   = ""
+            size   = 0
+          else
+            status = :fail
+            md5    = pkg.latest_md5
+            sha1   = pkg.latest_sha1
+            size   = pkg.size
+          end
+
+
+          Datyl::Logger.info "working package #{pkg.inspect}"
+
           #  StructFixityRecord is ordered as:  name, location, status, md5, sha1, fixity_time, put_time, size
 
           yield Struct::FixityRecord.new(pkg.name,
                                          pkg.url(@port, @scheme),
-                                         (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) ? :ok : :fail,
-                                         pkg.latest_md5,
-                                         pkg.latest_sha1,
+                                         status,
+                                         md5,
+                                         sha1,
                                          pkg.latest_timestamp,
                                          pkg.initial_timestamp,
-                                         pkg.size
+                                         size
                                          )
         end
       end
