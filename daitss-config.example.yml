@@ -9,7 +9,7 @@
 # Please don't use tabs in this file.
 
 defaults:
-     fixity_expired_days:        60
+     fixity_expired_days:        90
      fixity_stale_days:          45
 
 database:
@@ -27,6 +27,7 @@ silo-pool.example.org:
      log_syslog_facility:        LOG_LOCAL0
      log_filename:               /path/to/name/of/file.log
      tivoli_server:              TIVOLI
+     silo_temp_directory         /path/to/temp/dir
 
 disk-fixity:
      hostname:                   silo-pool.example.org
@@ -119,6 +120,15 @@ tape-fixity:
 # ------------------
 # The name of the Tivolo tape server, if you are using
 # DAITSS with the FDA style of tape storage. No defaults.
+#
+# silo:silo_temp_directory
+# ------------------------
+# When a per-package request is received, a temporary disk
+# silo directory structure is set up; this tells the 
+# we service where that should be placed on the filesystem.
+# These files are removed after a certain amount of time,
+# but they can require a very large amount of space. If
+# not ser
 
 
 # disk-fixity

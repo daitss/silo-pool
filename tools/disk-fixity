@@ -97,15 +97,33 @@ end
 # Order the disk silos by oldest completed fixity time, latest first; if silos have been specified on the command line, restrict our list to just those.
 
 def select_silos config, reporter
+
   silos = Store::DB::SiloRecord.list(config.hostname).select{ |s| not s.retired? and s.state == :disk_master }.map{ |rec| Store::SiloDB.new(rec.hostname, rec.filesystem) }
+
+  if silos.empty?
+     reporter.warn "There were no silos available to process for #{config.hostname}."
+     return []
+  end
+
   candidates = ARGV.map { |s| s.sub(%r{/+$}, '') }
-  silos = silos.select { |s| candidates.include? s.filesystem } unless candidates.empty?
-  silos = silos.select { |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
-  return silos
+
+  if not candidates.empty?
+    all_silo_filesystems = silos.map{ |s| s.filesystem }.sort
+    silos = silos.select { |s| candidates.include? s.filesystem }
+    if silos.empty?
+      reporter.warn "You erred when you added the silos to the command line:"
+      reporter.warn "Silos on the command line were: #{candidates * ', '}."
+      reporter.warn "Available silos: #{all_silo_filesystems * ', '}."
+      return []
+    end
+  end
+
+  return silos.select { |s| s.oldest_fixity }.sort{ |a,b| a.oldest_fixity <=> b.oldest_fixity }
+
 rescue => e
-  reporter.error "Failed selecting the list of silos to process:"
-  reporter.error "#{e.class} #{e.message}, backtrace follows:"
-  e.backtrace.each { |line| reporter.error "  #{line}" }
+  reporter.err "Failed selecting the list of silos to process:"
+  reporter.err "#{e.class} #{e.message}, backtrace follows:"
+  e.backtrace.each { |line| reporter.err "  #{line}" }
   reporter.write
   exit                 # skip teardown so we leave pid file - makes sure xymon will squawk
 end
@@ -121,14 +139,11 @@ config   = get_config
 reporter = setup(config)
 
 reporter.info  "DiskFixity started at #{Time.now}"
-config.keys.sort.each { |key| reporter.info "Configuration options: #{key} => #{StoreUtils.safen_connection_string(config[key].to_s)}." }
+config.keys.sort.each { |key| Datyl::Logger.info "Configuration options: #{key} => #{StoreUtils.safen_connection_string(config[key].to_s)}." }
 
 silos    = select_silos(config, reporter)
 
-if silos.empty?                                                   # TODO: prettier output here
-  reporter.warn "There were no silos available to process for #{config.hostname}."
-  reporter.warn "Silos specified on the command line: #{ARGV * ', '}." unless ARGV.empty?
-else
+if not silos.empty?                                                   # TODO: prettier output here
   reporter.info "Checking the following silos for #{config.hostname} by last fixity check date:" 
   silos.each { |silo| reporter.info "  * #{silo.filesystem} - #{silo.oldest_fixity.strftime('%A, %B %d, %Y at %r')}" }
   reporter.info "Will skip packages if checked within #{config.fresh_enough} days." if config.fresh_enough > 0   # TODO plural check, commify
@@ -183,7 +198,7 @@ silos.each do |silo|
         counter.ok += 1
       else
         counter.errors += 1
-        reporter.err "Fixity failure for #{package.name} on silo #{silo.filesystem}:"
+        reporter.err "Fixity error for #{package.name} on silo #{silo.filesystem}:"
         errors.each { |line|  reporter.err "  #{line}" }
       end
     end

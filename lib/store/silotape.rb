@@ -57,7 +57,7 @@ module Store
 
       raise ConfigurationError, "No database record found for tape-based silo #{hostname}:#{filesystem}." unless @silo_record
 
-      #### TODO: Dumb - make them as needed...
+      # TODO: would be better to be lazy here and make them at need:
 
       dir = File.join(cache_root, 'tape-silo-cache-' + Digest::MD5.hexdigest(hostname + filesystem)[0..7])  # don't want a collison from same package on two silos
       FileUtils.mkdir_p dir
@@ -106,28 +106,16 @@ module Store
     def sha1 name;     package_rec = lookup! name;  package_rec.sha1;              end
     def datetime name; package_rec = lookup! name;  package_rec.datetime;          end
 
-    # TODO: need to get exceptions that specifically warn about orphaned packages (doc what an orphan is)
 
     def delete name
-
-      # TODO: need to get exists? in here, others perhaps....
-      # TODO: check for orphans/missing
-
       cache_silo.delete(name) if cache_silo.exists?(name)
       DB::HistoryRecord.delete(silo_record, name)
     end
 
-    # TODO: data_path now necessary.  need to fix the sendfile debacle... monkey patch sinatra... something....
-
     def get name, &block
-      # TODO: need to get exists? in here, others perhaps....
       retrieve_from_tape(name) unless cache_silo.exists?(name)
-      # TODO: need test to check block is passed correctly
-      # TODO: checksum data before we pass it back
       cache_silo.get(name, &block)
     end
-
-    # TODO: we really want to read-lock data_path reads somehow - expose the read_lock method?
 
     def data_path name
       retrieve_from_tape(name) unless cache_silo.exists?(name)
@@ -159,7 +147,6 @@ module Store
       rec
     end
 
-    # TODO: get rid of this crock.  Maybe inject logger.
 
     def get_tsm_info tsm
       open("/tmp/tsm.#{$$}.log", 'w') do |fh|
@@ -197,9 +184,7 @@ module Store
       source      = slashify(File.join(self.filesystem, StoreUtils.hashpath(name)))
       
       tsm.restore(source, destination)
-      
-      # TODO: better than this - must check output, error on status 8, 4, look for particular ASNs, no error output etc
-      # it will take some time to generate heuristics.
+
 
       if tsm.status > 8
 	raise "TSM Execution Error - exit status #{tsm.status}; " + get_tsm_info(tsm).join("\n")
@@ -208,8 +193,6 @@ module Store
       if not cache_silo.exists?(name)
         raise "TSM Execution Error - Can't retrieve #{name} from #{self}; it hasn't been properly restored from tape to #{cache_silo}."
       end
-
-      # TODO: double-check the checksum here; might as well.  
     end
     
     def cleanup_cache

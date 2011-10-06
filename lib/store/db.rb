@@ -269,7 +269,8 @@ module Store
     # HistoryRecord table.
     #
     # In point of fact, PackageRecords are normally populated by
-    # side-effect, when a HistoryRecord is updated.
+    # side-effect, when a HistoryRecord is updated (or, for missing
+    # packages, when SiloRecord.missing(PackageName) is called
     #
     # PUTs are recorded using the :initial_timestamp, :initial_sha1,
     # :initial_md5 columns.
@@ -281,8 +282,7 @@ module Store
     # package.
     #
     # FIXITYs are recorded using the :latest_* columns.
-    #
-    # There is a special case of fixity event: missing. In that case,
+    # There is a special case of a fixity event: missing. In that case,
     # the latest_sha1 and latest_md5 fields are nil.
     
 

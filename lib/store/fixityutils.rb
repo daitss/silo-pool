@@ -6,7 +6,7 @@ require 'store/silodb'
 require 'store/silotape'
 require 'store/tsmexecutor'
 
-# TODO: This is used entirely by tape-fixity,  and needs to be refactored to use the disk-fixity stuff instead.
+# TODO: This is used entirely by tape-fixity,  and needs to be refactored against disk-fixity to be consistent.
 #
 
 
@@ -113,16 +113,20 @@ end
 #
 # In some cases, the presence of aliens or ghosts is not a big deal (say, found on 
 # tape).  But it may indicate a problem - especially if they were on disk.
+#
+# Missing packages are explicitly entered into the DB
 
 Struct.new('FileIssues', :ghosts, :missing, :aliens)
 
-def check_for_missing web_server, silo, filesystem, reporter    ## TODO: rename to database_check
+def check_for_missing web_server, silo_name, filesystem, reporter
   info = Struct::FileIssues.new(0, 0, 0)
 
-  reporter.info "Database check for missing, ghost and alien packages for the silo #{silo} on filesystem #{filesystem}."
+  reporter.info "Database check for missing, ghost and alien packages for the silo #{silo_name} on filesystem #{filesystem}."
+
+  silo_record = Store::DB::SiloRecord.lookup(web_server, silo_name)
 
   silo_stream = SiloStream.new(filesystem)
-  db_stream   = DbStream.new(web_server, silo)
+  db_stream   = DbStream.new(web_server, silo_name)
 
   missing  = []  # in db, but not on filesystem
   aliens   = []  # on filesystem, but not in db at all
@@ -132,10 +136,14 @@ def check_for_missing web_server, silo, filesystem, reporter    ## TODO: rename 
   # in_db is nil if no package record in db, false if package was marked as deleted, and true if it should exist   #### TODO: need better than true/false here
 
   ComparisonStream.new(silo_stream, db_stream).get do |package_name, on_disk, in_db|
-    if on_disk.nil?
-      missing.push package_name if in_db       # we don't care if not on disk and marked as deleted in the db;
+
+    if on_disk.nil? and in_db                  # we don't care if not on disk and marked as deleted in the db;
+      missing.push package_name
+      silo_record.missing(package_name)
+
     elsif in_db.nil?                           
       aliens.push package_name    
+
     else
       ghosts.push package_name  if not in_db   # It is on_disk, but is marked in the db as deleted - this will happen over time for silos restored from tapes,
     end                                        # but it indicates a real problem for disk silos.
@@ -143,20 +151,20 @@ def check_for_missing web_server, silo, filesystem, reporter    ## TODO: rename 
 
   if not ghosts.empty?
     info.ghosts = ghosts.count
-    reporter.info "The filesystem #{filesystem} has #{info.ghosts} #{pluralize_maybe(ghosts.count, 'package')} that the database indicates have been deleted from #{silo}: package names follow:"
-    ghosts.each_slice(5) { |slice| reporter.info slice.join(' ') }
+    reporter.info "The filesystem #{filesystem} has #{info.ghosts} ghost #{pluralize_maybe(ghosts.count, 'package')} that the database indicates have been deleted from #{silo_name}: package names follow:"
+    ghosts.each_slice(5) { |slice| reporter.info '    ' + slice.join(' ') }
   end
   
   if not aliens.empty?
     info.aliens = aliens.count
-    reporter.info "The filesystem #{filesystem} has #{info.aliens} #{pluralize_maybe(aliens.count, 'package')} that the database for #{silo} has no record of, package names follow:"
-    aliens.each_slice(5) { |slice| reporter.warn slice.join(' ') }
+    reporter.info "The filesystem #{filesystem} has #{info.aliens} alien #{pluralize_maybe(aliens.count, 'package')} that the database for #{silo_name} has no record of, package names follow:"
+    aliens.each_slice(5) { |slice| reporter.warn '     ' + slice.join(' ') }
   end
 
   if not missing.empty?
     info.missing = missing.count
-    reporter.err "The filesystem #{filesystem} is missing #{info.missing} #{pluralize_maybe(missing.count, 'package')} that the database for #{silo} indicates should be there, package names follow:"
-    missing.each_slice(5) { |slice| reporter.err slice.join(' ') }
+    reporter.err "The filesystem #{filesystem} is missing #{info.missing} #{pluralize_maybe(missing.count, 'package')} that the database for #{silo_name} indicates should be there, package names follow:"
+    missing.each_slice(5) { |slice| reporter.err '     ' + slice.join(' ') }
   end
 
   return info
