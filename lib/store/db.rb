@@ -20,6 +20,11 @@ module Store
     # operations staff could get confused about what is required,
     # especially since very little reporting machinery can be set up
     # at the time it is called.
+    #
+
+    # The setup routine can take either one string or two; the
+    # deprecated two-argument version handles a legacy method of
+    # initializing from a yaml and a key in that yaml file.
 
     def self.setup *args
 
@@ -36,17 +41,6 @@ module Store
       end
     end
 
-    def self.setup_with_string connection_string
-      dm = DataMapper.setup(:store_master, connection_string)
-
-      begin
-        dm = DM.setup connection_string        
-        dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
-        dm
-      rescue => e
-        raise ConfigurationError, "Failure setting up the silo-pool database: #{e.message}"
-      end
-    end
 
     class DM
       def self.setup db

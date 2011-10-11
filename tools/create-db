@@ -48,7 +48,7 @@ include Store
 conf = parse_command_line ARGV
 
 if conf.db_string
-  DB.setup_with_string(conf.db_string)
+  DB.setup(conf.db_string)
 else
   DB.setup(conf.file, conf.key)
 end
