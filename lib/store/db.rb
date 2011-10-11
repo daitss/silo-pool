@@ -412,18 +412,16 @@ module Store
         sql +=     "WHERE #{clauses.join(' AND ')} " unless clauses.empty?
         sql +=  "ORDER BY name"
 
-        ## TODO: this isn't flexible enough - find actual repository we belong to - just repository enough?
-
         repository(repository).adapter.select(sql)
       end
 
     end # of class PackageRecord
 
 
-    ### TODO: we want to populate the size field as well, need to add a size here, and 
+    ### TODO: we want to populate a size field as well, need to add a size here, and 
     ### perhaps a latest_size on package record.  For now, we're just using the size info
     ### from package to ensure we're getting the functional interface correct - see the silo
-    ### mixins for that....
+    ### mixins.
 
     class HistoryRecord
 

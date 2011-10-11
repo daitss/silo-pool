@@ -6,15 +6,13 @@ require 'store/silodb'
 require 'store/silotape'
 require 'store/tsmexecutor'
 
-# TODO: This is used entirely by tape-fixity,  and needs to be refactored against disk-fixity to be consistent.
-#
-
+# TODO: This is used entirely by tape-fixity,  and needs to be refactored/merged against disk-fixity to be consistent.
 
 # check_package_fixities CONF
 #
 # Recompute all checksums and record into a database.  Log error if we get
 # a mismatch with a previous checksum.
-#
+
 
 def check_package_fixities web_server, silo_name, filesystem, fresh_enough, reporter
   success = true
@@ -26,7 +24,6 @@ def check_package_fixities web_server, silo_name, filesystem, fresh_enough, repo
 
   silo.each do |package|
     begin
-
       package_record = Store::DB::PackageRecord.lookup(silo_record, package) 
 
       if (package_record.initial_timestamp != package_record.latest_timestamp) and (DateTime.now - package_record.latest_timestamp) <  fresh_enough

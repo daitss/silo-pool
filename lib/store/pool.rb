@@ -98,9 +98,6 @@ module Store
             size   = pkg.size
           end
 
-
-          Datyl::Logger.info "working package #{pkg.inspect}"
-
           #  StructFixityRecord is ordered as:  name, location, status, md5, sha1, fixity_time, put_time, size
 
           yield Struct::FixityRecord.new(pkg.name,
