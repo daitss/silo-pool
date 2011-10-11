@@ -36,6 +36,17 @@ module Store
       end
     end
 
+    def self.setup_with_string connection_string
+      dm = DataMapper.setup(:store_master, connection_string)
+
+      begin
+        dm = DM.setup connection_string        
+        dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
+        dm
+      rescue => e
+        raise ConfigurationError, "Failure setting up the silo-pool database: #{e.message}"
+      end
+    end
 
     class DM
       def self.setup db
