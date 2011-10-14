@@ -1,5 +1,5 @@
 require 'datyl/reporter'
-require 'store/deprecated-streams'  # an earlier version of streams, only fixityutils uses this (and by extension, only tape-fixities uses it)
+require 'store/deprecated-streams'  # an earlier version of streams, only fixityutils uses this (and by extension, only tape-fixities uses this)
 require 'store/exceptions'
 require 'store/silo'
 require 'store/silodb'
@@ -129,21 +129,31 @@ def check_for_missing web_server, silo_name, filesystem, reporter
   aliens   = []  # on filesystem, but not in db at all
   ghosts   = []  # on filesystem, but marked as deleted in db
 
-  # on_disk is nil if package was not present on disk,  true otherwise
-  # in_db is nil if no package record in db, false if package was marked as deleted, and true if it should exist   #### TODO: need better than true/false here
-
   ComparisonStream.new(silo_stream, db_stream).get do |package_name, on_disk, in_db|
 
-    if on_disk.nil? and in_db                  # we don't care if not on disk and marked as deleted in the db;
+    # on_disk is nil if package was not present on disk,  true otherwise
+    # in_db is nil if no package record present in db, false if package was marked as deleted, and true if marked as present
+    #
+    # Here are all six cases, some vacuous:
+
+    case
+    when (on_disk and in_db == false)       # ghost: the package was deleted, but it's still on disk
+      ghosts.push package_name
+
+    when (on_disk and in_db == nil)         # alien: we don't know about this package, but it's on disk somehow
+      aliens.push package_name
+
+    when (on_disk and in_db)                # ok: package present and accounted for
+
+    when (not on_disk and in_db == false)   # ok: package deleted and accounted for
+
+    when (not on_disk and in_db == nil)     # ok: package never existed (won't happen here, left here for completeness)
+
+    when (not on_disk and in_db)            # missing: should be there but it's not
       missing.push package_name
       silo_record.missing(package_name)
+    end
 
-    elsif in_db.nil?                           
-      aliens.push package_name    
-
-    else
-      ghosts.push package_name  if not in_db   # It is on_disk, but is marked in the db as deleted - this will happen over time for silos restored from tapes,
-    end                                        # but it indicates a real problem for disk silos.
   end
 
   if not ghosts.empty?
