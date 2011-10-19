@@ -37,20 +37,35 @@ get '/add-silo?' do
 end
 
 
-# provide information on the services we supply.  There are two requirements: 
-#   * a URL that we can POST to: it will return a URL that we can PUT a new resource to store.
-#   * one or more URLs where we can retrieve fixity data
-
-
-# TODO: add the per-partition fixity URLs here as well.
+# Provide information on the services we supply.  There are two requirements that a storage master
+# requires in the returned XML:
+#
+#   * a create tag showing a URL that we can POST to: it will return a URL that we can PUT a new resource to store
+#   * a fixity tag showing one or more URLs where we can retrieve fixity data
+#
+# TODO: to be RESTful, this should return a specialized media-type.
 
 get '/services' do
   xml = Builder::XmlMarkup.new(:indent => 2)
   xml.instruct!(:xml, :encoding => 'UTF-8')
+
   xml.services(:version => Store::VERSION) {
     xml.create(:location => absolutely('/create/%s'),  :method => "post")
     xml.fixity(:location => absolutely('/fixity.csv'), :method => "get",  :mime_type => 'text/csv')
     xml.fixity(:location => absolutely('/fixity.xml'), :method => "get",  :mime_type => 'application/xml')
+
+    list_silos.each do |silo|
+      xml.partition_fixity(:localtion => absolutely("/#{silo.name}/fixity/"), :method => "get",  :mime_type => 'application/xml')
+    end
+
+    list_silos.each do |silo|
+      xml.store(:location => absolutely("/#{silo.name}/data/%s"),  :method => "put")
+    end
+
+    list_silos.each do |silo|
+      xml.retrieve(:location => absolutely("/#{silo.name}/data/%s"),  :method => "get")
+    end
+
   }
   status 200
   headers 'Content-Type' => 'application/xml'
