@@ -343,7 +343,8 @@ module Store
         port_str = port.to_i == 80 ? '' : ":#{port}"
         scheme + '://' + silo_record.hostname + port_str + '/' + silo_record.filesystem.split('/').pop + '/data/' + name
       end
-      
+
+
       # PackageRecord.create always is performed by HistoryRecord.put
       # when a PUT has been perfomed to this silo.
 
@@ -419,6 +420,30 @@ module Store
 
         repository(repository).adapter.select(sql)
       end
+
+
+      # A late addtion, get the entire list of active fixities at a point in time
+      # TODO:  add point in time
+
+      def self.list_all_fixities hostname
+
+        sql  =  "SELECT packages.name, packages.size, "                 +
+                       "packages.latest_sha1, packages.latest_md5, "    +
+                       "packages.initial_sha1, packages.initial_md5, "  +
+                       "packages.initial_timestamp, "                   +
+                       "packages.latest_timestamp, "                    +
+                       "silos.filesystem, "                             +
+                       "NULL as status, "                               +   # we'll fill in status and location later..
+                       "NULL as location "                              +
+                  "FROM packages, silos "                               +
+                 "WHERE packages.silo_record_id = silos.id "            +
+                   "AND NOT silos.retired "                             +
+                   "AND packages.extant "                               +
+              "ORDER BY packages.name"
+
+        repository(repository).adapter.select(sql)
+      end
+
 
     end # of class PackageRecord
 
