@@ -1,6 +1,8 @@
 require 'store/exceptions' 
 require 'store/utils'
 require 'mime/types'
+require 'date'
+
 
 helpers do
   include Rack::Utils     # to get escape_html
@@ -155,6 +157,16 @@ helpers do
 
     silos
   end
+
+
+  # parse query string with 'before', make sure we get a date-able string
+
+  def before?
+    return DateTime.parse(params[:before]) if params[:before] 
+  rescue => e
+    raise Http400, "Invalid date for the 'before' parameter in the query string"
+  end
+
 
   # Look up the silo from our virtual hostname and the supplied
   # partition.  If name is given, check to make sure it exists.  This

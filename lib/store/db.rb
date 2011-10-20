@@ -425,20 +425,27 @@ module Store
       # A late addtion, get the entire list of active fixities at a point in time
       # TODO:  add point in time
 
-      def self.list_all_fixities hostname
+      def self.list_all_fixities hostname, options = {}
 
-        sql  =  "SELECT packages.name, packages.size, "                 +
-                       "packages.latest_sha1, packages.latest_md5, "    +
-                       "packages.initial_sha1, packages.initial_md5, "  +
-                       "packages.initial_timestamp, "                   +
-                       "packages.latest_timestamp, "                    +
-                       "silos.filesystem, "                             +
-                       "NULL as status, "                               +   # we'll fill in status and location later..
-                       "NULL as location "                              +
-                  "FROM packages, silos "                               +
-                 "WHERE packages.silo_record_id = silos.id "            +
-                   "AND NOT silos.retired "                             +
-                   "AND packages.extant "                               +
+        clauses = []
+
+        if options[:before]
+          clauses.push "packages.initial_timestamp < '#{options[:before]}'"
+        end
+
+        sql  =  "SELECT packages.name, packages.size, "                        +
+                       "packages.latest_sha1, packages.latest_md5, "           +
+                       "packages.initial_sha1, packages.initial_md5, "         +
+                       "packages.initial_timestamp, "                          +
+                       "packages.latest_timestamp, "                           +
+                       "silos.filesystem, "                                    +
+                       "NULL AS status, "                                      +   # we'll fill in status and location later..
+                       "NULL AS location "                                     +
+                  "FROM packages, silos "                                      +
+                 "WHERE packages.silo_record_id = silos.id "                   +
+                   "AND NOT silos.retired "                                    +
+                   "AND packages.extant "                                      +
+          ( clauses.empty?  ? "" : 'AND ' +  clauses.join(' AND ') + ' ')      +
               "ORDER BY packages.name"
 
         repository(repository).adapter.select(sql)

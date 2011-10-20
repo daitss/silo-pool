@@ -19,8 +19,6 @@ put '/:partition/data/:name' do |partition, name|
   raise Http412, "The identifier #{name} does not meet the resource naming convention for #{web_location(partition)}" unless good_name name
   raise Http412, "Missing the Content-MD5 header, required for PUTs to #{web_location(partition)}" unless supplied_md5
 
-  ## TODO: check, is a silo cleanup necessary her?
-
   data = request.body                                          # singleton method to provide content length. (silo.put needs
   eval "def data.size; #{request.content_length.to_i}; end"    # to garner size; but that's not provided by 'rewindable' body object)
   silo.put(name, data, request.content_type || 'application/x-tar')

@@ -197,7 +197,6 @@ module Store
 
 
 
-
   # TODO - refactor these old errors; investigate how each of these
   # are used and get them subclassed into the HTTP classed errors as
   # above

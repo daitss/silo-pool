@@ -162,13 +162,18 @@ get '/:partition/data/:name/*' do |partition, name, path|
 end
 
 
-
 get '/fixity.xml' do
-  [ 200, {'Content-Type'  => 'application/xml'}, Store::PoolFixityXmlReport.new(hostname, port) ]
+  options = {}
+  options[:before] ||= before?
+
+  [ 200, {'Content-Type'  => 'application/xml'}, Store::PoolFixityXmlReport.new(hostname, port, request.scheme, options) ]
 end
 
 get '/fixity.csv' do
-  [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname, port) ]
+  options = {}
+  options[:before] ||= before?    
+
+  [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname, port, request.scheme, options) ]
 end
 
 # TODO:  refactor individual silo fixities to use the above xml/csv report techniques.

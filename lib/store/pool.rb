@@ -2,6 +2,7 @@ require 'store/utils'
 require 'store/exceptions'
 require 'store/silodb'
 require 'store/db'
+require 'date'
 
 class DateTime
   def to_utc
@@ -22,36 +23,40 @@ module Store
 
   class PoolFixity
 
-    Struct.new('FixityHeader', :hostname, :count, :earliest, :latest)
+    Struct.new('FixityHeader', :hostname, :count, :earliest, :latest, :stored_before)
 
-    def initialize hostname, port = 80, scheme = 'http'
+    def initialize hostname, port = 80, scheme = 'http', options = {}
       @hostname = hostname
       @port     = port.to_i == 80 ? '' : ":#{port}"
       @scheme   = scheme
-      @silos    = DB::SiloRecord.all(:hostname => hostname)   # TODO:  adjust when we add 'retired' attribute to silos
-      @started  = DateTime.now
+      @silos    = DB::SiloRecord.all(:hostname => hostname, :retired => false)
+      @options  = options
     end
 
     def summary
+
+      conditions = { :extant => true, :silo_record => @silos }
+      conditions[:initial_timestamp.lt] = @options[:before] if @options[:before]
+
       Struct::FixityHeader.new(@hostname,
-                               Store::DB::PackageRecord.count(:extant => true, :silo_record => @silos),
-                               Store::DB::PackageRecord.min(:latest_timestamp, :extant => true, :silo_record => @silos),
-                               Store::DB::PackageRecord.max(:latest_timestamp, :extant => true, :silo_record => @silos))
+                               Store::DB::PackageRecord.count(conditions),
+                               Store::DB::PackageRecord.min(:latest_timestamp, conditions),
+                               Store::DB::PackageRecord.max(:latest_timestamp, conditions),
+                               (@options[:before] || DateTime.now).to_utc.to_s
+                               )
+
     end
-
-
 
     def url filesystem, name
       @scheme + '://' + @hostname + @port + '/' + filesystem.split('/').pop + '/data/' + name
     end
 
+
     def each
-      list = Store::DB::PackageRecord.list_all_fixities(@hostname)
+      Store::DB::PackageRecord.list_all_fixities(@hostname, @options).each do |pkg|
 
-      list.each do |pkg|
-
-          # N.B. the following special-casing for the missing case,
-          # using nil-valued latest_md5/sha1, is repeated in db.rb and
+          # N.B. the following test for the missing case,
+          # using nil-valued latest_md5/sha1; is repeated in db.rb and
           # silomixins.rb - all this needs to be refactored into one
           # place and made explicit.
 
@@ -79,18 +84,19 @@ module Store
 
   class PoolFixityXmlReport
 
-    def initialize hostname, port = 80, scheme = 'http'
+    def initialize hostname, port = 80, scheme = 'http', options = {}
       @hostname    = hostname
-      @pool_fixity = PoolFixity.new(hostname, port, scheme)
+      @pool_fixity = PoolFixity.new(hostname, port, scheme, options)
     end
 
     def each
       header = @pool_fixity.summary
 
-      yield '<fixities hostname="'  + StoreUtils.xml_escape(@hostname) + '" ' +
-            'fixity_check_count="'  + header.count.to_s                + '" ' +
-         'earliest_fixity_check="'  + header.earliest.to_s             + '" ' +
-           'latest_fixity_check="'  + header.latest.to_s               + '">' + "\n"
+      yield '<fixities hostname="'  + StoreUtils.xml_escape(@hostname)                   + '" ' +
+                 'stored_before="'  + StoreUtils.xml_escape(header.stored_before)        + '" ' +
+            'fixity_check_count="'  + header.count.to_s                                  + '" ' +
+         'earliest_fixity_check="'  + header.earliest.to_s                               + '" ' +
+           'latest_fixity_check="'  + header.latest.to_s                                 + '">' + "\n"
 
       @pool_fixity.each do |fix|
         yield  '  <fixity name="'   + StoreUtils.xml_escape(fix.name)     + '" '  +
@@ -112,8 +118,8 @@ module Store
 
   class PoolFixityCsvReport
 
-    def initialize hostname, port = '80', scheme = 'http'
-      @pool_fixity = PoolFixity.new(hostname, port, scheme)
+    def initialize hostname, port = '80', scheme = 'http', options = {}
+      @pool_fixity = PoolFixity.new(hostname, port, scheme, options)
     end
 
     def each
