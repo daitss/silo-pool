@@ -52,15 +52,15 @@ module Store
     end
 
 
-    def each
-      Store::DB::PackageRecord.list_all_fixities(@hostname, @options).each do |pkg|
+    # ultimately, pkg is from datamapper that has left some place holders for us to fill in.
+
+    def update_record pkg
+        pkg.location = url(pkg.filesystem, pkg.name)
 
           # N.B. the following test for the missing case,
           # using nil-valued latest_md5/sha1; is repeated in db.rb and
           # silomixins.rb - all this needs to be refactored into one
           # place and made explicit.
-
-        pkg.location = url(pkg.filesystem, pkg.name)
 
         case
         when (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) then
@@ -73,10 +73,24 @@ module Store
         else
           pkg.status = :fail
         end
+    end
 
-        yield pkg
+
+    def list
+      list = Store::DB::PackageRecord.list_all_fixities(@hostname, @options)
+      list.each  { |pkg| update_record(pkg) }
+      return list
+    end
+
+    # TODO: There is no need to use yield here any more, since list_all_fixities doesn't.
+
+    def each
+      Store::DB::PackageRecord.list_all_fixities(@hostname, @options).each do |pkg|
+        yield update_record pkg
       end
     end
+
+
   end # of class Store::PoolFixity
 
   # A wrapper for the data returned by the PoolFixity class that can be used in a space-efficient rack response.
@@ -88,6 +102,9 @@ module Store
       @hostname    = hostname
       @pool_fixity = PoolFixity.new(hostname, port, scheme, options)
     end
+
+
+    ## TODO:  chunk out from PoolFixity
 
     def each
       header = @pool_fixity.summary
@@ -110,6 +127,30 @@ module Store
       end
 
       yield "</fixities>\n"
+    end
+
+
+    def get
+      header = @pool_fixity.summary
+      text = []
+      text.push '<fixities hostname="'  + StoreUtils.xml_escape(@hostname)                   + '" ' +
+                     'stored_before="'  + StoreUtils.xml_escape(header.stored_before)        + '" ' +
+                'fixity_check_count="'  + header.count.to_s                                  + '" ' +
+             'earliest_fixity_check="'  + header.earliest.to_s                               + '" ' +
+               'latest_fixity_check="'  + header.latest.to_s                                 + '">' + "\n"
+
+      @pool_fixity.each do |fix|
+        text.push '  <fixity name="'   + StoreUtils.xml_escape(fix.name)     + '" '  +
+                        'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +
+                            'sha1="'   + fix.latest_sha1                     + '" '  +
+                             'md5="'   + fix.latest_md5                      + '" '  +
+                            'size="'   + fix.size.to_s                       + '" '  +
+                     'fixity_time="'   + fix.latest_timestamp.to_utc         + '" '  +
+                        'put_time="'   + fix.initial_timestamp.to_utc        + '" '  +
+                          'status="'   + fix.status.to_s                     + '"/>' + "\n"
+      end
+
+      text.push "</fixities>\n"
     end
   end # of class Store::PoolFixityXmlReport
 

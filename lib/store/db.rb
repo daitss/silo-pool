@@ -423,7 +423,6 @@ module Store
 
 
       # A late addtion, get the entire list of active fixities at a point in time
-      # TODO:  add point in time
 
       def self.list_all_fixities hostname, options = {}
 
