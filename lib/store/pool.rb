@@ -1,8 +1,9 @@
-require 'store/utils'
+require 'date'
+require 'enumerator'
+require 'store/db'
 require 'store/exceptions'
 require 'store/silodb'
-require 'store/db'
-require 'date'
+require 'store/utils'
 
 class DateTime
   def to_utc
@@ -14,16 +15,18 @@ module Store
 
   # Class PoolFixity
   #
-  # TODO: make silo-level fixities use this same strategem, include here.
-  #
-
+  # TODO: make silo-level fixity reports use this same strategem and include here
 
   # Assemble all the recent fixity data for all silos associated with
   # a given hostname.  Fixity data are returned sorted by package name.
 
   class PoolFixity
 
+    CHUNK = 1000
+
     Struct.new('FixityHeader', :hostname, :count, :earliest, :latest, :stored_before)
+
+    # only option supported is :before, which should be a DateTime object
 
     def initialize hostname, port = 80, scheme = 'http', options = {}
       @hostname = hostname
@@ -47,48 +50,63 @@ module Store
 
     end
 
+
+    def list
+      start = Time.now
+
+      list = Store::DB::PackageRecord.list_all_fixities(@hostname, @options)
+      list.each  { |pkg| update_record(pkg) }
+
+      STDERR.puts sprintf("FixityReport: got %d records in %d seconds", list.length, (Time.now - start).to_i)
+      return list
+    end
+
+    private
+
     def url filesystem, name
       @scheme + '://' + @hostname + @port + '/' + filesystem.split('/').pop + '/data/' + name
     end
 
-
-    # ultimately, pkg is from datamapper that has left some place holders for us to fill in.
+    # update_record(pkg)
+    #
+    # ultimately, pkg is from datamapper that has left some place holders for us to fill in,
+    # and here we do just that.
+    #
+    # fields from database:
+    #
+    # packages.initial_md5
+    # packages.initial_sha1
+    # packages.initial_timestamp
+    # packages.latest_md5 (may be nil-valued)
+    # packages.latest_sha1 (may be nil-valued)
+    # packages.latest_timestamp
+    # packages.name
+    # packages.size
+    # silos.filesystem
+    # location (nil => url string)
+    # status (nil => one of :missing, :fail, :ok)
 
     def update_record pkg
-        pkg.location = url(pkg.filesystem, pkg.name)
+      pkg.location = url(pkg.filesystem, pkg.name)
 
-          # N.B. the following test for the missing case,
-          # using nil-valued latest_md5/sha1; is repeated in db.rb and
-          # silomixins.rb - all this needs to be refactored into one
-          # place and made explicit.
+      # N.B. the following test for the missing case,
+      # using nil-valued latest_md5/sha1; is repeated in db.rb and
+      # silomixins.rb - all this needs to be refactored into one
+      # place and made explicit.
 
-        case
-        when (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) then
-          pkg.status = :ok
-        when (pkg.latest_md5.nil? and pkg.latest_sha1.nil?) then
-          pkg.latest_md5  = ''
-          pkg.latest_sha1 = ''
-          pkg.status = :missing
-          pkg.size   = 0
-        else
-          pkg.status = :fail
-        end
-    end
-
-
-    def list
-      list = Store::DB::PackageRecord.list_all_fixities(@hostname, @options)
-      list.each  { |pkg| update_record(pkg) }
-      return list
-    end
-
-    # TODO: There is no need to use yield here any more, since list_all_fixities doesn't.
-
-    def each
-      Store::DB::PackageRecord.list_all_fixities(@hostname, @options).each do |pkg|
-        yield update_record pkg
+      case
+      when (pkg.latest_md5 == pkg.initial_md5 and pkg.latest_sha1 == pkg.initial_sha1) then
+        pkg.status = :ok
+      when (pkg.latest_md5.nil? and pkg.latest_sha1.nil?) then
+        pkg.latest_md5  = ''
+        pkg.latest_sha1 = ''
+        pkg.status = :missing
+        pkg.size   = 0
+      else
+        pkg.status = :fail
       end
     end
+
 
 
   end # of class Store::PoolFixity
@@ -103,55 +121,40 @@ module Store
       @pool_fixity = PoolFixity.new(hostname, port, scheme, options)
     end
 
-
-    ## TODO:  chunk out from PoolFixity
+    # Ultimately we'll be using this object as the body of a rack responce,
+    # which will handle calling each and sending the response to a web client.
+    # Here we chunk stuff up - the list returned by @pool_fixity.list is 
+    # currently over 300,000 elements, so we need limit the number of yields required..
 
     def each
-      header = @pool_fixity.summary
+      @header ||= @pool_fixity.summary
 
-      yield '<fixities hostname="'  + StoreUtils.xml_escape(@hostname)                   + '" ' +
-                 'stored_before="'  + StoreUtils.xml_escape(header.stored_before)        + '" ' +
-            'fixity_check_count="'  + header.count.to_s                                  + '" ' +
-         'earliest_fixity_check="'  + header.earliest.to_s                               + '" ' +
-           'latest_fixity_check="'  + header.latest.to_s                                 + '">' + "\n"
+      yield '<fixities hostname="'  + StoreUtils.xml_escape(@hostname)             + '" ' +
+                 'stored_before="'  + StoreUtils.xml_escape(@header.stored_before) + '" ' +
+            'fixity_check_count="'  + @header.count.to_s                           + '" ' +
+         'earliest_fixity_check="'  + @header.earliest.to_s                        + '" ' +
+           'latest_fixity_check="'  + @header.latest.to_s                          + '">' + "\n"
 
-      @pool_fixity.each do |fix|
-        yield  '  <fixity name="'   + StoreUtils.xml_escape(fix.name)     + '" '  +
-                     'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +
-                         'sha1="'   + fix.latest_sha1                     + '" '  +
-                          'md5="'   + fix.latest_md5                      + '" '  +
-                         'size="'   + fix.size.to_s                       + '" '  +
-                  'fixity_time="'   + fix.latest_timestamp.to_utc         + '" '  +
-                     'put_time="'   + fix.initial_timestamp.to_utc        + '" '  +
-                       'status="'   + fix.status.to_s                     + '"/>' + "\n"
+      @list ||= @pool_fixity.list
+
+      @list.each_slice(PoolFixity::CHUNK) do |group|
+
+        text = []
+        group.each do |fix|
+          text.push '  <fixity name="'   + StoreUtils.xml_escape(fix.name)     + '" '  +
+                          'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +
+                              'sha1="'   + fix.latest_sha1                     + '" '  +
+                               'md5="'   + fix.latest_md5                      + '" '  +
+                              'size="'   + fix.size.to_s                       + '" '  +
+                       'fixity_time="'   + fix.latest_timestamp.to_utc         + '" '  +
+                          'put_time="'   + fix.initial_timestamp.to_utc        + '" '  +
+                            'status="'   + fix.status.to_s                     + '"/>'
+        end
+        yield text.join("\n") + "\n"
       end
-
       yield "</fixities>\n"
     end
 
-
-    def get
-      header = @pool_fixity.summary
-      text = []
-      text.push '<fixities hostname="'  + StoreUtils.xml_escape(@hostname)                   + '" ' +
-                     'stored_before="'  + StoreUtils.xml_escape(header.stored_before)        + '" ' +
-                'fixity_check_count="'  + header.count.to_s                                  + '" ' +
-             'earliest_fixity_check="'  + header.earliest.to_s                               + '" ' +
-               'latest_fixity_check="'  + header.latest.to_s                                 + '">' + "\n"
-
-      @pool_fixity.each do |fix|
-        text.push '  <fixity name="'   + StoreUtils.xml_escape(fix.name)     + '" '  +
-                        'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +
-                            'sha1="'   + fix.latest_sha1                     + '" '  +
-                             'md5="'   + fix.latest_md5                      + '" '  +
-                            'size="'   + fix.size.to_s                       + '" '  +
-                     'fixity_time="'   + fix.latest_timestamp.to_utc         + '" '  +
-                        'put_time="'   + fix.initial_timestamp.to_utc        + '" '  +
-                          'status="'   + fix.status.to_s                     + '"/>' + "\n"
-      end
-
-      text.push "</fixities>\n"
-    end
   end # of class Store::PoolFixityXmlReport
 
   # A CSV wrapper for the data returned by the PoolFixity class that can
@@ -163,10 +166,21 @@ module Store
       @pool_fixity = PoolFixity.new(hostname, port, scheme, options)
     end
 
+    # Ultimately we'll be using this object as the body of a rack responce,
+    # which will handle calling each and sending the response to a web client.
+    # Here we chunk stuff up - the list returned by @pool_fixity.list is 
+    # currently over 300,000 elements, so we need limit the number of yields required..
+
     def each
       yield '"name","location","sha1","md5","size","fixity_time","put_time","status"' + "\n"
-      @pool_fixity.each do |r|
-        yield [r.name, r.location, r.latest_sha1, r.latest_md5, r.size.to_s, r.latest_timestamp.to_utc, r.initial_timestamp.to_utc, r.status.to_s].map{ |e| StoreUtils.csv_escape(e) }.join(',') + "\n"
+      @list ||= @pool_fixity.list
+
+      @list.each_slice(PoolFixity::CHUNK) do |group|
+        text = []
+        group.each do |r|
+          text.push [r.name, r.location, r.latest_sha1, r.latest_md5, r.size.to_s, r.latest_timestamp.to_utc, r.initial_timestamp.to_utc, r.status.to_s].map{ |e| StoreUtils.csv_escape(e) }.join(',')
+        end
+        yield text.join("\n") + "\n"
       end
     end
 

@@ -10,7 +10,8 @@ require 'socket'
 require 'store/exceptions'
 require 'time'
 
-# TODO: add code to ensure that the last compoent of the silo filesystem is unique.
+# TODO: add code to ensure that the last compoent of the silo filesystem is unique; it's an assumption
+# but not explicitly enfoced.
 # Used by SiloDB, SiloTapeDB classes; Used by utility programs such as fixity.
 
 module Store
@@ -214,10 +215,6 @@ module Store
           raise "Disk in an unhandled state: #{state}"
         end
       end
-
-      # TODO: only allow certain transitions.
-      # TODO: put some tests for these.
-      # TODO: this doesn't belong here, maybe (used in do-tape)
 
       def make_tape_master
         self.state = :tape_master
