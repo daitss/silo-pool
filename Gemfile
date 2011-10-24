@@ -2,6 +2,7 @@
 
 source "http://rubygems.org"
 
+# gem 'ruby-prof'
 gem 'mime-types', :require => 'mime/types'
 gem 'data_mapper'
 gem 'dm-postgres-adapter'

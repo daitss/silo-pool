@@ -415,34 +415,57 @@ module Store
         sql +=     "WHERE #{clauses.join(' AND ')} " unless clauses.empty?
         sql +=  "ORDER BY name"
 
-        repository(repository).adapter.select(sql)
+        list = repository(repository).adapter.select(sql)        
       end
 
 
-      # A late addtion, get the entire list of active fixities at a point in time
+      # A late addtion, get the entire list of active fixities at a point in time in an efficient manner.
 
-      def self.list_all_fixities hostname, options = {}
-
+      def self.list_all_fixities url, options = {}
         clauses = []
 
         if options[:before]
           clauses.push "packages.initial_timestamp < '#{options[:before]}'"
         end
 
-        sql  =  "SELECT packages.name, packages.size, "                        +
-                       "packages.latest_sha1, packages.latest_md5, "           +
-                       "packages.initial_sha1, packages.initial_md5, "         +
-                       "packages.initial_timestamp, "                          +
-                       "packages.latest_timestamp, "                           +
-                       "silos.filesystem, "                                    +
-                       "NULL AS status, "                                      +   # we'll fill in status and location later..
-                       "NULL AS location "                                     +
-                  "FROM packages, silos "                                      +
-                 "WHERE packages.silo_record_id = silos.id "                   +
-                   "AND NOT silos.retired "                                    +
-                   "AND packages.extant "                                      +
-          ( clauses.empty?  ? "" : 'AND ' +  clauses.join(' AND ') + ' ')      +
-              "ORDER BY packages.name"
+        # we have to do a lot of conversions of time to get datamapper from using the very expensive
+        # datetime constructor. we let postgres do the heaving lifting (since we can't use mysql or
+        # oracle anyway, due to using 'time with timezone' misdesign...)
+
+        sql  =  
+          "SELECT packages.name, " +
+
+          "(CASE WHEN packages.latest_sha1 IS NULL THEN '' " +
+                "ELSE packages.latest_sha1 " +
+           "END) AS sha1, " +
+
+          "(CASE WHEN packages.latest_md5  IS NULL THEN '' " +
+                "ELSE packages.latest_md5 " +
+          "END) AS md5, " +
+
+          "(CASE WHEN packages.latest_sha1 IS NULL AND packages.latest_md5 IS NULL THEN 0 " +
+                "ELSE packages.size " +
+          "END) AS size, " +
+
+          "REPLACE(TO_CHAR(packages.initial_timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH:MM:SSZ'), ' ', 'T') AS put_time, " +
+
+          "REPLACE(TO_CHAR(packages.latest_timestamp  AT TIME ZONE 'GMT', 'YYYY-MM-DD HH:MM:SSZ'), ' ', 'T') AS fixity_time, " +
+
+          "(CASE WHEN packages.latest_sha1 IS NULL AND packages.latest_md5 IS NULL THEN 'missing' " +
+                "WHEN packages.latest_sha1 = packages.initial_sha1 AND packages.latest_md5 = packages.initial_md5 THEN 'ok' " +
+                "ELSE 'fail' " +
+          "END) AS status, " +
+
+          "'#{url}' || SUBSTRING(silos.filesystem FROM '[^/]*$') || '/data/' || packages.name AS location " +
+
+          "FROM packages, silos WHERE packages.silo_record_id = silos.id " +
+                                 "AND NOT silos.retired " +
+                                 "AND silos.hostname = '#{url.host}' " +
+                                 "AND packages.extant " +
+
+          ( clauses.empty?  ? "" : 'AND ' +  clauses.join(' AND ') + ' ') +
+
+          "ORDER BY packages.name"
 
         repository(repository).adapter.select(sql)
       end
