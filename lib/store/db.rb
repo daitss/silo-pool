@@ -19,16 +19,16 @@ require 'time'
 module Store
   module DB
 
-    # We are especially careful with the setup since this is where
-    # operations staff could get confused about what is required,
-    # especially since very little reporting machinery can be set up
-    # at the time it is called.
-    #
-
     # The setup routine can take either one string or two; the
     # deprecated two-argument version handles a legacy method of
-    # initializing from a yaml and a key in that yaml file.
+    # initializing from a yaml and a key into the hash produced from
+    # that yaml file.
 
+    # We are especially careful with the setup since this is where
+    # operations staff could get confused about what is required. This
+    # is problematic since very little reporting machinery can be set
+    # up at the time setup is called (e.g., no logging).
+    
     def self.setup *args
 
       connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
@@ -37,7 +37,7 @@ module Store
 
       begin
         dm = DM.setup connection_string        
-        dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
+        dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now.
         dm
       rescue => e
         raise ConfigurationError, "Failure setting up the silo-pool database: #{e.message}"
@@ -47,8 +47,7 @@ module Store
 
     class DM
       def self.setup db
-        dm = DataMapper.setup(:default, db) # TOFU: change from :default to :silo_pool or some such
-        # TODO:  use dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
+        dm = DataMapper.setup(:default, db)
         DataMapper.finalize
         dm
       end
@@ -92,7 +91,7 @@ module Store
     end # of class DM
 
 
-    # Way overkill for what we use it for now:  table with at most one row, for name 'admin', for now.
+    # Way overkill for what we use it for: table with at most one row, for user name 'admin'.
 
     class Authentication
 
@@ -154,7 +153,7 @@ module Store
       property  :filesystem,  String, :length => 255, :required => true
       property  :hostname,    String, :length => 127, :required => true
       property  :state,       Enum[ *states  ], :default =>   :disk_master
-      property  :forbidden,   Flag[ *methods ], :default => [ :delete, :put, :post, :options ]  # :post seems to be a no-op now?
+      property  :forbidden,   Flag[ *methods ], :default => [ :delete, :put, :post, :options ]  # :post seems to be a no-op?
       property  :retired,     Boolean, :default  => false
 
       has n,    :package_record, :constraint => :destroy
@@ -270,26 +269,27 @@ module Store
     # PackageRecord keeps track of the current state of a package, so
     # we can get the most recent PUT, DELETE, and FIXITY events for a
     # package.  The complete list of records are kept in the
-    # HistoryRecord table.
+    # HistoryRecord table. HistoryRecord is extensive and slow to access.
     #
     # In point of fact, PackageRecords are normally populated by
-    # side-effect, when a HistoryRecord is updated (or, for missing
-    # packages, when SiloRecord.missing(PackageName) is called.
+    # side-effect, as when a HistoryRecord is updated or when
+    # missing packages are discovered, which happens wheng
+    # SiloRecord.missing(PackageName) is called.
     #
     # PUTs are recorded using the :initial_timestamp, :initial_sha1,
-    # :initial_md5 columns.
+    # and :initial_md5 columns.
     #
-    # DELETEs are indicated by the :extant column set to false (no
-    # date information - see the histories table for that).  This is
-    # because, generally speaking, only lists of extant packages are
-    # returned.  NOTE: :extant is never used to indicate a missing
-    # package.
+    # DELETEs are indicated by the :extant column being set to false.
+    # (no date information is relevant - see the histories table for
+    # that. This is because, generally speaking, only lists of
+    # extant packages are used) NOTE: :extant is NEVER used to
+    # indicate a missing package.
     #
-    # FIXITYs are recorded using the :latest_* columns.
-    # There is a special case of a fixity event: missing. In that case,
-    # the latest_sha1 and latest_md5 fields are null.
+    # FIXITYs are recorded using the :latest_* columns.  There is an
+    # important special case of a fixity event: the package has gone
+    # missing. In that case, the latest_sha1 and latest_md5 fields are
+    # null.
     
-
 
     class PackageRecord
       include DataMapper::Resource
@@ -305,7 +305,6 @@ module Store
 
       property   :size,               Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1
       property   :type,               String,   :required => true
-
 
       # if missing, the following checksums will be null:
 
