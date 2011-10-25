@@ -447,9 +447,9 @@ module Store
                 "ELSE packages.size " +
           "END) AS size, " +
 
-          "REPLACE(TO_CHAR(packages.initial_timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH:MM:SSZ'), ' ', 'T') AS put_time, " +
+          "REPLACE(TO_CHAR(packages.initial_timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS put_time, " +
 
-          "REPLACE(TO_CHAR(packages.latest_timestamp  AT TIME ZONE 'GMT', 'YYYY-MM-DD HH:MM:SSZ'), ' ', 'T') AS fixity_time, " +
+          "REPLACE(TO_CHAR(packages.latest_timestamp  AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS fixity_time, " +
 
           "(CASE WHEN packages.latest_sha1 IS NULL AND packages.latest_md5 IS NULL THEN 'missing' " +
                 "WHEN packages.latest_sha1 = packages.initial_sha1 AND packages.latest_md5 = packages.initial_md5 THEN 'ok' " +
