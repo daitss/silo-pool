@@ -12,6 +12,8 @@ require 'time'
 
 # TODO: add code to ensure that the last compoent of the silo filesystem is unique; it's an assumption
 # but not explicitly enfoced.
+
+
 # Used by SiloDB, SiloTapeDB classes; Used by utility programs such as fixity.
 
 module Store
@@ -272,7 +274,7 @@ module Store
     #
     # In point of fact, PackageRecords are normally populated by
     # side-effect, when a HistoryRecord is updated (or, for missing
-    # packages, when SiloRecord.missing(PackageName) is called
+    # packages, when SiloRecord.missing(PackageName) is called.
     #
     # PUTs are recorded using the :initial_timestamp, :initial_sha1,
     # :initial_md5 columns.
@@ -428,35 +430,49 @@ module Store
           clauses.push "packages.initial_timestamp < '#{options[:stored_before]}'"
         end
 
-        # we have to do a lot of conversions of time to get datamapper from using the very expensive
-        # datetime constructor. we let postgres do the heaving lifting (since we can't use mysql or
-        # oracle anyway, due to using 'time with timezone' misdesign...)
+        # We have to do some conversions to get datamapper from using
+        # the very expensive datetime constructor. So we let postgres
+        # do the heaving lifting (since we can't use mysql or oracle
+        # anyway, due to the constraint of requiring the use of 'time
+        # with timezone' in postgres...).  Specifically, we get
+        # postgres to turn the 'time with timezone' into a string
+        # representing the UTC time. This keeps datamapper from
+        # coercing it to a datetime object.  This provides an order of
+        # magnitude speedup (e.g. producing the current list of
+        # 304,000 records goes from 20 minutes to 2).
 
         sql  =  
           "SELECT packages.name, " +
 
           "(CASE WHEN packages.latest_sha1 IS NULL THEN '' " +
                 "ELSE packages.latest_sha1 " +
-           "END) AS sha1, " +
+           "END) " +
+          "AS sha1, " +
 
           "(CASE WHEN packages.latest_md5  IS NULL THEN '' " +
                 "ELSE packages.latest_md5 " +
-          "END) AS md5, " +
+          "END) " +
+          "AS md5, " +
 
           "(CASE WHEN packages.latest_sha1 IS NULL AND packages.latest_md5 IS NULL THEN 0 " +
                 "ELSE packages.size " +
-          "END) AS size, " +
+          "END) " +
+          "AS size, " +
 
-          "REPLACE(TO_CHAR(packages.initial_timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS put_time, " +
+          "REPLACE(TO_CHAR(packages.initial_timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') " +
+          "AS put_time, " +
 
-          "REPLACE(TO_CHAR(packages.latest_timestamp  AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') AS fixity_time, " +
+          "REPLACE(TO_CHAR(packages.latest_timestamp  AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') " +
+          "AS fixity_time, " +
 
           "(CASE WHEN packages.latest_sha1 IS NULL AND packages.latest_md5 IS NULL THEN 'missing' " +
                 "WHEN packages.latest_sha1 = packages.initial_sha1 AND packages.latest_md5 = packages.initial_md5 THEN 'ok' " +
                 "ELSE 'fail' " +
-          "END) AS status, " +
+          "END) " +
+          "AS status, " +
 
-          "'#{url}' || SUBSTRING(silos.filesystem FROM '[^/]*$') || '/data/' || packages.name AS location " +
+          "'#{url}' || SUBSTRING(silos.filesystem FROM '[^/]*$') || '/data/' || packages.name " +
+          "AS location " +
 
           "FROM packages, silos WHERE packages.silo_record_id = silos.id " +
                                  "AND NOT silos.retired " +
@@ -467,7 +483,7 @@ module Store
 
           "ORDER BY packages.name"
 
-        repository(repository).adapter.select(sql)
+        return repository(repository).adapter.select(sql)
       end
 
 
