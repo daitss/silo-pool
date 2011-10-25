@@ -77,6 +77,7 @@ module Store
             'fixity_check_count="'  + @header.count.to_s                           + '" ' +
          'earliest_fixity_check="'  + @header.earliest.to_s                        + '" ' +
            'latest_fixity_check="'  + @header.latest.to_s                          + '">' + "\n"
+
       @list.each do |fix|
         yield '  <fixity name="'   + StoreUtils.xml_escape(fix.name)     + '" '  +
                     'location="'   + StoreUtils.xml_escape(fix.location) + '" '  +
@@ -85,8 +86,9 @@ module Store
                         'size="'   + fix.size.to_s                       + '" '  +
                  'fixity_time="'   + fix.fixity_time                     + '" '  +
                     'put_time="'   + fix.put_time                        + '" '  +
-                      'status="'   + fix.status                          + '"/>'
+                      'status="'   + fix.status                          + '"/>' + "\n"
       end
+
       yield "</fixities>\n"
     end
 
@@ -110,7 +112,7 @@ module Store
               '"' +  rec.size.to_s                 +  '",'  + 
               '"' +  rec.fixity_time               +  '",'  + 
               '"' +  rec.put_time                  +  '",'  + 
-              '"' +  rec.status                    +  '"'   
+              '"' +  rec.status                    +  '"'   + "\n"
     end
 
     # Ultimately we'll be using this object as the body of a rack responce,
