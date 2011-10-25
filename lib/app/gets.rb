@@ -164,14 +164,14 @@ end
 
 get '/fixity.xml' do
   options = {}
-  options[:before] ||= before?
+  options[:stored_before] ||= stored_before?
 
   [ 200, {'Content-Type'  => 'application/xml'}, Store::PoolFixityXmlReport.new(hostname, port, request.scheme, options) ]
 end
 
 get '/fixity.csv' do
   options = {}
-  options[:before] ||= before?    
+  options[:stored_before] ||= stored_before?    
 
   [ 200, {'Content-Type'  => 'text/csv'}, Store::PoolFixityCsvReport.new(hostname, port, request.scheme, options) ]
 end

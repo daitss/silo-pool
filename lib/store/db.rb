@@ -285,7 +285,7 @@ module Store
     #
     # FIXITYs are recorded using the :latest_* columns.
     # There is a special case of a fixity event: missing. In that case,
-    # the latest_sha1 and latest_md5 fields are nil.
+    # the latest_sha1 and latest_md5 fields are null.
     
 
 
@@ -424,8 +424,8 @@ module Store
       def self.list_all_fixities url, options = {}
         clauses = []
 
-        if options[:before]
-          clauses.push "packages.initial_timestamp < '#{options[:before]}'"
+        if options[:stored_before]
+          clauses.push "packages.initial_timestamp < '#{options[:stored_before]}'"
         end
 
         # we have to do a lot of conversions of time to get datamapper from using the very expensive

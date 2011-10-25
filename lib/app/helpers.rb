@@ -159,10 +159,10 @@ helpers do
   end
 
 
-  # parse query string with 'before', make sure we get a date-able string
+  # parse query string with 'stored_before', make sure we get a date-able string
 
-  def before?
-    return DateTime.parse(params[:before]) if params[:before] 
+  def stored_before?
+    return DateTime.parse(params[:stored_before]) if params[:stored_before] 
   rescue => e
     raise Http400, "Invalid date for the 'before' parameter in the query string"
   end
