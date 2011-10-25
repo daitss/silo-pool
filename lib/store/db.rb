@@ -511,7 +511,7 @@ module Store
       property   :timestamp, DateTime,         :default  => lambda { |resource, property| DateTime.now }
       belongs_to :package_record
 
-      # gets either a package_record or silo_record, name as arguments
+      # called with either a (package_record) or (silo_record, package_name) as arguments
 
       def self.list *args
         package_record = (args.length == 1) ?  args[0] : PackageRecord.lookup(*args)
