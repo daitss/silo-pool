@@ -1,3 +1,34 @@
+v1.1.5 - 2011-10-31
+
+ * Gemfiles rebuild to include DataMapper 1.2.0
+
+ * /services URL returns more information about available services, e.g:
+
+    <partition_fixity method="get" mime_type="application/xml" localtion="http://silos.tarchive.fcla.edu:70/001/fixity/"/>
+    <partition_fixity method="get" mime_type="application/xml" localtion="http://silos.tarchive.fcla.edu:70/002/fixity/"/>
+    ...
+    <store method="put" location="http://silos.tarchive.fcla.edu:70/001/data/%s"/>
+    <store method="put" location="http://silos.tarchive.fcla.edu:70/002/data/%s"/>
+    ...
+    <retrieve method="get" location="http://silos.tarchive.fcla.edu:70/001/data/%s"/>
+    <retrieve method="get" location="http://silos.tarchive.fcla.edu:70/002/data/%s"/>
+   
+   in addition to 
+
+    <create method="post" location="http://silos.tarchive.fcla.edu:70/create/%s"/>
+    <fixity method="get" mime_type="text/csv" location="http://silos.tarchive.fcla.edu:70/fixity.csv"/>
+    <fixity method="get" mime_type="application/xml" location="http://silos.tarchive.fcla.edu:70/fixity.xml"/>
+
+  * /fixity.xml takes a query string "stored_before=[date]" and returns fixities only for materials stored before that date
+    
+  * Using better custom SQL instead of DataMapper objects; all information returned at once in one result set instead of iterating through in chunks.
+
+  * Various small code cleanups and doc improvements.
+
+  * disk-fixity catches problem with package disappearing under it, reports as error and continues
+
+
+
 v1.1.4 - 2011-10-06
 
  * Gemfile.lock rebuilt to pull in changes to datyl 
