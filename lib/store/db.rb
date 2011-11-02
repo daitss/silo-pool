@@ -10,22 +10,25 @@ require 'socket'
 require 'store/exceptions'
 require 'time'
 
-# TODO: add code to ensure that the last compoent of the silo filesystem is unique.
+# TODO: add code to ensure that the last compoent of the silo filesystem is unique; it's an assumption
+# but not explicitly enfoced.
+
+
 # Used by SiloDB, SiloTapeDB classes; Used by utility programs such as fixity.
 
 module Store
   module DB
 
-    # We are especially careful with the setup since this is where
-    # operations staff could get confused about what is required,
-    # especially since very little reporting machinery can be set up
-    # at the time it is called.
-    #
-
     # The setup routine can take either one string or two; the
     # deprecated two-argument version handles a legacy method of
-    # initializing from a yaml and a key in that yaml file.
+    # initializing from a yaml and a key into the hash produced from
+    # that yaml file.
 
+    # We are especially careful with the setup since this is where
+    # operations staff could get confused about what is required. This
+    # is problematic since very little reporting machinery can be set
+    # up at the time setup is called (e.g., no logging).
+    
     def self.setup *args
 
       connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
@@ -34,7 +37,7 @@ module Store
 
       begin
         dm = DM.setup connection_string        
-        dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.
+        dm.select('select 1 + 1')  # if we're going to fail (with, say, a non-existant database), let's fail now.
         dm
       rescue => e
         raise ConfigurationError, "Failure setting up the silo-pool database: #{e.message}"
@@ -44,8 +47,7 @@ module Store
 
     class DM
       def self.setup db
-        dm = DataMapper.setup(:default, db) # TOFU: change from :default to :silo_pool or some such
-        # TODO:  use dm.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
+        dm = DataMapper.setup(:default, db)
         DataMapper.finalize
         dm
       end
@@ -89,7 +91,7 @@ module Store
     end # of class DM
 
 
-    # Way overkill for what we use it for now:  table with at most one row, for name 'admin', for now.
+    # Way overkill for what we use it for: table with at most one row, for user name 'admin'.
 
     class Authentication
 
@@ -151,7 +153,7 @@ module Store
       property  :filesystem,  String, :length => 255, :required => true
       property  :hostname,    String, :length => 127, :required => true
       property  :state,       Enum[ *states  ], :default =>   :disk_master
-      property  :forbidden,   Flag[ *methods ], :default => [ :delete, :put, :post, :options ]  # :post seems to be a no-op now?
+      property  :forbidden,   Flag[ *methods ], :default => [ :delete, :put, :post, :options ]  # :post seems to be a no-op?
       property  :retired,     Boolean, :default  => false
 
       has n,    :package_record, :constraint => :destroy
@@ -215,10 +217,6 @@ module Store
         end
       end
 
-      # TODO: only allow certain transitions.
-      # TODO: put some tests for these.
-      # TODO: this doesn't belong here, maybe (used in do-tape)
-
       def make_tape_master
         self.state = :tape_master
         self.save!
@@ -271,26 +269,27 @@ module Store
     # PackageRecord keeps track of the current state of a package, so
     # we can get the most recent PUT, DELETE, and FIXITY events for a
     # package.  The complete list of records are kept in the
-    # HistoryRecord table.
+    # HistoryRecord table. HistoryRecord is extensive and slow to access.
     #
     # In point of fact, PackageRecords are normally populated by
-    # side-effect, when a HistoryRecord is updated (or, for missing
-    # packages, when SiloRecord.missing(PackageName) is called
+    # side-effect, as when a HistoryRecord is updated or when
+    # missing packages are discovered, which happens wheng
+    # SiloRecord.missing(PackageName) is called.
     #
     # PUTs are recorded using the :initial_timestamp, :initial_sha1,
-    # :initial_md5 columns.
+    # and :initial_md5 columns.
     #
-    # DELETEs are indicated by the :extant column set to false (no
-    # date information - see the histories table for that).  This is
-    # because, generally speaking, only lists of extant packages are
-    # returned.  NOTE: :extant is never used to indicate a missing
-    # package.
+    # DELETEs are indicated by the :extant column being set to false.
+    # (no date information is relevant - see the histories table for
+    # that. This is because, generally speaking, only lists of
+    # extant packages are used) NOTE: :extant is NEVER used to
+    # indicate a missing package.
     #
-    # FIXITYs are recorded using the :latest_* columns.
-    # There is a special case of a fixity event: missing. In that case,
-    # the latest_sha1 and latest_md5 fields are nil.
+    # FIXITYs are recorded using the :latest_* columns.  There is an
+    # important special case of a fixity event: the package has gone
+    # missing. In that case, the latest_sha1 and latest_md5 fields are
+    # null.
     
-
 
     class PackageRecord
       include DataMapper::Resource
@@ -306,7 +305,6 @@ module Store
 
       property   :size,               Integer,  :required => true, :index => true, :min => 0, :max => 2**63 - 1
       property   :type,               String,   :required => true
-
 
       # if missing, the following checksums will be null:
 
@@ -418,37 +416,73 @@ module Store
         sql +=     "WHERE #{clauses.join(' AND ')} " unless clauses.empty?
         sql +=  "ORDER BY name"
 
-        repository(repository).adapter.select(sql)
+        list = repository(repository).adapter.select(sql)        
       end
 
 
-      # A late addtion, get the entire list of active fixities at a point in time
-      # TODO:  add point in time
+      # A late addtion, get the entire list of active fixities at a point in time in an efficient manner.
 
-      def self.list_all_fixities hostname, options = {}
-
+      def self.list_all_fixities url, options = {}
         clauses = []
 
-        if options[:before]
-          clauses.push "packages.initial_timestamp < '#{options[:before]}'"
+        if options[:stored_before]
+          clauses.push "packages.initial_timestamp < '#{options[:stored_before]}'"
         end
 
-        sql  =  "SELECT packages.name, packages.size, "                        +
-                       "packages.latest_sha1, packages.latest_md5, "           +
-                       "packages.initial_sha1, packages.initial_md5, "         +
-                       "packages.initial_timestamp, "                          +
-                       "packages.latest_timestamp, "                           +
-                       "silos.filesystem, "                                    +
-                       "NULL AS status, "                                      +   # we'll fill in status and location later..
-                       "NULL AS location "                                     +
-                  "FROM packages, silos "                                      +
-                 "WHERE packages.silo_record_id = silos.id "                   +
-                   "AND NOT silos.retired "                                    +
-                   "AND packages.extant "                                      +
-          ( clauses.empty?  ? "" : 'AND ' +  clauses.join(' AND ') + ' ')      +
-              "ORDER BY packages.name"
+        # We have to do some conversions to get datamapper from using
+        # the very expensive datetime constructor. So we let postgres
+        # do the heaving lifting (since we can't use mysql or oracle
+        # anyway, due to the constraint of requiring the use of 'time
+        # with timezone' in postgres...).  Specifically, we get
+        # postgres to turn the 'time with timezone' into a string
+        # representing the UTC time. This keeps datamapper from
+        # coercing it to a datetime object.  This provides an order of
+        # magnitude speedup (e.g. producing the current list of
+        # 304,000 records goes from 20 minutes to 2).
 
-        repository(repository).adapter.select(sql)
+        sql  =  
+          "SELECT packages.name, " +
+
+          "(CASE WHEN packages.latest_sha1 IS NULL THEN '' " +
+                "ELSE packages.latest_sha1 " +
+           "END) " +
+          "AS sha1, " +
+
+          "(CASE WHEN packages.latest_md5  IS NULL THEN '' " +
+                "ELSE packages.latest_md5 " +
+          "END) " +
+          "AS md5, " +
+
+          "(CASE WHEN packages.latest_sha1 IS NULL AND packages.latest_md5 IS NULL THEN 0 " +
+                "ELSE packages.size " +
+          "END) " +
+          "AS size, " +
+
+          "REPLACE(TO_CHAR(packages.initial_timestamp AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') " +
+          "AS put_time, " +
+
+          "REPLACE(TO_CHAR(packages.latest_timestamp  AT TIME ZONE 'GMT', 'YYYY-MM-DD HH24:MI:SSZ'), ' ', 'T') " +
+          "AS fixity_time, " +
+
+          "(CASE WHEN packages.latest_sha1 IS NULL AND packages.latest_md5 IS NULL THEN 'missing' " +
+                "WHEN packages.latest_sha1 = packages.initial_sha1 AND packages.latest_md5 = packages.initial_md5 THEN 'ok' " +
+                "ELSE 'fail' " +
+          "END) " +
+          "AS status, " +
+
+          "'#{url}' || SUBSTRING(silos.filesystem FROM '[^/]*$') || '/data/' || packages.name " +
+          "AS location " +
+
+          "FROM packages, silos WHERE packages.silo_record_id = silos.id " +
+                                 "AND NOT silos.retired " +
+                                 "AND silos.hostname = '#{url.host}' " +
+                                 "AND packages.extant " +
+
+          ( clauses.empty?  ? "" : 'AND ' +  clauses.join(' AND ') + ' ') +
+
+          "ORDER BY packages.name"
+
+        return repository(repository).adapter.select(sql)
       end
 
 
@@ -477,7 +511,7 @@ module Store
       property   :timestamp, DateTime,         :default  => lambda { |resource, property| DateTime.now }
       belongs_to :package_record
 
-      # gets either a package_record or silo_record, name as arguments
+      # called with either a (package_record) or (silo_record, package_name) as arguments
 
       def self.list *args
         package_record = (args.length == 1) ?  args[0] : PackageRecord.lookup(*args)

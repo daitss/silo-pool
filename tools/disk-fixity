@@ -190,10 +190,15 @@ silos.each do |silo|
       counter.errors += 1
 
     else
-      silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
       errors = []
-      errors.push "md5 mismatch - expected #{silo.md5(package.name)} but got #{md5}"    if (md5  != silo.md5(package.name))
-      errors.push "sha1 mismatch - expected #{silo.sha1(package.name)} but got #{sha1}" if (sha1 != silo.sha1(package.name))
+      begin
+        silo.fixity(package.name, :md5 => md5, :sha1 => sha1)
+        errors.push "md5 mismatch - expected #{silo.md5(package.name)} but got #{md5}"    if (md5  != silo.md5(package.name))
+        errors.push "sha1 mismatch - expected #{silo.sha1(package.name)} but got #{sha1}" if (sha1 != silo.sha1(package.name))
+      rescue => e
+        errors.push "Unable to reconcile the checksums for package #{package.name}: #{e.message}"
+      end
+
       if errors.empty?
         counter.ok += 1
       else

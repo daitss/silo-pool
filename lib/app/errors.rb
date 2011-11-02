@@ -20,16 +20,17 @@ error do
     Logger.warn e.client_message, @env
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
 
-  # No backtrace needed for configuration errors; the messages are
-  # pretty good:
+  # No backtrace needed for configuration errors; the messages are sensitive
+  # but everything should be nailed down quickly durring setup, so we err on
+  # the side of helpfulness
 
   elsif e.is_a? Store::ConfigurationError
     Logger.err e.client_message, @env
     halt 500, { 'Content-Type' => 'text/plain' }, e.client_message
 
-  # Next are known errors with sufficiently informative messages for
-  # the user; they won't need backtraces.  It is important that kinds
-  # of messages not leak information.
+  # Next are known errors with safe, sufficiently informative messages for
+  # the user; they won't need backtraces.  It is important that these kinds
+  # of messages not leak sensitive information.
 
   elsif e.is_a? Store::HttpError
     Logger.err e.client_message, @env

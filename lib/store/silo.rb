@@ -403,7 +403,7 @@ module Store
           yield
         end
       rescue Timeout::Error => e
-        raise SiloError, "Timed out waiting for #{LOCKFILE_GRAB_TIMEOUT} seconds for read lock to #{describe name}: #{e.message}"
+       raise SiloError, "Timed out waiting for #{LOCKFILE_GRAB_TIMEOUT} seconds for read lock to #{describe name}: #{e.message}"
       end
     end
 

@@ -155,16 +155,16 @@ helpers do
 
     Logger.info "Using hostname '#{hostname}' for silo lookup: #{silos.length} #{silos.length == 1 ? 'silo' : 'silos'} found."
 
-    silos
+    return silos
   end
 
 
-  # parse query string with 'before', make sure we get a date-able string
+  # parse query string with 'stored-before', make sure we get a date-able string
 
-  def before?
-    return DateTime.parse(params[:before]) if params[:before] 
+  def stored_before?
+    return DateTime.parse(params['stored-before']) if params['stored-before'] 
   rescue => e
-    raise Http400, "Invalid date for the 'before' parameter in the query string"
+    raise Http400, "Invalid date for the 'stored-before' parameter in the query string"
   end
 
 
