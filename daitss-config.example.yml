@@ -25,7 +25,7 @@ database:
 silo-pool.example.org:
      log_database_queries:       false
      log_syslog_facility:        LOG_LOCAL0
-     log_filename:               /path/to/name/of/file.log
+     log_filename:               /path/to/silo-pool.log
      tivoli_server:              TIVOLI
      silo_temp_directory         /path/to/temp/dir
 
@@ -33,7 +33,7 @@ disk-fixity:
      hostname:                   silo-pool.example.org
      pid_directory:              /var/run/fixity
      log_syslog_facility:        LOG_LOCAL2   
-     log_filename:               /path/to/disk-fixity.com
+     log_filename:               /path/to/disk-fixity.log
      fresh_enough:               7
      log_database_queries:       false
 
@@ -42,12 +42,11 @@ tape-fixity:
      fresh_enough:               0
      hostname:                   silo-pool.example.org
      log_database_queries:       false
-     log_filename:               /path/to/tape-fixity.com
+     log_filename:               /path/to/tape-fixity.log
      log_syslog_facility:        LOG_LOCAL2   
      pid_directory:              /var/run/fixity
      silo_user:                  silo
      tivoli_server:              TIVOLI
-     
 
 # defaults
 # ========
