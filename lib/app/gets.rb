@@ -62,7 +62,7 @@ get '/services' do
     xml.fixity(:location => absolutely('/fixity.xml'), :method => "get",  :mime_type => 'application/xml')
 
     list_silos.each do |silo|
-      xml.partition_fixity(:localtion => absolutely("/#{silo.name}/fixity/"), :method => "get",  :mime_type => 'application/xml')
+      xml.partition_fixity(:location => absolutely("/#{silo.name}/fixity/"), :method => "get",  :mime_type => 'application/xml')
     end
 
     list_silos.each do |silo|
@@ -72,13 +72,12 @@ get '/services' do
     list_silos.each do |silo|
       xml.retrieve(:location => absolutely("/#{silo.name}/data/%s"),  :method => "get")
     end
-
   }
+
   status 200
   headers 'Content-Type' => 'application/xml'
   xml.target!
 end
-
 
 get '/:partition/knobs' do |partition|
   redirect absolutely("/#{partition}/knobs/"), 301
@@ -124,8 +123,6 @@ get '/:partition/data/' do |partition|
     :revision        => REVISION }
 end
 
-
-
 get '/:partition/data/:name' do |partition, name|
   silo = get_silo(partition, name)
   silo.get_ok? or raise Http405
@@ -135,7 +132,6 @@ get '/:partition/data/:name' do |partition, name|
   headers  'Content-MD5' => StoreUtils.md5hex_to_base64(silo.md5 name), 'Content-Type' => silo.type(name), 'Last-Modified' => Time.parse(silo.datetime(name).to_s).httpdate
   send_file silo.data_path(name), :filename => "#{name}.tar", :type => silo.type(name)
 end
-
 
 get '/:partition/data/:name/' do |partition, name|
   silo = get_silo(partition, name)
@@ -167,7 +163,6 @@ get '/:partition/data/:name/*' do |partition, name, path|
   raise Http404 unless body
   [ 200, { 'Content-Type' => mime_type_by_filename(filename) },  body ]
 end
-
 
 get '/fixity.xml' do
   options = {}
@@ -283,11 +278,9 @@ get '/settings/?' do
   erb :settings, :locals => { :opts => myopts, :revision => REVISION }
 end
 
-
 get '/status' do
   [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]
 end
-
 
 # for testing logging, error handling:
 
