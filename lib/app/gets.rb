@@ -232,7 +232,8 @@ get '/:partition/fixity/:name' do |partition, name|
   
   # From package level reports we only get information since the last
   # PUT - so there is never a delete record shown this way.  Also,
-  # currently :missing won't show since we ge an error exception.
+  # currently :missing won't show since we get an error exception
+  # trying the get_silo(partition, name).
  
   fixity.fixity_records.each do |rec|
     case rec[:action]
