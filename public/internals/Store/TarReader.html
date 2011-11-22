@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Store::TarReader</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Store::TarReader
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -121,9 +134,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Returns the value of attribute filename.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute filename.</p>
 </div></span>
   
 </li>
@@ -148,9 +160,8 @@ Returns the value of attribute filename.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Returns the value of attribute headers.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute headers.</p>
 </div></span>
   
 </li>
@@ -158,6 +169,9 @@ Returns the value of attribute headers.
     
   </ul>
 
+
+
+  
 
   
     <h2>
@@ -183,10 +197,9 @@ Returns the value of attribute headers.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-COMPUTE_HEADER_CHECKSUM(BUFF) returns the computed checksum of the supplied
-512-byte USTAR tar file header BUFF.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>COMPUTE_HEADER_CHECKSUM(BUFF) returns the computed checksum of the supplied
+512-byte USTAR tar file header BUFF.</p>
 </div></span>
   
 </li>
@@ -229,10 +242,9 @@ COMPUTE_HEADER_CHECKSUM(BUFF) returns the computed checksum of the supplied
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-EACH  yields the pair (file-name, io-object) for each regular file in the
-archive;.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>EACH  yields the pair (file-name, io-object) for each regular file in the
+archive;.</p>
 </div></span>
   
 </li>
@@ -256,9 +268,8 @@ archive;.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of TarReader.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of TarReader.</p>
 </div></span>
   
 </li>
@@ -322,10 +333,9 @@ A new instance of TarReader.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-OCT_MAYBE(STR) takes a string STR, presumably an octal representation of
-number, and returns it as a fixnum.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>OCT_MAYBE(STR) takes a string STR, presumably an octal representation of
+number, and returns it as a fixnum.</p>
 </div></span>
   
 </li>
@@ -368,10 +378,9 @@ number, and returns it as a fixnum.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-ROUND_TO_BLOCK(NUM) takes the positive fixnum NUM and rounds up to the next
-multiple of 512  (unless, of course, NUM is already a multiple of 512).
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>ROUND_TO_BLOCK(NUM) takes the positive fixnum NUM and rounds up to the next
+multiple of 512  (unless, of course, NUM is already a multiple of 512).</p>
 </div></span>
   
 </li>
@@ -393,10 +402,9 @@ multiple of 512  (unless, of course, NUM is already a multiple of 512).
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-STRIP_NULLS(BUFF) takes a byte buffer BUFF and strips off everything after
-the first null, inclusive.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>STRIP_NULLS(BUFF) takes a byte buffer BUFF and strips off everything after
+the first null, inclusive.</p>
 </div></span>
   
 </li>
@@ -418,21 +426,21 @@ the first null, inclusive.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of TarReader
-</p>
+    
+<p>A new instance of TarReader</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="TarReaderError.html" title="Store::TarReaderError (class)">TarReaderError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="TarReaderError.html" title="Store::TarReaderError (class)">TarReaderError</a></span></tt>)</span>
       
       
       
@@ -559,15 +567,15 @@ A new instance of TarReader
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Returns the value of attribute filename
-</p>
+    
+<p>Returns the value of attribute filename</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -602,15 +610,15 @@ Returns the value of attribute filename
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Returns the value of attribute headers
-</p>
+    
+<p>Returns the value of attribute headers</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -649,17 +657,17 @@ Returns the value of attribute headers
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-COMPUTE_HEADER_CHECKSUM(BUFF) returns the computed checksum of the supplied
+    
+<p>COMPUTE_HEADER_CHECKSUM(BUFF) returns the computed checksum of the supplied
 512-byte USTAR tar file header BUFF. The location of the checksum itself
-(at <a href="http://148..155">buff</a>) is treated as a string of blanks.
-</p>
+(at <a href="http://148..155">buff</a>) is treated as a string of blanks.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -738,16 +746,16 @@ COMPUTE_HEADER_CHECKSUM(BUFF) returns the computed checksum of the supplied
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-EACH  yields the pair (file-name, io-object) for each regular file in the
-archive;
-</p>
+    
+<p>EACH  yields the pair (file-name, io-object) for each regular file in the
+archive;</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -857,16 +865,16 @@ archive;
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-OCT_MAYBE(STR) takes a string STR, presumably an octal representation of
-number, and returns it as a fixnum. If STR is nil or false, return STR.
-</p>
+    
+<p>OCT_MAYBE(STR) takes a string STR, presumably an octal representation of
+number, and returns it as a fixnum. If STR is nil or false, return STR.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -905,13 +913,14 @@ number, and returns it as a fixnum. If STR is nil or false, return STR.
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="TarReaderError.html" title="Store::TarReaderError (class)">TarReaderError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="TarReaderError.html" title="Store::TarReaderError (class)">TarReaderError</a></span></tt>)</span>
       
       
       
@@ -1034,17 +1043,17 @@ number, and returns it as a fixnum. If STR is nil or false, return STR.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-ROUND_TO_BLOCK(NUM) takes the positive fixnum NUM and rounds up to the next
+    
+<p>ROUND_TO_BLOCK(NUM) takes the positive fixnum NUM and rounds up to the next
 multiple of 512  (unless, of course, NUM is already a multiple of 512). 
-Headers and files within a tar file all start on 512-byte boundries.
-</p>
+Headers and files within a tar file all start on 512-byte boundries.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -1076,18 +1085,18 @@ Headers and files within a tar file all start on 512-byte boundries.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-STRIP_NULLS(BUFF) takes a byte buffer BUFF and strips off everything after
+    
+<p>STRIP_NULLS(BUFF) takes a byte buffer BUFF and strips off everything after
 the first null, inclusive.   It returns the original string if no null
 characters are present.  It returns nil for an empty string or a string
-starting a null character.
-</p>
+starting a null character.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -1115,9 +1124,9 @@ starting a null character.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:36 2011 by 
+  Generated on Mon Nov 21 17:48:03 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

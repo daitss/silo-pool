@@ -1,3 +1,6 @@
+# TODO:  I've implemented a more complete Streams module in the Datyl pacakge.  We need
+# to use that one.
+
 require 'nokogiri'
 require 'net/http'
 require 'uri'

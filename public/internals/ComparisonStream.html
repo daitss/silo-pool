@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: ComparisonStream</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: ComparisonStream
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -74,38 +87,36 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb</dd>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Class ComparisonStream is initialized with two streams - each stream should
+    
+<p>Class ComparisonStream is initialized with two streams - each stream should
 be thought of as a list of two-element arrays.  The first element is key (a
 string), and the second element is the value for that key (any object). A
-key is unique within a list. Each list is sorted on its keys.
-</p>
-<p>
-This class provides a block method that compares two such streams. It works
+key is unique within a list. Each list is sorted on its keys.</p>
+
+<p>This class provides a block method that compares two such streams. It works
 by a merge-like operation on the unique keys of the lists, yielding at each
 merged record three elements.  The first element is the unique key,
 followed by its corresponding value from the first stream and the value
 from the second stream.  If a stream has no corresponding value for a key,
-nil is returned. At most one element will be nil, of course.
-</p>
-<p>
-This can give us a convienent way to determine, in one very quick pass,
+nil is returned. At most one element will be nil, of course.</p>
+
+<p>This can give us a convienent way to determine, in one very quick pass,
 both missing packages and orphaned packages, as well as comparing the
-expected and actual checksums.
-</p>
+expected and actual checksums.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
   <h2>Constant Summary</h2>
   
@@ -125,6 +136,8 @@ expected and actual checksums.
       
     </dl>
   
+
+
 
 
 
@@ -238,9 +251,8 @@ expected and actual checksums.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of ComparisonStream.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of ComparisonStream.</p>
 </div></span>
   
 </li>
@@ -282,28 +294,28 @@ A new instance of ComparisonStream.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of ComparisonStream
-</p>
+    
+<p>A new instance of ComparisonStream</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-158
-159
-160
-161</pre>
+161
+162
+163
+164</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 158</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 161</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='stream1 identifier id'>stream1</span><span class='comma token'>,</span> <span class='stream2 identifier id'>stream2</span>
   <span class='@stream1 ivar id'>@stream1</span> <span class='assign token'>=</span> <span class='stream1 identifier id'>stream1</span>
@@ -335,13 +347,13 @@ A new instance of ComparisonStream
       <pre class="lines">
 
 
-168
-169
-170
-171</pre>
+171
+172
+173
+174</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 168</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 171</span>
 
 <span class='def def kw'>def</span> <span class='close identifier id'>close</span>
   <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='close identifier id'>close</span> <span class='if if_mod kw'>if</span> <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span> <span class='symbol val'>:close</span>
@@ -366,9 +378,6 @@ A new instance of ComparisonStream
       <pre class="lines">
 
 
-177
-178
-179
 180
 181
 182
@@ -398,10 +407,13 @@ A new instance of ComparisonStream
 206
 207
 208
-209</pre>
+209
+210
+211
+212</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 177</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 180</span>
 
 <span class='def def kw'>def</span> <span class='get identifier id'>get</span>
   <span class='left_hand identifier id'>left_hand</span>  <span class='assign token'>=</span> <span class='get_lhs identifier id'>get_lhs</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
@@ -455,12 +467,12 @@ A new instance of ComparisonStream
       <pre class="lines">
 
 
-213
-214
-215</pre>
+216
+217
+218</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 213</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 216</span>
 
 <span class='def def kw'>def</span> <span class='get_lhs identifier id'>get_lhs</span>
   <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='integer val'>? </span><span class='nil nil kw'>nil</span> <span class='colon op'>:</span> <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
@@ -484,12 +496,12 @@ A new instance of ComparisonStream
       <pre class="lines">
 
 
-217
-218
-219</pre>
+220
+221
+222</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 217</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 220</span>
 
 <span class='def def kw'>def</span> <span class='get_rhs identifier id'>get_rhs</span>
   <span class='@stream2 ivar id'>@stream2</span><span class='dot token'>.</span><span class='eos? fid id'>eos?</span> <span class='integer val'>? </span><span class='nil nil kw'>nil</span> <span class='colon op'>:</span> <span class='@stream2 ivar id'>@stream2</span><span class='dot token'>.</span><span class='get identifier id'>get</span>
@@ -513,13 +525,13 @@ A new instance of ComparisonStream
       <pre class="lines">
 
 
-163
-164
-165
-166</pre>
+166
+167
+168
+169</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 163</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 166</span>
 
 <span class='def def kw'>def</span> <span class='rewind identifier id'>rewind</span>
   <span class='@stream1 ivar id'>@stream1</span><span class='dot token'>.</span><span class='rewind identifier id'>rewind</span>
@@ -536,9 +548,9 @@ A new instance of ComparisonStream
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:31 2011 by 
+  Generated on Mon Nov 21 17:48:18 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

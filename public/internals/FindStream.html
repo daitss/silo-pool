@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: FindStream</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: FindStream
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -83,16 +96,15 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-List all of the files from a silo (except for .lock files). Data is
+    
+<p>List all of the files from a silo (except for .lock files). Data is
 returned as a list of arrays, where the first element (key) is the path;
 and the second element (value) is a struct containing .path, a string;
-.mtime, a Time object;  and .size, a fixnum.
-</p>
-<pre class="code">
-  <span class='lbrack token'>[</span> <span class='string val'>&quot;/daitssfs/002/113/f0f4d29507f3049999b756bfb4215/data&quot;</span><span class='comma token'>,</span> <span class='comment val'>#&lt;struct  path=&quot;/daitssfs/002/113/f0f4d29507f3049999b756bfb4215/data&quot;, size=110023, mtime=&quot;Thu Jun 24 13:22:36 -0400 2010&quot;&gt; ],</span>
-  <span class='lbrack token'>[</span> <span class='string val'>&quot;/daitssfs/002/4e6/5e0f51a7f2c81cb4b5a6c3fa169c8/sha1&quot;</span><span class='comma token'>,</span> <span class='comment val'>#&lt;struct  path=&quot;/daitssfs/002/4e6/5e0f51a7f2c81cb4b5a6c3fa169c8/sha1&quot;, size=41,     mtime=&quot;Thu Jun 24 13:36:09 -0400 2010&quot;&gt; ],</span>
-  <span class='etc identifier id'>etc</span><span class='dot3 op'>...</span>
+.mtime, a Time object;  and .size, a fixnum.</p>
+
+<pre class="code"><span class='lbrack token'>[</span> <span class='string val'>&quot;/daitssfs/002/113/f0f4d29507f3049999b756bfb4215/data&quot;</span><span class='comma token'>,</span> <span class='comment val'>#&lt;struct  path=&quot;/daitssfs/002/113/f0f4d29507f3049999b756bfb4215/data&quot;, size=110023, mtime=&quot;Thu Jun 24 13:22:36 -0400 2010&quot;&gt; ],</span>
+<span class='lbrack token'>[</span> <span class='string val'>&quot;/daitssfs/002/4e6/5e0f51a7f2c81cb4b5a6c3fa169c8/sha1&quot;</span><span class='comma token'>,</span> <span class='comment val'>#&lt;struct  path=&quot;/daitssfs/002/4e6/5e0f51a7f2c81cb4b5a6c3fa169c8/sha1&quot;, size=41,     mtime=&quot;Thu Jun 24 13:36:09 -0400 2010&quot;&gt; ],</span>
+<span class='etc identifier id'>etc</span><span class='dot3 op'>...</span>
 </pre>
 
 
@@ -100,9 +112,15 @@ and the second element (value) is a struct containing .path, a string;
 </div>
 <div class="tags">
   
+
 </div>
 
   
+  
+  
+  
+
+
   
   
   
@@ -133,9 +151,8 @@ and the second element (value) is a struct containing .path, a string;
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of FindStream.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of FindStream.</p>
 </div></span>
   
 </li>
@@ -166,36 +183,36 @@ A new instance of FindStream.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of FindStream
-</p>
+    
+<p>A new instance of FindStream</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-253
-254
-255
-256
-257
-258
-259
-260
-261
-262
-263
-264</pre>
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 253</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/fixityutils.rb', line 268</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='filesystem identifier id'>filesystem</span>
   <span class='@index ivar id'>@index</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
@@ -221,9 +238,9 @@ A new instance of FindStream
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:23 2011 by 
+  Generated on Mon Nov 21 17:48:06 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

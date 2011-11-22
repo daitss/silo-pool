@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: SiloFixityStream</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: SiloFixityStream
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -76,24 +89,24 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb</dd>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Given a URL for getting fixity data, return a list of name/hash pairs where
+    
+<p>Given a URL for getting fixity data, return a list of name/hash pairs where
 the name is an IEID and the struct has fields for md5, sha1, and iso8601
-timestamp (a string).
-</p>
+timestamp (a string).</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><h2>Defined Under Namespace</h2>
 <p class="children">
    
@@ -132,9 +145,8 @@ timestamp (a string).
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Returns the value of attribute list.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute list.</p>
 </div></span>
   
 </li>
@@ -142,6 +154,11 @@ Returns the value of attribute list.
     
   </ul>
 
+
+
+  
+  
+  
 
   
     <h2>
@@ -190,9 +207,8 @@ Returns the value of attribute list.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of SiloFixityStream.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of SiloFixityStream.</p>
 </div></span>
   
 </li>
@@ -223,30 +239,30 @@ A new instance of SiloFixityStream.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of SiloFixityStream
-</p>
+    
+<p>A new instance of SiloFixityStream</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-86
-87
-88
 89
 90
-91</pre>
+91
+92
+93
+94</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 86</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 89</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='url identifier id'>url</span>
   <span class='document identifier id'>document</span> <span class='assign token'>=</span> <span class='FixityXml constant id'>FixityXml</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
@@ -277,27 +293,27 @@ A new instance of SiloFixityStream
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Returns the value of attribute list
-</p>
+    
+<p>Returns the value of attribute list</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-84
-85
-86</pre>
+87
+88
+89</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 84</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 87</span>
 
 <span class='def def kw'>def</span> <span class='list identifier id'>list</span>
   <span class='@list ivar id'>@list</span>
@@ -328,9 +344,6 @@ Returns the value of attribute list
       <pre class="lines">
 
 
-95
-96
-97
 98
 99
 100
@@ -343,10 +356,13 @@ Returns the value of attribute list
 107
 108
 109
-110</pre>
+110
+111
+112
+113</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 95</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 98</span>
 
 <span class='def def kw'>def</span> <span class='fetch identifier id'>fetch</span> <span class='location identifier id'>location</span><span class='comma token'>,</span> <span class='limit identifier id'>limit</span> <span class='assign token'>=</span> <span class='integer val'>5</span>                                                                                                                                             
   <span class='uri identifier id'>uri</span> <span class='assign token'>=</span> <span class='URI constant id'>URI</span><span class='dot token'>.</span><span class='parse identifier id'>parse</span> <span class='location identifier id'>location</span>
@@ -375,9 +391,9 @@ Returns the value of attribute list
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:33 2011 by 
+  Generated on Mon Nov 21 17:48:00 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

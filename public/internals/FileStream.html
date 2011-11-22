@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: FileStream</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: FileStream
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -74,24 +87,26 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb</dd>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-file of text, whitespace-separated columns, first column is unique, sorted
-key.  Really meant to be subclassed.
-</p>
+    
+<p>file of text, whitespace-separated columns, first column is unique, sorted
+key.  Really meant to be subclassed.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -162,9 +177,8 @@ key.  Really meant to be subclassed.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of FileStream.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>A new instance of FileStream.</p>
 </div></span>
   
 </li>
@@ -185,28 +199,28 @@ A new instance of FileStream.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of FileStream
-</p>
+    
+<p>A new instance of FileStream</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-118
-119
-120
-121</pre>
+121
+122
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 118</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 121</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='io identifier id'>io</span>
   <span class='@io ivar id'>@io</span> <span class='assign token'>=</span> <span class='io identifier id'>io</span>
@@ -239,13 +253,14 @@ A new instance of FileStream
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -259,12 +274,12 @@ A new instance of FileStream
       <pre class="lines">
 
 
-133
-134
-135</pre>
+136
+137
+138</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 133</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 136</span>
 
 <span class='def def kw'>def</span> <span class='eos? fid id'>eos?</span>
   <span class='@io ivar id'>@io</span><span class='dot token'>.</span><span class='eof? fid id'>eof?</span>
@@ -288,18 +303,18 @@ A new instance of FileStream
       <pre class="lines">
 
 
-123
-124
-125
 126
 127
 128
 129
 130
-131</pre>
+131
+132
+133
+134</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/datyl/streams.rb', line 123</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/deprecated-streams.rb', line 126</span>
 
 <span class='def def kw'>def</span> <span class='get identifier id'>get</span>
   <span class='if if kw'>if</span> <span class='block_given? fid id'>block_given?</span>
@@ -321,9 +336,9 @@ A new instance of FileStream
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:41:51 2011 by 
+  Generated on Mon Nov 21 17:48:11 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Module: Store::DB</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: Store::DB
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -70,10 +83,12 @@
     
    
     
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="DB/DM.html" title="Store::DB::DM (class)">DM</a></span>, <span class='object_link'><a href="DB/HistoryRecord.html" title="Store::DB::HistoryRecord (class)">HistoryRecord</a></span>, <span class='object_link'><a href="DB/PackageRecord.html" title="Store::DB::PackageRecord (class)">PackageRecord</a></span>, <span class='object_link'><a href="DB/ReservedDiskSpace.html" title="Store::DB::ReservedDiskSpace (class)">ReservedDiskSpace</a></span>, <span class='object_link'><a href="DB/SiloRecord.html" title="Store::DB::SiloRecord (class)">SiloRecord</a></span>
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="DB/Authentication.html" title="Store::DB::Authentication (class)">Authentication</a></span>, <span class='object_link'><a href="DB/DM.html" title="Store::DB::DM (class)">DM</a></span>, <span class='object_link'><a href="DB/HistoryRecord.html" title="Store::DB::HistoryRecord (class)">HistoryRecord</a></span>, <span class='object_link'><a href="DB/PackageRecord.html" title="Store::DB::PackageRecord (class)">PackageRecord</a></span>, <span class='object_link'><a href="DB/ReservedDiskSpace.html" title="Store::DB::ReservedDiskSpace (class)">ReservedDiskSpace</a></span>, <span class='object_link'><a href="DB/SiloRecord.html" title="Store::DB::SiloRecord (class)">SiloRecord</a></span>
     
   
 </p>
+
+
 
 
 
@@ -88,7 +103,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#setup-class_method" title="setup (class method)">+ (Object) <strong>setup</strong>(yaml_file, key) </a>
+      <a href="#setup-class_method" title="setup (class method)">+ (Object) <strong>setup</strong>(*args) </a>
     
 
     
@@ -101,11 +116,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-We are especially careful with the setup since this is where operations
-staff could get confused about what is required, especially since very
-little reporting machinery can be set up at the time it is called.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>We are especially careful with the setup since this is where operations
+staff could get confused about what is required.</p>
 </div></span>
   
 </li>
@@ -123,35 +136,23 @@ little reporting machinery can be set up at the time it is called.
       <div class="method_details first">
   <p class="signature first" id="setup-class_method">
   
-    + (<tt>Object</tt>) <strong>setup</strong>(yaml_file, key) 
+    + (<tt>Object</tt>) <strong>setup</strong>(*args) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-We are especially careful with the setup since this is where operations
-staff could get confused about what is required, especially since very
-little reporting machinery can be set up at the time it is called.
-</p>
+    
+<p>We are especially careful with the setup since this is where operations
+staff could get confused about what is required. This is problematic since
+very little reporting machinery can be set up at the time setup is called
+(e.g., no logging).</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
-<ul class="raise">
   
-    <li>
-      
-        <span class='type'>(<tt><span class='object_link'><a href="ConfigurationError.html" title="Store::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
-      
-      
-      
-      
-    </li>
-  
-</ul>
 
 </div><table class="source_code">
   <tr>
@@ -159,14 +160,6 @@ little reporting machinery can be set up at the time it is called.
       <pre class="lines">
 
 
-24
-25
-26
-27
-28
-29
-30
-31
 32
 33
 34
@@ -180,57 +173,23 @@ little reporting machinery can be set up at the time it is called.
 42
 43
 44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57
-58</pre>
+45</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 24</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 32</span>
 
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
-  <span class='oops identifier id'>oops</span> <span class='assign token'>=</span> <span class='string val'>&quot;DB setup can't&quot;</span>
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>
 
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} understand the configuration file name - it's not a filename string, it's a #{yaml_file.class}.&quot;</span>  <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='String constant id'>String</span><span class='rparen token'>)</span>
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} understand key for the configuration file #{yaml_file} - it's not a string, it's a #{key.class}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='lparen token'>(</span><span class='key identifier id'>key</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='eq op'>==</span> <span class='String constant id'>String</span><span class='rparen token'>)</span>
-  <span class='begin begin kw'>begin</span>
-    <span class='dict identifier id'>dict</span> <span class='assign token'>=</span> <span class='YAML constant id'>YAML</span><span class='colon2 op'>::</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
-  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-    <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} parse the configuration file #{yaml_file}: #{e.message}.&quot;</span>
-  <span class='end end kw'>end</span>
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} parse the data in the configuration file #{yaml_file}.&quot;</span> <span class='if if_mod kw'>if</span> <span class='dict identifier id'>dict</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='neq op'>!=</span> <span class='Hash constant id'>Hash</span>
-  <span class='dbinfo identifier id'>dbinfo</span> <span class='assign token'>=</span> <span class='dict identifier id'>dict</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} get any data from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                                    <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span>
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} get the vendor name (e.g. 'mysql' or 'postsql') from the #{yaml_file} configuration file using the key #{key}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'vendor'</span>
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} get the database name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                           <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'database'</span>
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} get the host name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                               <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'hostname'</span>
-  <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;#{oops} get the user name from the #{yaml_file} configuration file using the key #{key}.&quot;</span>                               <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'username'</span>
+  <span class='connection_string identifier id'>connection_string</span> <span class='assign token'>=</span> <span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='eq op'>==</span> <span class='integer val'>2</span> <span class='question op'>?</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='colon op'>:</span> <span class='args identifier id'>args</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
 
-  <span class='comment val'># Example string: 'postgres://root:topsecret@localhost:5432/silos'</span>
+  <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DataMapper constant id'>DataMapper</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='symbol val'>:store_master</span><span class='comma token'>,</span> <span class='connection_string identifier id'>connection_string</span><span class='rparen token'>)</span>
 
-  <span class='connection_string identifier id'>connection_string</span> <span class='assign token'>=</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'vendor'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span>
-                      <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'username'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span>
-                     <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'@'</span> <span class='plus op'>+</span>
-                      <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span> <span class='plus op'>+</span>
-                     <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span> <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'/'</span> <span class='plus op'>+</span>
-                      <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'database'</span><span class='rbrack token'>]</span>
   <span class='begin begin kw'>begin</span>
     <span class='dm identifier id'>dm</span> <span class='assign token'>=</span> <span class='DM constant id'>DM</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span> <span class='connection_string identifier id'>connection_string</span>        
-    <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='string val'>'select 1 + 1'</span><span class='rparen token'>)</span>  <span class='comment val'># if we're going to fail (with, say, a non-existant database), let's fail now - thanks Franco for the SQL idea.</span>
+    <span class='dm identifier id'>dm</span><span class='dot token'>.</span><span class='select identifier id'>select</span><span class='lparen token'>(</span><span class='string val'>'select 1 + 1'</span><span class='rparen token'>)</span>  <span class='comment val'># if we're going to fail (with, say, a non-existant database), let's fail now.</span>
     <span class='dm identifier id'>dm</span>
   <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
-    <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span>
-          <span class='dstring node'>&quot;Failure setting up the #{dbinfo['vendor']} #{dbinfo['database']} database for #{dbinfo['username']} on #{dbinfo['hostname']} (#{dbinfo['password'] ? 'password supplied' : 'no password'}) - used the configuration file #{yaml_file}: #{e.message}&quot;</span>
+    <span class='raise identifier id'>raise</span> <span class='ConfigurationError constant id'>ConfigurationError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Failure setting up the silo-pool database: #{e.message}&quot;</span>
   <span class='end end kw'>end</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -244,9 +203,9 @@ little reporting machinery can be set up at the time it is called.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:34 2011 by 
+  Generated on Mon Nov 21 17:48:03 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

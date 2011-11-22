@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Module: StoreUtils</title>
-<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: StoreUtils
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -66,17 +79,19 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-You know the drawer in your kitchen that has all the junk in it?  This
-module is like that&#8230;
-</p>
+    
+<p>You know the drawer in your kitchen that has all the junk in it?  This
+module is like that…</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
+
+
 
 
   
@@ -103,10 +118,9 @@ module is like that&#8230;
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-This function does the reverse of the above, taking the base64 string and
-returning the corresponding hex string.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>This function does the reverse of the above, taking the base64 string and
+returning the corresponding hex string.</p>
 </div></span>
   
 </li>
@@ -128,9 +142,32 @@ returning the corresponding hex string.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-put in commas in a number (American style numeric format).
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>put in commas in a number (American style numeric format).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#connection_string-class_method" title="connection_string (class method)">+ (Object) <strong>connection_string</strong>(yaml_file, key) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Purpose here is to provide connections for datamapper using our yaml
+configuration file + key technique; This will probably go away.</p>
 </div></span>
   
 </li>
@@ -215,9 +252,8 @@ put in commas in a number (American style numeric format).
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-N.B.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>N.B.</p>
 </div></span>
   
 </li>
@@ -260,9 +296,8 @@ N.B.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-StoreUtils.get_silo_options ARGS.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>StoreUtils.get_silo_options ARGS.</p>
 </div></span>
   
 </li>
@@ -284,10 +319,9 @@ StoreUtils.get_silo_options ARGS.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Without argument, return the group of the user running this process as a
-string.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Without argument, return the group of the user running this process as a
+string.</p>
 </div></span>
   
 </li>
@@ -351,10 +385,9 @@ string.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-We need to provide the base64 of the original binary md5 checksum; however 
-we typically have only the hexstring.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>We need to provide the base64 of the original binary md5 checksum; however 
+we typically have only the hexstring.</p>
 </div></span>
   
 </li>
@@ -376,10 +409,32 @@ we typically have only the hexstring.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Given a directory, return a path to a PID file in it, naming based on the
-currently running process name.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Given a directory, return a path to a PID file in it, naming based on the
+currently running process name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#safen_connection_string-class_method" title="safen_connection_string (class method)">+ (Object) <strong>safen_connection_string</strong>(str) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Remove the password from the db connection string for logging.</p>
 </div></span>
   
 </li>
@@ -422,10 +477,9 @@ currently running process name.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Without argument, give the name of the user running this process as a
-string.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Without argument, give the name of the user running this process as a
+string.</p>
 </div></span>
   
 </li>
@@ -491,16 +545,16 @@ string.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-This function does the reverse of the above, taking the base64 string and
-returning the corresponding hex string.
-</p>
+    
+<p>This function does the reverse of the above, taking the base64 string and
+returning the corresponding hex string.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -534,15 +588,15 @@ returning the corresponding hex string.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-put in commas in a number (American style numeric format)
-</p>
+    
+<p>put in commas in a number (American style numeric format)</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -558,6 +612,105 @@ put in commas in a number (American style numeric format)
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='commify identifier id'>commify</span> <span class='num identifier id'>num</span>
   <span class='num identifier id'>num</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='dot token'>.</span><span class='gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/(\d)(?=(\d\d\d)+(?!\d))/</span><span class='comma token'>,</span> <span class='string val'>&quot;\\1,&quot;</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="connection_string-class_method">
+  
+    + (<tt>Object</tt>) <strong>connection_string</strong>(yaml_file, key) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Purpose here is to provide connections for datamapper using our yaml
+configuration file + key technique; This will probably go away.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 192</span>
+
+<span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='connection_string identifier id'>connection_string</span> <span class='yaml_file identifier id'>yaml_file</span><span class='comma token'>,</span> <span class='key identifier id'>key</span>
+
+  <span class='oops identifier id'>oops</span> <span class='assign token'>=</span> <span class='string val'>&quot;Database setup can't&quot;</span>
+
+  <span class='comment val'># This looks like excessive error checking, but configuration errors need a lot explanation for new users of DAITSS.</span>
+
+  <span class='begin begin kw'>begin</span>
+    <span class='dict identifier id'>dict</span> <span class='assign token'>=</span> <span class='YAML constant id'>YAML</span><span class='colon2 op'>::</span><span class='load identifier id'>load</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='yaml_file identifier id'>yaml_file</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the configuration file '#{yaml_file}': #{e.message}.&quot;</span>
+  <span class='end end kw'>end</span>
+
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} parse the data in the configuration file '#{yaml_file}'.&quot;</span> <span class='if if_mod kw'>if</span> <span class='dict identifier id'>dict</span><span class='dot token'>.</span><span class='class identifier id'>class</span> <span class='neq op'>!=</span> <span class='Hash constant id'>Hash</span>
+
+  <span class='dbinfo identifier id'>dbinfo</span> <span class='assign token'>=</span> <span class='dict identifier id'>dict</span><span class='lbrack token'>[</span><span class='key identifier id'>key</span><span class='rbrack token'>]</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get any data from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                                     <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the vendor name (e.g. 'mysql' or 'postgres') from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'vendor'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the database name from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                            <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'database'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the host name from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'hostname'</span>
+  <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{oops} get the user name from the configuration file '#{yaml_file}' using the key '#{key}'&quot;</span>                                <span class='unless unless_mod kw'>unless</span> <span class='dbinfo identifier id'>dbinfo</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='string val'>'username'</span>
+
+  <span class='comment val'># Example string: 'mysql://root:topsecret@localhost/silos'</span>
+  <span class='comment val'># TODO: support different ports</span>
+
+  <span class='return return kw'>return</span> \
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'vendor'</span><span class='rbrack token'>]</span>    <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span>                                   <span class='comment val'># mysql://</span>
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'username'</span><span class='rbrack token'>]</span>  <span class='plus op'>+</span>                                           <span class='comment val'># mysql://fischer</span>
+   <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span>  <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'password'</span><span class='rbrack token'>]</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span> <span class='plus op'>+</span> <span class='string val'>'@'</span> <span class='plus op'>+</span>    <span class='comment val'># mysql://fischer:topsecret@  (or mysql://fischer@)</span>
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'hostname'</span><span class='rbrack token'>]</span>  <span class='plus op'>+</span>
+   <span class='lparen token'>(</span><span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span>      <span class='question op'>?</span> <span class='string val'>':'</span> <span class='plus op'>+</span> <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'port'</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='colon op'>:</span> <span class='string val'>''</span><span class='rparen token'>)</span>  <span class='plus op'>+</span> <span class='string val'>'/'</span> <span class='plus op'>+</span>  <span class='comment val'># mysql://fischer:topsecret@localhost/ (or mysql://fischer:topsecret@localhost:port/)</span>
+    <span class='dbinfo identifier id'>dbinfo</span><span class='lbrack token'>[</span><span class='string val'>'database'</span><span class='rbrack token'>]</span>                                              <span class='comment val'># mysql://fischer:topsecret@localhost/store_master</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -663,15 +816,15 @@ put in commas in a number (American style numeric format)
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-N.B. We depend on a trailing slash being removed in path
-</p>
+    
+<p>N.B. We depend on a trailing slash being removed in path</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -760,21 +913,19 @@ N.B. We depend on a trailing slash being removed in path
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-StoreUtils.get_silo_options ARGS
-</p>
-<p>
-Parse the command line argments used for various silo fixity utility
+    
+<p>StoreUtils.get_silo_options ARGS</p>
+
+<p>Parse the command line argments used for various silo fixity utility
 programs.  Returns nil on error, after having written a message on STDERR
 (usually you just want to exit with a non-zero exit status on a nil
-return); on success returns a struct with the following
-</p>
-<pre class="code">
- <span class='mult op'>*</span> <span class='silo_path identifier id'>silo_path</span> <span class='PATH constant id'>PATH</span> <span class='lparen token'>(</span><span class='required identifier id'>required</span><span class='rparen token'>)</span> <span class='minus op'>-</span> <span class='the identifier id'>the</span> <span class='root identifier id'>root</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='filesystem identifier id'>filesystem</span> <span class='with identifier id'>with</span> <span class='the identifier id'>the</span> <span class='silo identifier id'>silo</span><span class='comma token'>,</span> <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='g identifier id'>g</span><span class='dot token'>.</span> <span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='integer val'>016</span><span class='div op'>/</span><span class='semicolon token'>;</span> <span class='it identifier id'>it</span> <span class='must identifier id'>must</span> <span class='be identifier id'>be</span> <span class='readable identifier id'>readable</span> <span class='lparen token'>(</span><span class='and and kw'>and</span> <span class='currently identifier id'>currently</span> <span class='writable identifier id'>writable</span><span class='comma token'>,</span> <span class='though identifier id'>though</span> <span class='that identifier id'>that</span><span class='string val'>'s a design flaw)
- * hostname  NAME (required) - the name of the host associated with this silo.
- * db_configuration_file FILEPATH (defaults to /opt/fda/etc/db.yml) - the path to a yaml file that provides db information
- * db_configuration_key STRING (required) - a key into the hash provided by reading the db_configuration_file, which will return a hash of db connection information.
- * syslog_facility FACILITY_CODE (optional) - if provided you should setup syslog to this facility, otherwise logging to STDERR
+return); on success returns a struct with the following</p>
+
+<pre class="code"><span class='mult op'>*</span> <span class='silo_path identifier id'>silo_path</span> <span class='PATH constant id'>PATH</span> <span class='lparen token'>(</span><span class='required identifier id'>required</span><span class='rparen token'>)</span> <span class='minus op'>-</span> <span class='the identifier id'>the</span> <span class='root identifier id'>root</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='filesystem identifier id'>filesystem</span> <span class='with identifier id'>with</span> <span class='the identifier id'>the</span> <span class='silo identifier id'>silo</span><span class='comma token'>,</span> <span class='e identifier id'>e</span><span class='dot token'>.</span><span class='g identifier id'>g</span><span class='dot token'>.</span> <span class='div op'>/</span><span class='daitss identifier id'>daitss</span><span class='div op'>/</span><span class='integer val'>016</span><span class='div op'>/</span><span class='semicolon token'>;</span> <span class='it identifier id'>it</span> <span class='must identifier id'>must</span> <span class='be identifier id'>be</span> <span class='readable identifier id'>readable</span> <span class='lparen token'>(</span><span class='and and kw'>and</span> <span class='currently identifier id'>currently</span> <span class='writable identifier id'>writable</span><span class='comma token'>,</span> <span class='though identifier id'>though</span> <span class='that identifier id'>that</span><span class='string val'>'s a design flaw)
+* hostname  NAME (required) - the name of the host associated with this silo.
+* db_configuration_file FILEPATH (defaults to /opt/fda/etc/db.yml) - the path to a yaml file that provides db information
+* db_configuration_key STRING (required) - a key into the hash provided by reading the db_configuration_file, which will return a hash of db connection information.
+* syslog_facility FACILITY_CODE (optional) - if provided you should setup syslog to this facility, otherwise logging to STDERR
 </span></pre>
 
 
@@ -782,6 +933,7 @@ return); on success returns a struct with the following
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -895,17 +1047,17 @@ return); on success returns a struct with the following
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Without argument, return the group of the user running this process as a
+    
+<p>Without argument, return the group of the user running this process as a
 string.  With argument PATH, a string, assume it is a readble filepath and
-return the group name who owns it as a string.
-</p>
+return the group name who owns it as a string.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -1005,18 +1157,18 @@ return the group name who owns it as a string.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-We need to provide the base64 of the original binary md5 checksum; however 
+    
+<p>We need to provide the base64 of the original binary md5 checksum; however 
 we typically have only the hexstring.  This funtion takes the hexstring,
 packs it into the binary representation, then encodes that into a base64
-representation.
-</p>
+representation.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -1050,16 +1202,16 @@ representation.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Given a directory, return a path to a PID file in it, naming based on the
-currently running process name
-</p>
+    
+<p>Given a directory, return a path to a PID file in it, naming based on the
+currently running process name</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -1075,6 +1227,66 @@ currently running process name
 
 <span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='pid_file identifier id'>pid_file</span> <span class='dir identifier id'>dir</span>
   <span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='dir identifier id'>dir</span><span class='comma token'>,</span> <span class='$0 gvar id'>$0</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='SEPARATOR constant id'>SEPARATOR</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span> <span class='plus op'>+</span> <span class='string val'>'.pid'</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="safen_connection_string-class_method">
+  
+    + (<tt>Object</tt>) <strong>safen_connection_string</strong>(str) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>Remove the password from the db connection string for logging</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/utils.rb', line 229</span>
+
+<span class='def def kw'>def</span> <span class='StoreUtils constant id'>StoreUtils</span><span class='dot token'>.</span><span class='safen_connection_string identifier id'>safen_connection_string</span> <span class='str identifier id'>str</span>
+
+  <span class='vendor identifier id'>vendor</span><span class='comma token'>,</span> <span class='rest identifier id'>rest</span> <span class='assign token'>=</span> <span class='str identifier id'>str</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>'://'</span><span class='comma token'>,</span> <span class='integer val'>2</span><span class='rparen token'>)</span>              <span class='comment val'># postgres://fischer:topsecret@example.org:5432/mydb =&gt; [ postgres, fischer:topsecret@example.org:5432/mydb ]</span>
+  <span class='return return kw'>return</span> <span class='str identifier id'>str</span> <span class='unless unless_mod kw'>unless</span> <span class='rest identifier id'>rest</span>
+
+  <span class='userinfo identifier id'>userinfo</span><span class='comma token'>,</span> <span class='host_and_db identifier id'>host_and_db</span> <span class='assign token'>=</span> <span class='rest identifier id'>rest</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>'@'</span><span class='comma token'>,</span> <span class='integer val'>2</span><span class='rparen token'>)</span>      <span class='comment val'># fischer:topsecret@example.org:5432/mydb =&gt; [ fischer:topsecret, example.org:5432/mydb ]</span>
+  <span class='return return kw'>return</span> <span class='str identifier id'>str</span> <span class='unless unless_mod kw'>unless</span> <span class='host_and_db identifier id'>host_and_db</span>
+
+  <span class='user identifier id'>user</span><span class='comma token'>,</span> <span class='pass identifier id'>pass</span> <span class='assign token'>=</span> <span class='userinfo identifier id'>userinfo</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='string val'>':'</span><span class='comma token'>,</span> <span class='integer val'>2</span><span class='rparen token'>)</span>             <span class='comment val'># fischer:topsecret =&gt; [ fischer, topsecret ]</span>
+  <span class='return return kw'>return</span> <span class='str identifier id'>str</span> <span class='unless unless_mod kw'>unless</span> <span class='pass identifier id'>pass</span>
+
+  <span class='return return kw'>return</span> <span class='vendor identifier id'>vendor</span> <span class='plus op'>+</span> <span class='string val'>'://'</span> <span class='plus op'>+</span> <span class='user identifier id'>user</span> <span class='plus op'>+</span> <span class='string val'>':********@'</span> <span class='plus op'>+</span> <span class='host_and_db identifier id'>host_and_db</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -1122,17 +1334,17 @@ currently running process name
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Without argument, give the name of the user running this process as a
+    
+<p>Without argument, give the name of the user running this process as a
 string.  With argument PATH, a string, assume it is a readable filepath and
-return the user name who owns it as a string.
-</p>
+return the user name who owns it as a string.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -1177,13 +1389,14 @@ return the user name who owns it as a string.
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -1247,9 +1460,9 @@ return the user name who owns it as a string.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:41:46 2011 by 
+  Generated on Mon Nov 21 17:48:20 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

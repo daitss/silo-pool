@@ -128,7 +128,7 @@ module Store
         silos[partition] << silo
       end
 
-      raise NoSilosAvailable, "There are no writable silos in this pool with space for a package of size  #{StoreUtils.commify(sprintf("%5.2f", size_needed/1000.0))} KB"  if available.empty?
+      raise NoSilosLargeEnough, "There are no writable silos in this pool with space for a package of size  #{StoreUtils.commify(sprintf("%5.2f", size_needed/1000.0))} KB"  if available.empty?
 
       # find the partition with the least free space...
         

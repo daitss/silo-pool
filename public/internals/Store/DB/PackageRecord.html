@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Store::DB::PackageRecord</title>
-<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Store::DB::PackageRecord
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '../..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -83,18 +96,10 @@
 </dl>
 <div class="clear"></div>
 
-<h2>Overview</h2><div class="docstring">
-  <div class="discussion">
-    <p>
-PackageRecord keeps three kinds of records; PUT, DELETE, FIXITY.
-</p>
 
 
-  </div>
-</div>
-<div class="tags">
   
-</div>
+
 
   
 
@@ -143,9 +148,32 @@ PackageRecord keeps three kinds of records; PUT, DELETE, FIXITY.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-List all of the package records for this silo; by default order by name.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>List all of the package records for this silo; by default order by name.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#list_all_fixities-class_method" title="list_all_fixities (class method)">+ (Object) <strong>list_all_fixities</strong>(url, options = {}) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>A late addtion, get the entire list of active fixities at a point in time
+in an efficient manner.</p>
 </div></span>
   
 </li>
@@ -188,9 +216,8 @@ List all of the package records for this silo; by default order by name.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-This allows us to go a bit faster than the above.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>This allows us to go a bit faster than the above.</p>
 </div></span>
   
 </li>
@@ -230,6 +257,27 @@ This allows us to go a bit faster than the above.
   <span class="summary_signature">
     
       <a href="#md5-instance_method" title="#md5 (instance method)">- (Object) <strong>md5</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#missing%3F-instance_method" title="#missing? (instance method)">- (Boolean) <strong>missing?</strong> </a>
     
 
     
@@ -333,36 +381,36 @@ This allows us to go a bit faster than the above.
       <pre class="lines">
 
 
-279
-280
-281
-282
-283
-284
-285
-286
-287
-288
-289
-290
-291
-292
-293
-294
-295
-296
-297
-298
-299
-300
-301
-302
-303
-304
-305</pre>
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 279</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 358</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='create identifier id'>create</span> <span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span><span class='comma token'>,</span> <span class='options identifier id'>options</span>
   <span class='package_record identifier id'>package_record</span> <span class='assign token'>=</span> <span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='new identifier id'>new</span>
@@ -406,29 +454,66 @@ This allows us to go a bit faster than the above.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-List all of the package records for this silo; by default order by name.
+    
+<p>List all of the package records for this silo; by default order by name.
 DataMapper options may be specified by hash notation, which override the
-defaults.
-</p>
+defaults.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-315</pre>
+394</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 315</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 394</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list identifier id'>list</span> <span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="list_all_fixities-class_method">
+  
+    + (<tt>Object</tt>) <strong>list_all_fixities</strong>(url, options = {}) 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>A late addtion, get the entire list of active fixities at a point in time
+in an efficient manner.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+425</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 425</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='list_all_fixities identifier id'>list_all_fixities</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
     </td>
   </tr>
@@ -448,12 +533,12 @@ defaults.
       <pre class="lines">
 
 
-307
-308
-309</pre>
+386
+387
+388</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 307</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 386</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='lookup identifier id'>lookup</span> <span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span> <span class='name identifier id'>name</span>
   <span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='first identifier id'>first</span><span class='lparen token'>(</span> <span class='symbol val'>:silo_record</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='silo_record identifier id'>silo_record</span><span class='comma token'>,</span>  <span class='symbol val'>:name</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='name identifier id'>name</span> <span class='rparen token'>)</span>
@@ -473,25 +558,25 @@ defaults.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-This allows us to go a bit faster than the above
-</p>
+    
+<p>This allows us to go a bit faster than the above</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-324</pre>
+403</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 324</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 403</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='raw_list identifier id'>raw_list</span> <span class='silo_record identifier id'>silo_record</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
@@ -519,12 +604,12 @@ This allows us to go a bit faster than the above
       <pre class="lines">
 
 
-258
-259
-260</pre>
+332
+333
+334</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 258</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 332</span>
 
 <span class='def def kw'>def</span> <span class='datetime identifier id'>datetime</span>
   <span class='initial_timestamp identifier id'>initial_timestamp</span>
@@ -548,15 +633,66 @@ This allows us to go a bit faster than the above
       <pre class="lines">
 
 
-250
-251
-252</pre>
+324
+325
+326</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 250</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 324</span>
 
 <span class='def def kw'>def</span> <span class='md5 identifier id'>md5</span>
   <span class='initial_md5 identifier id'>initial_md5</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="missing?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>missing?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+336
+337
+338</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 336</span>
+
+<span class='def def kw'>def</span> <span class='missing? fid id'>missing?</span>
+  <span class='latest_sha1 identifier id'>latest_sha1</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span> <span class='and and kw'>and</span> <span class='latest_md5 identifier id'>latest_md5</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -577,12 +713,12 @@ This allows us to go a bit faster than the above
       <pre class="lines">
 
 
-254
-255
-256</pre>
+328
+329
+330</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 254</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 328</span>
 
 <span class='def def kw'>def</span> <span class='sha1 identifier id'>sha1</span>
   <span class='initial_sha1 identifier id'>initial_sha1</span>
@@ -606,12 +742,12 @@ This allows us to go a bit faster than the above
       <pre class="lines">
 
 
-246
-247
-248</pre>
+320
+321
+322</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 246</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 320</span>
 
 <span class='def def kw'>def</span> <span class='to_s identifier id'>to_s</span>
   <span class='dstring node'>&quot;#&lt;PackageRecord: #{self.name} for #{silo_record.hostname} at #{silo_record.filesystem}&gt;&quot;</span>
@@ -635,13 +771,13 @@ This allows us to go a bit faster than the above
       <pre class="lines">
 
 
-262
-263
-264
-265</pre>
+340
+341
+342
+343</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 262</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 340</span>
 
 <span class='def def kw'>def</span> <span class='url identifier id'>url</span> <span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>80</span><span class='comma token'>,</span> <span class='scheme identifier id'>scheme</span> <span class='assign token'>=</span> <span class='string val'>'http'</span>
   <span class='port_str identifier id'>port_str</span> <span class='assign token'>=</span> <span class='port identifier id'>port</span><span class='dot token'>.</span><span class='to_i identifier id'>to_i</span> <span class='eq op'>==</span> <span class='integer val'>80</span> <span class='question op'>?</span> <span class='string val'>''</span> <span class='colon op'>:</span> <span class='dstring node'>&quot;:#{port}&quot;</span>
@@ -658,9 +794,9 @@ This allows us to go a bit faster than the above
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:32 2011 by 
+  Generated on Mon Nov 21 17:48:03 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

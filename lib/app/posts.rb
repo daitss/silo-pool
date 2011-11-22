@@ -4,6 +4,7 @@ require 'store/poolreservation'
 require 'builder'
 
 post '/create/:name' do |name|
+  
   log_start_of_request
 
   # TODO: check if name is unique accross entire set of pools.
@@ -13,6 +14,9 @@ post '/create/:name' do |name|
   raise MissingTar,  "#{this_resource} only accepts content types of application/x-tar"       unless request.content_type == 'application/x-tar'
 
   silo = nil
+
+  # Note: PoolReservation checks for 'put' permissions on silos (thought is is technically not a PUT,
+  # we use that designation in the pool administration GUI to limit the set of writable silos)
 
   PoolReservation.new(request.content_length.to_i) do |silo|
     silo.put(name, request.body, request.content_type || 'application/x-tar')
@@ -25,7 +29,7 @@ post '/create/:name' do |name|
     raise MD5Mismatch, "The request indicated the MD5 was #{request_md5}, but the server computed #{computed_md5}"
   end
 
-  loc = web_location(silo.filesystem.split('/')[-1], name)
+  loc = web_location(silo.filesystem.split('/')[-1], name)    # last part of the filesystem directory path is unique name of silo
 
   status 201
   headers 'Location' => loc, 'Content-Type' => 'application/xml'

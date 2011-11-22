@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Store::PoolFixity</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Store::PoolFixity
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -70,44 +83,31 @@
     
   
     
-      <dt class="r2">Includes:</dt>
-      <dd class="r2">Enumerable</dd>
-      
-    
   
   
   
-    <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb</dd>
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb</dd>
   
 </dl>
 <div class="clear"></div>
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Assemble all the recent fixity data for all silos associated with a given
-hostname.  Fixity data are returned sorted by package name.
-</p>
+    
+<p>Assemble all the recent fixity data for all silos associated with a given
+hostname.  Fixity data are returned sorted by package name.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
-</div><h2>Defined Under Namespace</h2>
-<p class="children">
-   
-    
-   
-    
-      <strong class="classes">Classes:</strong> <span class='object_link'><a href="PoolFixity/PoolFixityCsvReport.html" title="Store::PoolFixity::PoolFixityCsvReport (class)">PoolFixityCsvReport</a></span>, <span class='object_link'><a href="PoolFixity/PoolFixityXmlReport.html" title="Store::PoolFixity::PoolFixityXmlReport (class)">PoolFixityXmlReport</a></span>
-    
-  
-</p>
+
+</div>
 
 
-  
+
 
   
     <h2>
@@ -120,28 +120,7 @@ hostname.  Fixity data are returned sorted by package name.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#each-instance_method" title="#each (instance method)">- (Object) <strong>each</strong> </a>
-    
-
-    
-  </span>
-  
-  
-  
-  
-  
-  
-
-  
-    <span class="summary_desc"><div class='inline'></div></span>
-  
-</li>
-
-      
-        <li class="public ">
-  <span class="summary_signature">
-    
-      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PoolFixity) <strong>initialize</strong>(hostname, port = 80, scheme = 'http') </a>
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (PoolFixity) <strong>initialize</strong>(hostname, port = 80, scheme = 'http', options = {}) </a>
     
 
     
@@ -156,9 +135,9 @@ hostname.  Fixity data are returned sorted by package name.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-A new instance of PoolFixity.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>only option currently supported is :stored_before, which should be a
+DateTime object.</p>
 </div></span>
   
 </li>
@@ -167,7 +146,7 @@ A new instance of PoolFixity.
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#package_chunks-instance_method" title="#package_chunks (instance method)">- (Object) <strong>package_chunks</strong> </a>
+      <a href="#list-instance_method" title="#list (instance method)">- (Object) <strong>list</strong> </a>
     
 
     
@@ -180,10 +159,7 @@ A new instance of PoolFixity.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-TODO: try doing tests with different sizes to determine the sweet spot.
-</p>
-</div></span>
+    <span class="summary_desc"><div class='inline'></div></span>
   
 </li>
 
@@ -212,50 +188,40 @@ TODO: try doing tests with different sizes to determine the sweet spot.
     </ul>
   
 
-
-  <div id="constructor_details" class="method_details_list">
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
   <p class="signature first" id="initialize-instance_method">
   
-    - (<tt><span class='object_link'><a href="" title="Store::PoolFixity (class)">PoolFixity</a></span></tt>) <strong>initialize</strong>(hostname, port = 80, scheme = 'http') 
+    - (<tt><span class='object_link'><a href="" title="Store::PoolFixity (class)">PoolFixity</a></span></tt>) <strong>initialize</strong>(hostname, port = 80, scheme = 'http', options = {}) 
   
 
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-A new instance of PoolFixity
-</p>
+    
+<p>only option currently supported is :stored_before, which should be a
+DateTime object</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-36
-37
-38
-39
-40
-41</pre>
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb', line 36</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb', line 30</span>
 
-<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>80</span><span class='comma token'>,</span> <span class='scheme identifier id'>scheme</span> <span class='assign token'>=</span> <span class='string val'>'http'</span>
-  <span class='@hostname ivar id'>@hostname</span> <span class='assign token'>=</span> <span class='hostname identifier id'>hostname</span>
-  <span class='@port ivar id'>@port</span>     <span class='assign token'>=</span> <span class='port identifier id'>port</span>
-  <span class='@scheme ivar id'>@scheme</span>   <span class='assign token'>=</span> <span class='scheme identifier id'>scheme</span>
-  <span class='@silos ivar id'>@silos</span> <span class='assign token'>=</span> <span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='SiloRecord constant id'>SiloRecord</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:hostname</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='hostname identifier id'>hostname</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='hostname identifier id'>hostname</span><span class='comma token'>,</span> <span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='integer val'>80</span><span class='comma token'>,</span> <span class='scheme identifier id'>scheme</span> <span class='assign token'>=</span> <span class='string val'>'http'</span><span class='comma token'>,</span> <span class='options identifier id'>options</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span><span class='rbrace token'>}</span>
 </pre>
     </td>
   </tr>
@@ -270,9 +236,9 @@ A new instance of PoolFixity
     
     
       <div class="method_details first">
-  <p class="signature first" id="each-instance_method">
+  <p class="signature first" id="list-instance_method">
   
-    - (<tt>Object</tt>) <strong>each</strong> 
+    - (<tt>Object</tt>) <strong>list</strong> 
   
 
   
@@ -282,129 +248,15 @@ A new instance of PoolFixity
       <pre class="lines">
 
 
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85</pre>
+48
+49
+50</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb', line 70</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb', line 48</span>
 
-<span class='def def kw'>def</span> <span class='each identifier id'>each</span>
-  <span class='package_chunks identifier id'>package_chunks</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='packages identifier id'>packages</span><span class='bitor op'>|</span>
-    <span class='packages identifier id'>packages</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='pkg identifier id'>pkg</span><span class='bitor op'>|</span>
-      <span class='comment val'># Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :time, :size)</span>
-      <span class='yield yield kw'>yield</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FixityRecord constant id'>FixityRecord</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span>
-                                     <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='url identifier id'>url</span><span class='lparen token'>(</span><span class='@port ivar id'>@port</span><span class='comma token'>,</span> <span class='@scheme ivar id'>@scheme</span><span class='rparen token'>)</span><span class='comma token'>,</span>
-                                     <span class='lparen token'>(</span><span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_md5 identifier id'>latest_md5</span> <span class='eq op'>==</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_md5 identifier id'>initial_md5</span> <span class='and and kw'>and</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_sha1 identifier id'>latest_sha1</span> <span class='eq op'>==</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_sha1 identifier id'>initial_sha1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='symbol val'>:ok</span> <span class='colon op'>:</span> <span class='symbol val'>:fail</span><span class='comma token'>,</span>
-                                     <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_md5 identifier id'>latest_md5</span><span class='comma token'>,</span>
-                                     <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_sha1 identifier id'>latest_sha1</span><span class='comma token'>,</span>
-                                     <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_timestamp identifier id'>latest_timestamp</span><span class='comma token'>,</span>
-                                     <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_timestamp identifier id'>initial_timestamp</span><span class='comma token'>,</span>
-                                     <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span>
-                                     <span class='rparen token'>)</span>
-    <span class='end end kw'>end</span>
-  <span class='end end kw'>end</span>
-<span class='end end kw'>end</span>
-</pre>
-    </td>
-  </tr>
-</table>
-</div>
-    
-      <div class="method_details ">
-  <p class="signature " id="package_chunks-instance_method">
-  
-    - (<tt>Object</tt>) <strong>package_chunks</strong> 
-  
-
-  
-</p><div class="docstring">
-  <div class="discussion">
-    <p>
-TODO: try doing tests with different sizes to determine the sweet spot.
-Currently we have 1/4 million records, so 2000 gives us 125 or so separate
-database hits.
-</p>
-
-
-  </div>
-</div>
-<div class="tags">
-  
-</div><table class="source_code">
-  <tr>
-    <td>
-      <pre class="lines">
-
-
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86</pre>
-    </td>
-    <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb', line 61</span>
-
-<span class='def def kw'>def</span> <span class='package_chunks identifier id'>package_chunks</span>
-    <span class='size identifier id'>size</span>   <span class='assign token'>=</span> <span class='integer val'>2000</span>
-    <span class='offset identifier id'>offset</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
-    <span class='while while kw'>while</span> <span class='lparen token'>(</span><span class='records identifier id'>records</span> <span class='assign token'>=</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:order</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='lbrack token'>[</span> <span class='symbol val'>:name</span><span class='dot token'>.</span><span class='asc identifier id'>asc</span> <span class='rbrack token'>]</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:silo_record</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@silos ivar id'>@silos</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='slice identifier id'>slice</span><span class='lparen token'>(</span><span class='offset identifier id'>offset</span><span class='comma token'>,</span> <span class='size identifier id'>size</span><span class='rparen token'>)</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='length identifier id'>length</span> <span class='gt op'>&gt;</span> <span class='integer val'>0</span>  <span class='do do kw'>do</span>
-      <span class='offset identifier id'>offset</span> <span class='opasgn op'>+=</span> <span class='size identifier id'>size</span>
-      <span class='yield yield kw'>yield</span> <span class='records identifier id'>records</span>
-    <span class='end end kw'>end</span>
-  <span class='end end kw'>end</span>
-
-  <span class='def def kw'>def</span> <span class='each identifier id'>each</span>
-    <span class='package_chunks identifier id'>package_chunks</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='packages identifier id'>packages</span><span class='bitor op'>|</span>
-      <span class='packages identifier id'>packages</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='pkg identifier id'>pkg</span><span class='bitor op'>|</span>
-        <span class='comment val'># Struct.new('FixityRecord', :name, :location, :status, :md5, :sha1, :time, :size)</span>
-        <span class='yield yield kw'>yield</span> <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FixityRecord constant id'>FixityRecord</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='name identifier id'>name</span><span class='comma token'>,</span>
-                                       <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='url identifier id'>url</span><span class='lparen token'>(</span><span class='@port ivar id'>@port</span><span class='comma token'>,</span> <span class='@scheme ivar id'>@scheme</span><span class='rparen token'>)</span><span class='comma token'>,</span>
-                                       <span class='lparen token'>(</span><span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_md5 identifier id'>latest_md5</span> <span class='eq op'>==</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_md5 identifier id'>initial_md5</span> <span class='and and kw'>and</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_sha1 identifier id'>latest_sha1</span> <span class='eq op'>==</span> <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_sha1 identifier id'>initial_sha1</span><span class='rparen token'>)</span> <span class='question op'>?</span> <span class='symbol val'>:ok</span> <span class='colon op'>:</span> <span class='symbol val'>:fail</span><span class='comma token'>,</span>
-                                       <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_md5 identifier id'>latest_md5</span><span class='comma token'>,</span>
-                                       <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_sha1 identifier id'>latest_sha1</span><span class='comma token'>,</span>
-                                       <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='latest_timestamp identifier id'>latest_timestamp</span><span class='comma token'>,</span>
-                                       <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='initial_timestamp identifier id'>initial_timestamp</span><span class='comma token'>,</span>
-                                       <span class='pkg identifier id'>pkg</span><span class='dot token'>.</span><span class='size identifier id'>size</span>
-                                       <span class='rparen token'>)</span>
-      <span class='end end kw'>end</span>
-    <span class='end end kw'>end</span>
-  <span class='end end kw'>end</span>
+<span class='def def kw'>def</span> <span class='list identifier id'>list</span>
+  <span class='return return kw'>return</span> <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='list_all_fixities identifier id'>list_all_fixities</span><span class='lparen token'>(</span><span class='@base_url ivar id'>@base_url</span><span class='comma token'>,</span> <span class='@options ivar id'>@options</span><span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -425,21 +277,31 @@ database hits.
       <pre class="lines">
 
 
+36
+37
+38
+39
+40
+41
+42
 43
 44
 45
-46
-47
-48</pre>
+46</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb', line 43</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/pool.rb', line 36</span>
 
 <span class='def def kw'>def</span> <span class='summary identifier id'>summary</span>
-  <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FixityHeader constant id'>FixityHeader</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@hostname ivar id'>@hostname</span><span class='comma token'>,</span>
-                           <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='count identifier id'>count</span><span class='lparen token'>(</span><span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:silo_record</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@silos ivar id'>@silos</span><span class='rparen token'>)</span><span class='comma token'>,</span>
-                           <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='min identifier id'>min</span><span class='lparen token'>(</span><span class='symbol val'>:latest_timestamp</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:silo_record</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@silos ivar id'>@silos</span><span class='rparen token'>)</span><span class='comma token'>,</span>
-                           <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='max identifier id'>max</span><span class='lparen token'>(</span><span class='symbol val'>:latest_timestamp</span><span class='comma token'>,</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:silo_record</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@silos ivar id'>@silos</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='conditions identifier id'>conditions</span> <span class='assign token'>=</span> <span class='lbrace token'>{</span> <span class='symbol val'>:extant</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='true true kw'>true</span><span class='comma token'>,</span> <span class='symbol val'>:silo_record</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='@silos ivar id'>@silos</span> <span class='rbrace token'>}</span>
+  <span class='conditions identifier id'>conditions</span><span class='lbrack token'>[</span><span class='symbol val'>:initial_timestamp</span><span class='dot token'>.</span><span class='lt identifier id'>lt</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='@options ivar id'>@options</span><span class='lbrack token'>[</span><span class='symbol val'>:stored_before</span><span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='@options ivar id'>@options</span><span class='lbrack token'>[</span><span class='symbol val'>:stored_before</span><span class='rbrack token'>]</span>
+
+  <span class='Struct constant id'>Struct</span><span class='colon2 op'>::</span><span class='FixityHeader constant id'>FixityHeader</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='@base_url ivar id'>@base_url</span><span class='dot token'>.</span><span class='host identifier id'>host</span><span class='comma token'>,</span>
+                           <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='count identifier id'>count</span><span class='lparen token'>(</span><span class='conditions identifier id'>conditions</span><span class='rparen token'>)</span><span class='comma token'>,</span>
+                           <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='min identifier id'>min</span><span class='lparen token'>(</span><span class='symbol val'>:latest_timestamp</span><span class='comma token'>,</span> <span class='conditions identifier id'>conditions</span><span class='rparen token'>)</span><span class='comma token'>,</span>
+                           <span class='Store constant id'>Store</span><span class='colon2 op'>::</span><span class='DB constant id'>DB</span><span class='colon2 op'>::</span><span class='PackageRecord constant id'>PackageRecord</span><span class='dot token'>.</span><span class='max identifier id'>max</span><span class='lparen token'>(</span><span class='symbol val'>:latest_timestamp</span><span class='comma token'>,</span> <span class='conditions identifier id'>conditions</span><span class='rparen token'>)</span><span class='comma token'>,</span>
+                           <span class='lparen token'>(</span><span class='@options ivar id'>@options</span><span class='lbrack token'>[</span><span class='symbol val'>:stored_before</span><span class='rbrack token'>]</span> <span class='orop op'>||</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='to_utc identifier id'>to_utc</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span>
+                           <span class='rparen token'>)</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -452,9 +314,9 @@ database hits.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:41:55 2011 by 
+  Generated on Mon Nov 21 17:48:13 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

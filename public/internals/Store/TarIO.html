@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Store::TarIO</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Store::TarIO
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,15 +94,15 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-duck types an IO object for an individual file within a tar archive
-</p>
+    
+<p>duck types an IO object for an individual file within a tar archive</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
   <h2>Constant Summary</h2>
   
@@ -103,6 +116,8 @@ duck types an IO object for an individual file within a tar archive
       
     </dl>
   
+
+
 
 
 
@@ -130,9 +145,8 @@ duck types an IO object for an individual file within a tar archive
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-no ops:.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>no ops:.</p>
 </div></span>
   
 </li>
@@ -154,9 +168,8 @@ no ops:.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-mostly for rack.&#8230;
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>mostly for rack.…</p>
 </div></span>
   
 </li>
@@ -180,12 +193,11 @@ mostly for rack.&#8230;
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-TarIO.new(IO, FILE_START_POSITION, FILE_SIZE) where IO is an IO object
+    <span class="summary_desc"><div class='inline'>
+<p>TarIO.new(IO, FILE_START_POSITION, FILE_SIZE) where IO is an IO object
 opened on the tar archive;  FILE_START_POSITION is the offset into the tar
 archive of the file of interest in the archive;  FILE_SIZE is the length of
-that file.
-</p>
+that file.</p>
 </div></span>
   
 </li>
@@ -228,11 +240,10 @@ that file.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-TarIO.READ() returns the entire file, or an empty string if it is
+    <span class="summary_desc"><div class='inline'>
+<p>TarIO.READ() returns the entire file, or an empty string if it is
 zero-length TarIO.READ(SIZE) returns a buffer up to size bytes, or nil if
-there is nothing left to read.
-</p>
+there is nothing left to read.</p>
 </div></span>
   
 </li>
@@ -316,18 +327,18 @@ there is nothing left to read.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-TarIO.new(IO, FILE_START_POSITION, FILE_SIZE) where IO is an IO object
+    
+<p>TarIO.new(IO, FILE_START_POSITION, FILE_SIZE) where IO is an IO object
 opened on the tar archive;  FILE_START_POSITION is the offset into the tar
 archive of the file of interest in the archive;  FILE_SIZE is the length of
-that file.
-</p>
+that file.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -372,15 +383,15 @@ that file.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-no ops:
-</p>
+    
+<p>no ops:</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -408,15 +419,15 @@ no ops:
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-mostly for rack.&#8230;
-</p>
+    
+<p>mostly for rack.…</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -477,17 +488,17 @@ mostly for rack.&#8230;
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-TarIO.READ() returns the entire file, or an empty string if it is
+    
+<p>TarIO.READ() returns the entire file, or an empty string if it is
 zero-length TarIO.READ(SIZE) returns a buffer up to size bytes, or nil if
-there is nothing left to read
-</p>
+there is nothing left to read</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -622,9 +633,9 @@ there is nothing left to read
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:41:54 2011 by 
+  Generated on Mon Nov 21 17:48:08 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

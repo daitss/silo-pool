@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Store::PoolReservation</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Store::PoolReservation
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -81,24 +94,22 @@
 
 <h2>Overview</h2><div class="docstring">
   <div class="discussion">
-    <p>
-Class PoolReservation provides a way to find and reserve a silo with enough
-free space to store a package of a known size.
-</p>
-<p>
-One proceeds as follows:
-</p>
-<pre class="code">
-  <span class='require identifier id'>require</span> <span class='string val'>'store/db'</span>
-  <span class='require identifier id'>require</span> <span class='string val'>'store/poolreservation'</span>
-  <span class='include identifier id'>include</span> <span class='Store constant id'>Store</span>
+    
+<p>Class PoolReservation provides a way to find and reserve a silo with enough
+free space to store a package of a known size.</p>
 
-  <span class='DB constant id'>DB</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='string val'>'/etc/db.yml'</span><span class='comma token'>,</span> <span class='string val'>'store_master'</span><span class='rparen token'>)</span>
-  <span class='PoolReservation constant id'>PoolReservation</span><span class='dot token'>.</span><span class='lockfile_directory identifier id'>lockfile_directory</span> <span class='assign token'>=</span> <span class='string val'>'/var/run/silos/'</span> <span class='comment val'># defaults to /var/tmp/</span>
+<p>One proceeds as follows:</p>
 
-  <span class='PoolReservation constant id'>PoolReservation</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='size identifier id'>size</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='silo identifier id'>silo</span><span class='bitor op'>|</span>
-    <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='put identifier id'>put</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='dot3 op'>...</span>
-  <span class='end end kw'>end</span>
+<pre class="code"><span class='require identifier id'>require</span> <span class='string val'>'store/db'</span>
+<span class='require identifier id'>require</span> <span class='string val'>'store/poolreservation'</span>
+<span class='include identifier id'>include</span> <span class='Store constant id'>Store</span>
+
+<span class='DB constant id'>DB</span><span class='dot token'>.</span><span class='setup identifier id'>setup</span><span class='lparen token'>(</span><span class='string val'>'/etc/db.yml'</span><span class='comma token'>,</span> <span class='string val'>'store_master'</span><span class='rparen token'>)</span>
+<span class='PoolReservation constant id'>PoolReservation</span><span class='dot token'>.</span><span class='lockfile_directory identifier id'>lockfile_directory</span> <span class='assign token'>=</span> <span class='string val'>'/var/run/silos/'</span> <span class='comment val'># defaults to /var/tmp/</span>
+
+<span class='PoolReservation constant id'>PoolReservation</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='size identifier id'>size</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='silo identifier id'>silo</span><span class='bitor op'>|</span>
+  <span class='silo identifier id'>silo</span><span class='dot token'>.</span><span class='put identifier id'>put</span><span class='lparen token'>(</span><span class='name identifier id'>name</span><span class='rparen token'>)</span> <span class='dot3 op'>...</span>
+<span class='end end kw'>end</span>
 </pre>
 
 
@@ -106,6 +117,7 @@ One proceeds as follows:
 </div>
 <div class="tags">
   
+
 </div>
   <h2>Constant Summary</h2>
   
@@ -114,32 +126,32 @@ One proceeds as follows:
         <dt id="MAX_RESERVATION-constant" class="">MAX_RESERVATION =
           <div class="docstring">
   <div class="discussion">
-    <p>
-3 hours expressed in days
-</p>
+    
+<p>16 hours expressed in days for DateTime</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
         </dt>
-        <dd><pre class="code"><span class='float val'>3.0</span> <span class='div op'>/</span> <span class='float val'>24.0</span>
+        <dd><pre class="code"><span class='float val'>16.0</span> <span class='div op'>/</span> <span class='float val'>24.0</span>
 </pre></dd>
       
         <dt id="LOCK_TIMEOUT-constant" class="">LOCK_TIMEOUT =
           <div class="docstring">
   <div class="discussion">
-    <p>
-seconds we&#8217;ll wait to get at the DB ReservedDiskSpace table
-</p>
+    
+<p>seconds we’ll wait to get at the DB ReservedDiskSpace table</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
         </dt>
         <dd><pre class="code"><span class='integer val'>30</span>
@@ -148,15 +160,15 @@ seconds we&#8217;ll wait to get at the DB ReservedDiskSpace table
         <dt id="HEADROOM-constant" class="">HEADROOM =
           <div class="docstring">
   <div class="discussion">
-    <p>
-256 KB headroom required
-</p>
+    
+<p>256 KB headroom required on partitions</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
         </dt>
         <dd><pre class="code"><span class='integer val'>256</span> <span class='mult op'>*</span> <span class='integer val'>1024</span>
@@ -165,16 +177,16 @@ seconds we&#8217;ll wait to get at the DB ReservedDiskSpace table
         <dt id="lockfile_directory-classvariable" class="">@@lockfile_directory =
           <div class="docstring">
   <div class="discussion">
-    <p>
-TODO: we need better support for unqiue lockfiles, for multiple pool
-servers on one host.  Make it optional part of constructor&#8230;
-</p>
+    
+<p>TODO: we need better support for unqiue lockfiles, for multiple pool
+servers on one host.  Make it optional part of constructor…</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div>
         </dt>
         <dd><pre class="code"><span class='string val'>'/var/tmp/'</span>
@@ -206,15 +218,16 @@ servers on one host.  Make it optional part of constructor&#8230;
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Returns the value of attribute record_id.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the value of attribute record_id.</p>
 </div></span>
   
 </li>
 
     
   </ul>
+
+
 
 
   
@@ -292,10 +305,9 @@ Returns the value of attribute record_id.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-best_fit_silo(size_needed) returns a silo, or raises a NoSilosAvailable
-exception.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>best_fit_silo(size_needed) returns a silo, or raises a NoSilosAvailable
+exception.</p>
 </div></span>
   
 </li>
@@ -319,9 +331,8 @@ exception.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-size in bytes.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>size in bytes.</p>
 </div></span>
   
 </li>
@@ -343,9 +354,8 @@ size in bytes.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-reservation_lock.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>reservation_lock.</p>
 </div></span>
   
 </li>
@@ -367,9 +377,8 @@ reservation_lock.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-writable_silos .
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>writable_silos .</p>
 </div></span>
   
 </li>
@@ -390,21 +399,21 @@ writable_silos .
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-size in bytes
-</p>
+    
+<p>size in bytes</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Yields:</h3>
+  
+<h3>Yields:</h3>
 <ul class="yield">
   
     <li>
       
-        <span class='type'>(<tt>reservation_lock{ ... }</tt>)</span>
       
+        <span class='type'>(<tt>reservation_lock{ ... }</tt>)</span>
       
       
       
@@ -430,7 +439,7 @@ size in bytes
       <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/poolreservation.rb', line 37</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span> <span class='size identifier id'>size</span>   
-  <span class='@record_id ivar id'>@record_id</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>      
+  <span class='@record_id ivar id'>@record_id</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='yield yield kw'>yield</span> <span class='reservation_lock identifier id'>reservation_lock</span> <span class='lbrace token'>{</span> <span class='best_fit_silo identifier id'>best_fit_silo</span><span class='lparen token'>(</span><span class='size identifier id'>size</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
 <span class='ensure ensure kw'>ensure</span>
   <span class='rec identifier id'>rec</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
@@ -459,15 +468,15 @@ size in bytes
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Returns the value of attribute record_id
-</p>
+    
+<p>Returns the value of attribute record_id</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -540,13 +549,14 @@ Returns the value of attribute record_id
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="ConfigurationError.html" title="Store::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="ConfigurationError.html" title="Store::ConfigurationError (class)">ConfigurationError</a></span></tt>)</span>
       
       
       
@@ -607,31 +617,30 @@ Returns the value of attribute record_id
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-best_fit_silo(size_needed) returns a silo, or raises a NoSilosAvailable
-exception.
-</p>
-<p>
-Our strategy is to sort silos by the size of their disk partitions such
+    
+<p>best_fit_silo(size_needed) returns a silo, or raises a NoSilosAvailable
+exception.</p>
+
+<p>Our strategy is to sort silos by the size of their disk partitions such
 that we get the partition with the least free space that is greater than
 <tt>size_needed</tt>. We return one of the silos that uses that partition.
-While it is true that at the FDA a silo&#8217;s filesystem maps to a unique
-partition, there&#8217;s no requirement in this code for that to be the
-case.  On succees, we reserve <tt>size_needed</tt> bytes for the selected
-paritition.
-</p>
+While it is true that at the FDA a silo’s filesystem maps to a unique
+partition, there’s no requirement in this code for that to be the case. 
+On succees, we reserve <tt>size_needed</tt> bytes for the selected
+paritition.</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="NoSilosAvailable.html" title="Store::NoSilosAvailable (class)">NoSilosAvailable</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="NoSilosAvailable.html" title="Store::NoSilosAvailable (class)">NoSilosAvailable</a></span></tt>)</span>
       
       
       
@@ -708,7 +717,7 @@ paritition.
     <span class='silos identifier id'>silos</span><span class='lbrack token'>[</span><span class='partition identifier id'>partition</span><span class='rbrack token'>]</span> <span class='lshft op'>&lt;&lt;</span> <span class='silo identifier id'>silo</span>
   <span class='end end kw'>end</span>
 
-  <span class='raise identifier id'>raise</span> <span class='NoSilosAvailable constant id'>NoSilosAvailable</span><span class='comma token'>,</span> <span class='dstring node'>&quot;There are no writable silos in this pool with space for a package of size  #{StoreUtils.commify(sprintf(&quot;%5.2f&quot;, size_needed/1000.0))} KB&quot;</span>  <span class='if if_mod kw'>if</span> <span class='available identifier id'>available</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
+  <span class='raise identifier id'>raise</span> <span class='NoSilosLargeEnough constant id'>NoSilosLargeEnough</span><span class='comma token'>,</span> <span class='dstring node'>&quot;There are no writable silos in this pool with space for a package of size  #{StoreUtils.commify(sprintf(&quot;%5.2f&quot;, size_needed/1000.0))} KB&quot;</span>  <span class='if if_mod kw'>if</span> <span class='available identifier id'>available</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span>
 
   <span class='comment val'># find the partition with the least free space...</span>
     
@@ -734,27 +743,26 @@ paritition.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-reservation_lock
-</p>
-<p>
-provide a wrapper that ensures exclusive access to something. In our case,
+    
+<p>reservation_lock</p>
+
+<p>provide a wrapper that ensures exclusive access to something. In our case,
 that something is a set of certain write/delete operations on the
 DB::ReservedDiskSpace table.  We use it when we want to determine, augment,
-or delete disk space reservations for a particular disk partition.
-</p>
+or delete disk space reservations for a particular disk partition.</p>
 
 
   </div>
 </div>
 <div class="tags">
-  <h3>Raises:</h3>
+  
+<h3>Raises:</h3>
 <ul class="raise">
   
     <li>
       
-        <span class='type'>(<tt><span class='object_link'><a href="CouldNotLockPool.html" title="Store::CouldNotLockPool (class)">CouldNotLockPool</a></span></tt>)</span>
       
+        <span class='type'>(<tt><span class='object_link'><a href="CouldNotLockPool.html" title="Store::CouldNotLockPool (class)">CouldNotLockPool</a></span></tt>)</span>
       
       
       
@@ -782,7 +790,7 @@ or delete disk space reservations for a particular disk partition.
 
 <span class='def def kw'>def</span> <span class='reservation_lock identifier id'>reservation_lock</span> <span class='wait_time identifier id'>wait_time</span> <span class='assign token'>=</span> <span class='LOCK_TIMEOUT constant id'>LOCK_TIMEOUT</span>
   <span class='open identifier id'>open</span><span class='lparen token'>(</span><span class='PoolReservation constant id'>PoolReservation</span><span class='dot token'>.</span><span class='lockfile identifier id'>lockfile</span><span class='comma token'>,</span> <span class='string val'>'w'</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='fd identifier id'>fd</span><span class='bitor op'>|</span> 
-   <span class='Timeout constant id'>Timeout</span><span class='dot token'>.</span><span class='timeout identifier id'>timeout</span><span class='lparen token'>(</span><span class='wait_time identifier id'>wait_time</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='fd identifier id'>fd</span><span class='dot token'>.</span><span class='flock identifier id'>flock</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='LOCK_EX constant id'>LOCK_EX</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
+    <span class='Timeout constant id'>Timeout</span><span class='dot token'>.</span><span class='timeout identifier id'>timeout</span><span class='lparen token'>(</span><span class='wait_time identifier id'>wait_time</span><span class='rparen token'>)</span> <span class='lbrace token'>{</span> <span class='fd identifier id'>fd</span><span class='dot token'>.</span><span class='flock identifier id'>flock</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='LOCK_EX constant id'>LOCK_EX</span><span class='rparen token'>)</span> <span class='rbrace token'>}</span>
     <span class='yield yield kw'>yield</span>
   <span class='end end kw'>end</span>
 <span class='rescue rescue kw'>rescue</span> <span class='Timeout constant id'>Timeout</span><span class='colon2 op'>::</span><span class='Error constant id'>Error</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='e identifier id'>e</span>
@@ -803,19 +811,18 @@ or delete disk space reservations for a particular disk partition.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-writable_silos 
-</p>
-<p>
-returns a list of candidate silos for a PUT, sorted by the name of
-silo&#8217;s filesystem. No checks are made for free space at this time.
-</p>
+    
+<p>writable_silos</p>
+
+<p>returns a list of candidate silos for a PUT, sorted by the name of silo’s
+filesystem. No checks are made for free space at this time.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -857,9 +864,9 @@ silo&#8217;s filesystem. No checks are made for free space at this time.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:26 2011 by 
+  Generated on Mon Nov 21 17:48:18 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

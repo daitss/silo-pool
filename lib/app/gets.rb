@@ -6,16 +6,18 @@ require 'store/utils'
 require 'time'
 require 'builder'
 
-# TODO: document the site URL structure.
-# TODO: recent sinatra fixed relative-redirection problem, check to see if we can remove 'absolutely'
+# TODO: recently sinatra fixed relative-redirection problem, check to see if we can remove 'absolutely'
 
-PACKAGES_PER_PAGE = 40 # should be even
+PACKAGES_PER_PAGE = 40 # should be an even number. unless prime.
 
 include Store
 
 REVISION = Store.version.rev
 
-get '/'       do;    redirect absolutely('/silos/'), 302;  end
+get '/' do
+  erb :index, :locals => { :hostname => hostname, :revision => REVISION }
+end
+
 get '/silos'  do;    redirect absolutely('/silos/'), 301;  end
 get '/silos/' do
   erb :silos, :locals => { 
@@ -36,6 +38,10 @@ get '/add-silo?' do
   erb :add, :locals => {:hostname => hostname, :revision => REVISION}
 end
 
+get '/protocol?' do
+  erb :protocol, :locals => {:hostname => hostname, :revision => REVISION}
+end
+
 
 # Provide information on the services we supply.  There are two requirements that a storage master
 # requires in the returned XML:
@@ -51,6 +57,7 @@ get '/services' do
 
   xml.services(:version => Store::VERSION) {
     xml.create(:location => absolutely('/create/%s'),  :method => "post")
+
     xml.fixity(:location => absolutely('/fixity.csv'), :method => "get",  :mime_type => 'text/csv')
     xml.fixity(:location => absolutely('/fixity.xml'), :method => "get",  :mime_type => 'application/xml')
 

@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Module: Store::AllowedMethods</title>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: Store::SiloMixinMethods
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../js/app.js"></script>
+
 
   </head>
   <body>
@@ -23,27 +33,30 @@
     <div id="header">
       <div id="menu">
   
-    <a href="../_index.html">Index (A)</a> &raquo; 
+    <a href="../_index.html">Index (S)</a> &raquo; 
     <span class='title'><span class='object_link'><a href="../Store.html" title="Store (module)">Store</a></span></span>
      &raquo; 
-    <span class="title">AllowedMethods</span>
+    <span class="title">SiloMixinMethods</span>
   
   
   <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
     <iframe id="search_frame"></iframe>
     
-    <div id="content"><h1>Module: Store::AllowedMethods
+    <div id="content"><h1>Module: Store::SiloMixinMethods
   
   
   
@@ -68,18 +81,9 @@
 </dl>
 <div class="clear"></div>
 
-<h2>Overview</h2><div class="docstring">
-  <div class="discussion">
-    <p>
-TODO name of module no longer appropriate.  Maybe KitchenSink?
-</p>
 
 
-  </div>
-</div>
-<div class="tags">
-  
-</div>
+
 
 
   
@@ -127,9 +131,8 @@ TODO name of module no longer appropriate.  Maybe KitchenSink?
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-allowed_methods.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>allowed_methods.</p>
 </div></span>
   
 </li>
@@ -151,9 +154,8 @@ allowed_methods.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-return alphabetically sorted, please.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>return alphabetically sorted, please.</p>
 </div></span>
   
 </li>
@@ -280,10 +282,9 @@ return alphabetically sorted, please.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-Because all our silos are under one root, we can use the  last part of the
-filesystem as the name of the silo.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>Because all our silos are under one root, we can use the last part of the
+filesystem as the name of the silo.</p>
 </div></span>
   
 </li>
@@ -305,9 +306,8 @@ filesystem as the name of the silo.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-possible_methods.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>possible_methods.</p>
 </div></span>
   
 </li>
@@ -358,6 +358,72 @@ possible_methods.
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#reactivate-instance_method" title="#reactivate (instance method)">- (Object) <strong>reactivate</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#retire-instance_method" title="#retire (instance method)">- (Object) <strong>retire</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#retired%3F-instance_method" title="#retired? (instance method)">- (Boolean) <strong>retired?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>handle retiring of silo;  we leave the data in place, but it won’t be
+reused.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#silo_directory%3F-instance_method" title="#silo_directory? (instance method)">- (Boolean) <strong>silo_directory?</strong>(directory) </a>
     
 
@@ -392,9 +458,8 @@ possible_methods.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-one of :disk_master, :disk_idling, :tape_master.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>one of :disk_master, :disk_idling, :tape_master.</p>
 </div></span>
   
 </li>
@@ -422,12 +487,12 @@ one of :disk_master, :disk_idling, :tape_master.
       <pre class="lines">
 
 
-100
-101
-102</pre>
+118
+119
+120</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 100</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 118</span>
 
 <span class='def def kw'>def</span> <span class='allow identifier id'>allow</span> <span class='method identifier id'>method</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='allow identifier id'>allow</span> <span class='method identifier id'>method</span>
@@ -447,20 +512,19 @@ one of :disk_master, :disk_idling, :tape_master.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-allowed_methods
-</p>
-<p>
-Returns a list from the set :get, :put, :delete, :post, of all the methods
+    
+<p>allowed_methods</p>
+
+<p>Returns a list from the set :get, :put, :delete, :post, of all the methods
 currently allowed for this silo.  Those are all of the possible_methods
-above, minus the additional admisitratively forbidden methods.
-</p>
+above, minus the additional admisitratively forbidden methods.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -492,15 +556,15 @@ above, minus the additional admisitratively forbidden methods.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-return alphabetically sorted, please
-</p>
+    
+<p>return alphabetically sorted, please</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -527,7 +591,7 @@ return alphabetically sorted, please
 
 <span class='def def kw'>def</span> <span class='allowed_states identifier id'>allowed_states</span>   
 
-  <span class='case case kw'>case</span> <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='state identifier id'>state</span>  
+  <span class='case case kw'>case</span> <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='state identifier id'>state</span>
 
   <span class='when when kw'>when</span> <span class='symbol val'>:disk_master</span>
     <span class='lbrack token'>[</span> <span class='symbol val'>:disk_idling</span><span class='comma token'>,</span> <span class='symbol val'>:disk_master</span> <span class='rbrack token'>]</span>
@@ -559,13 +623,14 @@ return alphabetically sorted, please
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -579,12 +644,12 @@ return alphabetically sorted, please
       <pre class="lines">
 
 
-112
-113
-114</pre>
+130
+131
+132</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 112</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 130</span>
 
 <span class='def def kw'>def</span> <span class='delete_ok? fid id'>delete_ok?</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='allowed_methods identifier id'>allowed_methods</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='symbol val'>:delete</span>
@@ -608,12 +673,12 @@ return alphabetically sorted, please
       <pre class="lines">
 
 
-104
-105
-106</pre>
+122
+123
+124</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 104</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 122</span>
 
 <span class='def def kw'>def</span> <span class='forbid identifier id'>forbid</span> <span class='method identifier id'>method</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='forbid identifier id'>forbid</span> <span class='method identifier id'>method</span>
@@ -638,13 +703,14 @@ return alphabetically sorted, please
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -658,12 +724,12 @@ return alphabetically sorted, please
       <pre class="lines">
 
 
-108
-109
-110</pre>
+126
+127
+128</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 108</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 126</span>
 
 <span class='def def kw'>def</span> <span class='get_ok? fid id'>get_ok?</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='allowed_methods identifier id'>allowed_methods</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='symbol val'>:get</span>
@@ -687,12 +753,12 @@ return alphabetically sorted, please
       <pre class="lines">
 
 
-92
-93
-94</pre>
+110
+111
+112</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 92</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 110</span>
 
 <span class='def def kw'>def</span> <span class='idle identifier id'>idle</span>
   <span class='state identifier id'>state</span> <span class='symbol val'>:disk_idle</span>
@@ -716,12 +782,12 @@ return alphabetically sorted, please
       <pre class="lines">
 
 
-96
-97
-98</pre>
+114
+115
+116</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 96</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 114</span>
 
 <span class='def def kw'>def</span> <span class='media identifier id'>media</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='media_device identifier id'>media_device</span>
@@ -741,28 +807,28 @@ return alphabetically sorted, please
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-Because all our silos are under one root, we can use the  last part of the
-filesystem as the name of the silo.
-</p>
+    
+<p>Because all our silos are under one root, we can use the last part of the
+filesystem as the name of the silo.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-127
-128
-129</pre>
+145
+146
+147</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 127</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 145</span>
 
 <span class='def def kw'>def</span> <span class='name identifier id'>name</span>
   <span class='filesystem identifier id'>filesystem</span><span class='dot token'>.</span><span class='split identifier id'>split</span><span class='lparen token'>(</span><span class='File constant id'>File</span><span class='colon2 op'>::</span><span class='SEPARATOR constant id'>SEPARATOR</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='pop identifier id'>pop</span>
@@ -782,20 +848,19 @@ filesystem as the name of the silo.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-possible_methods
-</p>
-<p>
-An array of the symbols :get, :put, :delete, :post; all of the methods
+    
+<p>possible_methods</p>
+
+<p>An array of the symbols :get, :put, :delete, :post; all of the methods
 allowed for the current state of this silo (e.g., tape masters do not allow
-:put)
-</p>
+:put)</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
@@ -832,13 +897,14 @@ allowed for the current state of this silo (e.g., tape masters do not allow
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -852,12 +918,12 @@ allowed for the current state of this silo (e.g., tape masters do not allow
       <pre class="lines">
 
 
-120
-121
-122</pre>
+138
+139
+140</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 120</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 138</span>
 
 <span class='def def kw'>def</span> <span class='post_ok? fid id'>post_ok?</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='allowed_methods identifier id'>allowed_methods</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='symbol val'>:post</span>
@@ -882,13 +948,14 @@ allowed for the current state of this silo (e.g., tape masters do not allow
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -902,15 +969,131 @@ allowed for the current state of this silo (e.g., tape masters do not allow
       <pre class="lines">
 
 
-116
-117
-118</pre>
+134
+135
+136</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 116</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 134</span>
 
 <span class='def def kw'>def</span> <span class='put_ok? fid id'>put_ok?</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='allowed_methods identifier id'>allowed_methods</span><span class='dot token'>.</span><span class='include? fid id'>include?</span> <span class='symbol val'>:put</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="reactivate-instance_method">
+  
+    - (<tt>Object</tt>) <strong>reactivate</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+74
+75
+76
+77</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 74</span>
+
+<span class='def def kw'>def</span> <span class='reactivate identifier id'>reactivate</span>
+  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='retired identifier id'>retired</span> <span class='assign token'>=</span> <span class='false false kw'>false</span>
+  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;DB error: wasn't able to reactivate the silo #{silo_record.filesystem}.&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="retire-instance_method">
+  
+    - (<tt>Object</tt>) <strong>retire</strong> 
+  
+
+  
+</p><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+69
+70
+71
+72</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 69</span>
+
+<span class='def def kw'>def</span> <span class='retire identifier id'>retire</span>
+  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='retired identifier id'>retired</span> <span class='assign token'>=</span> <span class='true true kw'>true</span>
+  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;DB error: wasn't able to retire the silo #{silo_record.filesystem}.&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <p class="signature " id="retired?-instance_method">
+  
+    - (<tt>Boolean</tt>) <strong>retired?</strong> 
+  
+
+  
+</p><div class="docstring">
+  <div class="discussion">
+    
+<p>handle retiring of silo;  we leave the data in place, but it won’t be
+reused.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<h3>Returns:</h3>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+65
+66
+67</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 65</span>
+
+<span class='def def kw'>def</span> <span class='retired? fid id'>retired?</span>
+  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='retired identifier id'>retired</span> <span class='eq op'>==</span> <span class='true true kw'>true</span>
 <span class='end end kw'>end</span>
 </pre>
     </td>
@@ -932,13 +1115,14 @@ allowed for the current state of this silo (e.g., tape masters do not allow
   </div>
 </div>
 <div class="tags">
-  <h3>Returns:</h3>
+  
+<h3>Returns:</h3>
 <ul class="return">
   
     <li>
       
-        <span class='type'>(<tt>Boolean</tt>)</span>
       
+        <span class='type'>(<tt>Boolean</tt>)</span>
       
       
       
@@ -977,55 +1161,55 @@ allowed for the current state of this silo (e.g., tape masters do not allow
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-one of :disk_master, :disk_idling, :tape_master
-</p>
+    
+<p>one of :disk_master, :disk_idling, :tape_master</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
 83
 84
 85
 86
 87
 88
-89</pre>
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 65</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/silomixins.rb', line 83</span>
 
 <span class='def def kw'>def</span> <span class='state identifier id'>state</span> <span class='new_state identifier id'>new_state</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span>
   <span class='return return kw'>return</span> <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='state identifier id'>state</span> <span class='if if_mod kw'>if</span> <span class='new_state identifier id'>new_state</span><span class='dot token'>.</span><span class='nil? fid id'>nil?</span>
   <span class='return return kw'>return</span> <span class='if if_mod kw'>if</span> <span class='new_state identifier id'>new_state</span> <span class='eq op'>==</span> <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='state identifier id'>state</span>
 
-  
+
   <span class='case case kw'>case</span> <span class='new_state identifier id'>new_state</span>
   <span class='when when kw'>when</span> <span class='symbol val'>:disk_master</span>
     <span class='raise identifier id'>raise</span> <span class='StateChangeError constant id'>StateChangeError</span><span class='comma token'>,</span> <span class='string val'>&quot;Not allowed to change silo state to disk_master from tape_master.&quot;</span> <span class='if if_mod kw'>if</span> <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='state identifier id'>state</span> <span class='eq op'>==</span> <span class='symbol val'>:tape_master</span>
@@ -1035,15 +1219,15 @@ one of :disk_master, :disk_idling, :tape_master
   <span class='when when kw'>when</span> <span class='symbol val'>:disk_idling</span>
     <span class='raise identifier id'>raise</span> <span class='StateChangeError constant id'>StateChangeError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;Can't change silo state to disk_idling since there's no filesystem for #{silo_record.filesystem}.&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='silo_directory? fid id'>silo_directory?</span> <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='filesystem identifier id'>filesystem</span>
   <span class='else else kw'>else</span>
-    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't change silo state to unknown state #{new_state}.&quot;</span> 
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;Can't change silo state to unknown state #{new_state}.&quot;</span>
   <span class='end end kw'>end</span>
 
   <span class='comment val'># we need to clean out any forbidden states on state change, or they'll be confusingly reapply on the</span>
   <span class='comment val'># next state change.</span>
-  
-  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='forbidden identifier id'>forbidden</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>      
+
+  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='forbidden identifier id'>forbidden</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
   <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='state identifier id'>state</span> <span class='assign token'>=</span> <span class='new_state identifier id'>new_state</span>
-  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;DB error: wasn't able to change state from #{silo_record.state} to #{new_state} for silo #{silo_record.filesystem}.&quot;</span>
+  <span class='silo_record identifier id'>silo_record</span><span class='dot token'>.</span><span class='save identifier id'>save</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='DataBaseError constant id'>DataBaseError</span><span class='comma token'>,</span> <span class='dstring node'>&quot;DB error: wasn't able to change state to #{new_state} for silo #{silo_record.filesystem}.&quot;</span>
   <span class='new_state identifier id'>new_state</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -1057,9 +1241,9 @@ one of :disk_master, :disk_idling, :tape_master
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:41:48 2011 by 
+  Generated on Mon Nov 21 17:48:19 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>

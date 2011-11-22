@@ -2,17 +2,27 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <meta name="Content-Type" content="text/html; charset=utf-8" />
-<title>Class: Store::DB::ReservedDiskSpace</title>
-<link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
-<link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Store::DB::ReservedDiskSpace
+  
+    &mdash; Silo Service
+  
+</title>
+
+  <link rel="stylesheet" href="../../css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="../../css/common.css" type="text/css" media="screen" charset="utf-8" />
 
 <script type="text/javascript" charset="utf-8">
   relpath = '../..';
   if (relpath != '') relpath += '/';
 </script>
-<script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
-<script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="../../js/app.js"></script>
+
 
   </head>
   <body>
@@ -33,11 +43,14 @@
 </div>
 
       <div id="search">
-  <a id="class_list_link" href="#">Class List</a>
-  <a id="method_list_link" href="#">Method List</a>
-  <a id ="file_list_link" href="#">File List</a>
+  
+    <a id="class_list_link" href="#">Class List</a>
+  
+    <a id="method_list_link" href="#">Method List</a>
+  
+    <a id="file_list_link" href="#">File List</a>
+  
 </div>
-
       <div class="clear"></div>
     </div>
     
@@ -87,6 +100,9 @@
 
   
 
+
+  
+
   
     <h2>
       Class Method Summary
@@ -111,9 +127,8 @@
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-remove all records from the database older than <tt>max_reservation</tt>.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>remove all records from the database older than <tt>max_reservation</tt>.</p>
 </div></span>
   
 </li>
@@ -156,10 +171,9 @@ remove all records from the database older than <tt>max_reservation</tt>.
   
 
   
-    <span class="summary_desc"><div class='inline'><p>
-return hash of partitions and sizes: { partition_name => space, &#8230; }
-it automatically removes records older than max_reservation days.
-</p>
+    <span class="summary_desc"><div class='inline'>
+<p>return hash of partitions and sizes: { partition_name =&gt; space, … } it
+automatically removes records older than max_reservation days.</p>
 </div></span>
   
 </li>
@@ -184,29 +198,28 @@ it automatically removes records older than max_reservation days.
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-remove all records from the database older than <tt>max_reservation</tt>.
-<tt>max_reservation</tt> is expressed in days - typically this is a few
-hours at most
-</p>
+    
+<p>remove all records from the database older than <tt>max_reservation</tt>.
+<tt>max_reservation</tt> is expressed in days.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-482
-483
-484</pre>
+647
+648
+649</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 482</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 647</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='cleanout_stale_reservations identifier id'>cleanout_stale_reservations</span> <span class='max_reservation identifier id'>max_reservation</span>
   <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='lparen token'>(</span><span class='symbol val'>:timestamp</span><span class='dot token'>.</span><span class='lt identifier id'>lt</span> <span class='assign token'>=</span><span class='gt op'>&gt;</span> <span class='DateTime constant id'>DateTime</span><span class='dot token'>.</span><span class='now identifier id'>now</span> <span class='minus op'>-</span> <span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='destroy identifier id'>destroy</span>
@@ -230,12 +243,12 @@ hours at most
       <pre class="lines">
 
 
-486
-487
-488</pre>
+651
+652
+653</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 486</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 651</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='distinct_partitions identifier id'>distinct_partitions</span>
   <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='all identifier id'>all</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span> <span class='bitor op'>|</span><span class='rec identifier id'>rec</span><span class='bitor op'>|</span> <span class='rec identifier id'>rec</span><span class='dot token'>.</span><span class='partition identifier id'>partition</span> <span class='rbrace token'>}</span><span class='dot token'>.</span><span class='uniq identifier id'>uniq</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span>
@@ -255,34 +268,34 @@ hours at most
   
 </p><div class="docstring">
   <div class="discussion">
-    <p>
-return hash of partitions and sizes: { partition_name => space, &#8230; }
-it automatically removes records older than max_reservation days.
-</p>
+    
+<p>return hash of partitions and sizes: { partition_name =&gt; space, … } it
+automatically removes records older than max_reservation days.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+
 </div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-493
-494
-495
-496
-497
-498
-499
-500
-501</pre>
+658
+659
+660
+661
+662
+663
+664
+665
+666</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 493</span>
+      <pre class="code"><span class="info file"># File '/Users/fischer/WorkProjects/daitss2/silo-pool/lib/store/db.rb', line 658</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='partition_reservations identifier id'>partition_reservations</span><span class='lparen token'>(</span><span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span>
   <span class='ReservedDiskSpace constant id'>ReservedDiskSpace</span><span class='dot token'>.</span><span class='cleanout_stale_reservations identifier id'>cleanout_stale_reservations</span><span class='lparen token'>(</span><span class='max_reservation identifier id'>max_reservation</span><span class='rparen token'>)</span>
@@ -304,9 +317,9 @@ it automatically removes records older than max_reservation days.
 </div>
     
     <div id="footer">
-  Generated on Thu May 12 23:42:17 2011 by 
+  Generated on Mon Nov 21 17:48:07 2011 by 
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.6.0 (ruby-1.8.7).
+  0.7.3 (ruby-1.8.7).
 </div>
 
   </body>
