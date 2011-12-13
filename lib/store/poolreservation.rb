@@ -24,7 +24,7 @@ module Store
   class PoolReservation
 
     ## TODO: we need better support for unqiue lockfiles, for multiple pool servers on one host.  Make
-    ## it optional part of constructor...
+    ## it optional part of constructor perhaps?  
 
     @@lockfile_directory =  '/var/tmp/'
 

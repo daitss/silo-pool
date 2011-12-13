@@ -253,7 +253,6 @@ get '/docs/?' do
   redirect absolutely('/internals/index.html'), 301
 end
 
-# TODO: remove
 # For investigating sinatra's weird-ass settings defaults..
 
 get '/settings/?' do

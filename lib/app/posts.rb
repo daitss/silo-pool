@@ -7,7 +7,10 @@ post '/create/:name' do |name|
   
   log_start_of_request
 
-  # TODO: check if name is unique accross entire set of pools.
+  # TODO: check if name is new across entire set of silos in a pool; we have uniqueness 
+  # for names within a silo,  but perhaps we want it across all of them?  StorageMaster
+  # does guarentee this by workflow, but packages may appear in other ways (old PUT,
+  # local creation, restore from inconsistent backup...)
   
   raise SiloBadName, "The identifier #{name} does not meet our resource naming convention"    unless good_name name
   raise MissingMD5,  "Missing the Content-MD5 header, required for POSTs to #{this_resource}" unless request_md5
