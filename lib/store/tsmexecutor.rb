@@ -146,7 +146,14 @@ module Store
         when :other      # size     # units    # date                # time                # mgmt class    
           if line =~ %r{^([\d,]+)\s+([A-Z]+)\s+(\d{2}/\d{2}/\d{4})\s+(\d{2}:\d{2}:\d{2})\s+([A-Za-z0-9_-]+)\s+([A-Z]+)\s+(/.*)$} and $6 == 'A'
             path = $7
+            units = $2
             size = $1.gsub(',', '').to_i
+            case units.upcase    # normally in 'B', bytes.  We've had *one* *case* where this was 'KB'...
+            when 'KB'
+              size = size * 1024
+            when 'MB'
+              size = size * 1024 * 1024
+            end
             rec = Struct::TivoliRecord.new(path, size, nil)
             state = :listing
           end
