@@ -68,28 +68,31 @@ end
 
 
 # Assumes git pushed out
+if ENV["USER"] == "Carol"
+  user = "cchou"
+else
+  user = ENV["USER"]
+end
 
 task :darchive do
-  sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/silos     -S who=silo:daitss"
+  sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/silos     -S who=#{user}:#{user}"
 end
 
 task :tarchive do
-  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/silos     -S who=silo:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/silos     -S who=#{user}:#{user}"
 end
 
 task :betasilo do
-  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/betasilos -S who=silo:daitss"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/betasilos -S who=#{user}:#{user}"
 end
 
 task :ripple   do
-  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/silos       -S who=silo:daitss"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/silos       -S who=#{user}:#{user}"
 end
 
 task :retsina   do
-  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/silos       -S who=silo:daitss"
+  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/silos       -S who=#{user}:#{user}"
 end
-
-
 
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
