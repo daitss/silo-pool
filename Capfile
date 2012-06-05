@@ -10,7 +10,7 @@ set :repository,   "git://github.com/daitss/silo-pool.git"
 set :branch,       "master"
 
 set :use_sudo,     false
-set :user,         "silo"
+set :user,         "fclilt"
 set :group,        "daitss" 
 
 set :keep_releases, 4   # default is 5
