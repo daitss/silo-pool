@@ -5,6 +5,7 @@ require 'store/silo'
 require 'store/silodb'
 require 'store/silotape'
 require 'store/tsmexecutor'
+require 'datyl/config'
 
 # TODO: fixityutils.rb is used only by tape-fixity,  and should be refactored/merged against disk-fixity to be consistent.
 
@@ -21,11 +22,9 @@ def check_package_fixities web_server, silo_name, filesystem, fresh_enough, repo
 
   silo_record = Store::DB::SiloRecord.lookup(web_server, silo_name)
   silo        = Store::Silo.new(filesystem)
-
   silo.each do |package|
     begin
       package_record = Store::DB::PackageRecord.lookup(silo_record, package) 
-
       if (package_record.initial_timestamp != package_record.latest_timestamp) and (DateTime.now - package_record.latest_timestamp) <  fresh_enough
         skipped += 1
         next
@@ -135,7 +134,6 @@ def check_for_missing web_server, silo_name, filesystem, reporter
     # in_db is nil if no package record present in db, false if package was marked as deleted, and true if marked as present
     #
     # Here are all six cases, some vacuous:
-
     case
     when (on_disk and in_db == false)       # ghost: the package was deleted, but it's still on disk
       ghosts.push package_name
@@ -150,12 +148,12 @@ def check_for_missing web_server, silo_name, filesystem, reporter
     when (not on_disk and in_db == nil)     # ok: package never existed (won't happen here, left here for completeness)
 
     when (not on_disk and in_db)            # missing: should be there but it's not
+     reporter.info " not on_disk and in_db package_name=#{package_name} "
       missing.push package_name
-      silo_record.missing(package_name)
+     silo_record.missing(package_name)   
     end
 
   end
-
   if not ghosts.empty?
     info.ghosts = ghosts.count
     reporter.info "The filesystem #{filesystem} has #{info.ghosts} ghost #{pluralize_maybe(ghosts.count, 'package')} that the database indicates have been deleted from #{silo_name}: package names follow:"
@@ -176,6 +174,7 @@ def check_for_missing web_server, silo_name, filesystem, reporter
 
   return info
 rescue => e
+  puts e.backtrace.inspect
   raise Store::FatalFixityError, "Error while doing database checking for missing, alien or ghost packages: #{e}"
 end
 
@@ -217,7 +216,29 @@ def restore_to_scratch_disk tape_server, silo, destination_directory, reporter
   reporter.info "Restoring silo #{silo} from tape to scratch disk #{destination_directory}."
 
   tsm = Store::TsmExecutor.new(tape_server)
-  tsm.restore(silo, destination_directory, 16 * 60 * 60)   # Sixteen hours to restore - twice the expected time
+
+  config = Datyl::Config.new(ENV['DAITSS_CONFIG'],  'tape-fixity')
+
+  # default some potentially missing config options ([]= will create key/value)
+
+  tivoli_owner_pre055 =  config['tivoli_owner_pre055']
+  tivoli_owner_post055 = config['tivoli_owner_post055']
+  tivoli_server = config['tivoli_server']
+
+ reporter.info("Tivoli restore tivoli server:#{tivoli_server} tivoli_owner_pre055=#{tivoli_owner_pre055}  tivoli_owner_post055=#{tivoli_owner_post055}")
+
+  tivoli_owner = tivoli_owner_pre055       #  'silo_user'      #'fcldem'
+  reporter.info("first attempt tsm.restore(silo=#{silo}, destination_directory=#{destination_directory}, tivoli_owner=#{tivoli_owner}, 16 * 60 * 60")
+  tsm.restore(silo, destination_directory, tivoli_owner,16 * 60 * 60)   # Sixteen hours to restore - twice the expected time
+  reporter.info("first attempt status=#{tsm.status}  tsm.restore(silo=#{silo}, destination_directory=#{destination_directory}, 16 * 60 * 60)")
+  if tsm.status > 4
+   tivoli_owner =  tivoli_owner_post055      # 'fcldem'
+   reporter.info("tivoli first attempt status was #{tsm.status} going in for a second try new owner=#{tivoli_owner}")
+   tsm.restore(silo, destination_directory, tivoli_owner,16 * 60 * 60)   # Sixteen hours to restore - twice the expected time
+   reporter.info("tivoli second attempt status=#{tsm.status}  tsm.restore(silo=#{silo}, destination_directory=#{destination_directory}, 16 * 60 * 60")
+  end
+
+
 
   # list is sorted by tsm.list; status of 0 or 4 is OK; 8 may
   # be. 12 definitely isn't.
