@@ -49,12 +49,11 @@ module Store
       if not File.writable?  cache_root
         raise ConfigurationError, "Cache directory #{cache_root} is owned by #{StoreUtils.user(cache_root)} and is not writable by this process, which is running as user #{StoreUtils.user}."
       end
-
       @hostname      = hostname.downcase
       @filesystem    = filesystem.gsub(%r{/+$}, '')
       @tivoli_server = tivoli_server
       @silo_record   = DB::SiloRecord.lookup hostname, filesystem
-
+#STDERR.puts "silotape hostname="<<@hostname <<" filesystem="<<@filesystem<<" tivoli_server="<<@tivoli_server<<" silo_record="<<@silo_record
       raise ConfigurationError, "No database record found for tape-based silo #{hostname}:#{filesystem}." unless @silo_record
 
       # TODO: would be better to be lazy here and make them at need:
@@ -176,14 +175,15 @@ module Store
     # end
     
     def retrieve_from_tape name
-
       cleanup_cache
       tsm = TsmExecutor.new(tivoli_server)
       
       destination = slashify(File.join(cache_silo.filesystem, StoreUtils.hashpath_parent(name)))
       source      = slashify(File.join(self.filesystem, StoreUtils.hashpath(name)))
       
+puts "before tsm.restore(source=#{source}, destination=#{destination})"
       tsm.restore(source, destination)
+puts "after tsm.restore(source=#{source}, destination=#{destination})"
 
 
       if tsm.status > 8
@@ -196,6 +196,7 @@ module Store
     end
     
     def cleanup_cache
+STDERR.puts "cleanupcache"
       cache_silo.each { |name| cache_silo.delete(name) if (DateTime.now - cache_silo.last_access(name)) > DAYS_TO_CACHE }
     end
   end # of class SiloTape
