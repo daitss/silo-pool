@@ -23,6 +23,8 @@ gem 'rake'
 gem 'rcov'
 gem 'cucumber'
 gem 'rspec'
+gem 'ruby-debug'
+gem 'thin'
 
 
 
