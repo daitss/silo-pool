@@ -142,11 +142,15 @@ Struct.new('SiloInfo', :filesystem, :oldest_fixity, :state)
 # Select a silo to work on.  We'll
 
 def select_silo host, tape_server, fixity_stale_days, reporter
+  stuff = Store::SiloTape.silos(host)
+  reporter.info "select_silo available milos:"
+  stuff.each {|sy| reporter.info "zilo:  #{sy}-> #{sy.inspect}"}
   info = []
 
   Store::SiloTape.silos(host).each do |silorec|
     next if silorec.retired?
     silo =  Store::SiloTape.new(silorec.hostname, silorec.filesystem, '/tmp/', tape_server)   # TODO: /tmp?
+    puts "loop thru silos silo.filesystem=#{silo.filesystem} silo.oldest_fixity=#{silo.oldest_fixity} silo.state=#{silo.state}"
     info.push Struct::SiloInfo.new(silo.filesystem, silo.oldest_fixity, silo.state) if silo.oldest_fixity   # no packages to check
   end
 
@@ -154,8 +158,12 @@ def select_silo host, tape_server, fixity_stale_days, reporter
 
   now = DateTime.now
 
+  
   tape_masters = info.select{ |rec| (now - rec.oldest_fixity > fixity_stale_days) and (rec.state == :tape_master) }
   disk_idlers  = info.select{ |rec| rec.state == :disk_idling }
+
+ reporter.info(" disk_idlers=#{disk_idlers}")
+ reporter.info("tape_masters=#{tape_masters} ")
 
   silo_info = nil
 
@@ -339,11 +347,8 @@ begin
   reporter.info "Starting Tape Mastering/Fixity Checking at #{Time.now}"
 
   silodata = nil
-
   clean_up_scratch_disk(config.fixity_disk, reporter)
-
   silodata = select_silo(config.hostname, config.tivoli_server, config.fixity_stale_days, reporter)
-
   if silodata.nil?
     reporter.info "No silos need checking."
   elsif silodata.state == :disk_idling
