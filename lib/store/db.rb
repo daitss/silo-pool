@@ -197,7 +197,7 @@ module Store
 
       # record a missing package; name had better exist as a package in the PackageRecord table
 
-      def self.missing name
+      def missing name
         HistoryRecord.missing self, name
       end
 
