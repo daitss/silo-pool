@@ -181,10 +181,7 @@ module Store
       destination = slashify(File.join(cache_silo.filesystem, StoreUtils.hashpath_parent(name)))
       source      = slashify(File.join(self.filesystem, StoreUtils.hashpath(name)))
       
-puts "before tsm.restore(source=#{source}, destination=#{destination})"
       tsm.restore(source, destination)
-puts "after tsm.restore(source=#{source}, destination=#{destination})"
-
 
       if tsm.status > 8
 	raise "TSM Execution Error - exit status #{tsm.status}; " + get_tsm_info(tsm).join("\n")
