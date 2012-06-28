@@ -181,12 +181,10 @@ module Store
     def restore path, destination, tivoli_owner,timeout = nil
       ### run_dsmc(timeout, dsmc, "restore", "-latest", "-replace=no", "-filesonly", "-servername=#{server}", "-subdir=yes", path, destination)
       path = '"' << path << "*"  << '"'
-      puts "tsmexecutor.rb in restore before run_dsmc  servername=#{server} path=#{path} destination=#{destination} tivoli_owner=#{tivoli_owner}"
 
       #run_dsmc(timeout, dsmc, "restore", "-replace=no", "-filesonly", "-servername=#{server}", "-subdir=yes",  "-fromowner=fcldem" , "-optfile=/opt/tivoli/tsm/client/ba/bin/iraserv.opt", path, destination)
       #-worksrun_dsmc(timeout, dsmc, "restore", "-replace=no", "-filesonly", "-subdir=yes",  "-fromowner=fcldem" , "-optfile=/opt/tivoli/tsm/client/ba/bin/iraserv.opt", path, destination)
       run_dsmc(timeout, dsmc, "restore", "-replace=no", "-filesonly", "-subdir=yes",  "-fromowner=#{tivoli_owner}" , "-servername=#{server}", path, destination)
-      puts "tsmexecutor.rb in restore after run_dsmc  servername=#{server} path=#{path} destination=#{destination} $!=#{$!}"
     end
     
     def output &blk
