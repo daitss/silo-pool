@@ -142,9 +142,6 @@ Struct.new('SiloInfo', :filesystem, :oldest_fixity, :state)
 # Select a silo to work on.  We'll
 
 def select_silo host, tape_server, fixity_stale_days, reporter
-  stuff = Store::SiloTape.silos(host)
-  reporter.info "select_silo available milos:"
-  stuff.each {|sy| reporter.info "zilo:  #{sy}-> #{sy.inspect}"}
   info = []
 
   Store::SiloTape.silos(host).each do |silorec|
