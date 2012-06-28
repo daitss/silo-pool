@@ -150,7 +150,6 @@ def select_silo host, tape_server, fixity_stale_days, reporter
   Store::SiloTape.silos(host).each do |silorec|
     next if silorec.retired?
     silo =  Store::SiloTape.new(silorec.hostname, silorec.filesystem, '/tmp/', tape_server)   # TODO: /tmp?
-    puts "loop thru silos silo.filesystem=#{silo.filesystem} silo.oldest_fixity=#{silo.oldest_fixity} silo.state=#{silo.state}"
     info.push Struct::SiloInfo.new(silo.filesystem, silo.oldest_fixity, silo.state) if silo.oldest_fixity   # no packages to check
   end
 
