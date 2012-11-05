@@ -94,6 +94,12 @@ task :retsina   do
   sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/silos       -S who=#{user}:#{user}"
 end
 
+
+desc "deploy to development site (silos.marsala.fcla.edu)"
+task :marsala do
+ sh "cap deploy -S target=marsala.fcla.edu:/opt/web-services/sites/silos -S who=#{user}:#{user}"
+end
+
 desc "Generate documentation from libraries - try yardoc, hanna, rdoc, in that order."
 task :docs do
 
