@@ -181,7 +181,12 @@ module Store
       destination = slashify(File.join(cache_silo.filesystem, StoreUtils.hashpath_parent(name)))
       source      = slashify(File.join(self.filesystem, StoreUtils.hashpath(name)))
       
-      tsm.restore(source, destination)
+      tivoli_owner = 'daitss'              #tivoli_owner_post_055    github#8    
+      tsm.restore(source, destination,tivoli_owner)
+      if tsm.status > 4
+        tivoli_owner = 'silo'              #tivoli_owner_pre_055     github#8    
+        tsm.restore(source, destination,tivoli_owner)
+      end
 
       if tsm.status > 8
 	raise "TSM Execution Error - exit status #{tsm.status}; " + get_tsm_info(tsm).join("\n")
