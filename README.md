@@ -2,10 +2,9 @@ Silo-pool  Service
 ==========================
 A silo pool is a RESTful web service that allows packages to be stored to one of a collection of disk partitions. This page serves to document the two protocols for storing package data.
 
-Current Production code
+Current Production Code
 -----------------------
-git commit sha1 - 2adb991da7a7465d07657e721f94e98c01c84234
-https://github.com/daitss/silo-pool/2adb991da7a7465d07657e721f94e98c01c84234
+* https://github.com/daitss/silo-pool/2adb991da7a7465d07657e721f94e98c01c84234
 
 Simple PUT
 ---------
