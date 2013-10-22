@@ -6,7 +6,7 @@ require 'store'
 describe Store do
 
   it "should provide a NAME constant" do
-    (Store::NAME =~ /Silo Service/).should_not == nil
+    (Store::NAME =~ /Silo-Pool Service/).should_not == nil
   end
 
   it "should provide a VERSION constant" do
@@ -19,10 +19,6 @@ describe Store do
 
   it "should provide a REVISION constant" do
     (Store::REVISION.length > 0).should == true
-  end
-
-  it "should provide version rev information" do
-    (Store.version.rev =~ %r{Version}).should_not == nil
   end
 
   it "should provide version uri information" do

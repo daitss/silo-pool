@@ -255,7 +255,8 @@ module Store
       [ @output_file, @errors_file ].each { |file| file.rewind;  file.truncate(0) }
       
       Timeout.timeout(timeout) do
-        Open4.popen4(*cmd) do |@pid, process_in, process_out, process_err|
+        Open4.popen4(*cmd) do |pid, process_in, process_out, process_err|
+	  @pid = pid
           output_thread = Thread.new { while data = process_out.gets; @output_file.write data; end }
           errors_thread = Thread.new { while data = process_err.gets; @errors_file.write data; end }
           output_thread.join

@@ -102,16 +102,16 @@ module Store
 
       case
 
-      when (on_disk and rec.extant):
+      when (on_disk and rec.extant) then
         return true
 
-      when (on_disk and not rec.extant):
+      when (on_disk and not rec.extant) then
         raise GhostPackage, "Ghost package #{name}: database/disk inconsistency on #{hostname}:#{filesystem}: the silo db says package should not be on disk, but it's still there"
 
-      when (not on_disk and rec.extant):
+      when (not on_disk and rec.extant) then
         raise MissingPackage, "Missing package #{name}: database/disk inconsistency on #{hostname}:#{filesystem}: the silo db says package should be on disk, but it's not"
 
-      when (not on_disk and not rec.extant):
+      when (not on_disk and not rec.extant) then
         return false
       end
       

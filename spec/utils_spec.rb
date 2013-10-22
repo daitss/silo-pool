@@ -53,13 +53,14 @@ describe StoreUtils do
   end
 
   it "should allow us to retrieve correctly specified command line arguments, defaulting the db_configuration_file" do
-    argv = [ "--hostname", "example.com", "--silo-path", "/tmp", "--db-configuration-key", "foobar", "--syslog-facility", "LOCAL0"]
+    configuration_file = `pwd`.chomp+'/spec/db.yml'
+    argv = ["--hostname", "example.com", "--silo-path", "/tmp", "--db-configuration-key", "foobar", "--syslog-facility", "LOCAL0" ,"--db-configuration-file", configuration_file]
     conf = StoreUtils.get_silo_options(argv)
 
     conf.should_not == nil
 
     conf.hostname.should              == 'example.com'
-    conf.db_configuration_file.should == '/opt/fda/etc/db.yml'
+    conf.db_configuration_file.should == configuration_file   #### '/opt/fda/etc/db.yml'
     conf.db_configuration_key.should  == 'foobar'
     conf.syslog_facility.should       == 'LOCAL0'
     conf.silo_path.should             == '/tmp'

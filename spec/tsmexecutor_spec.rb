@@ -73,14 +73,13 @@ describe Store::TsmExecutor do
     data = "Some test data: #{rand(100000000)}\n"
   end
 
-  @@tsm = nil
+  self.class_variable_set(:@@tsm, nil)
     
   def setup_silo
     @root_dir = File.expand_path(File.join(File.dirname(__FILE__), 'tests', 'tsm', rand(100000).to_s)) # .../spec/tests/tsm/63206/
-    @silo_dir = FileUtils.mkdir_p(File.join(@root_dir, 'silo-000'))+ File::SEPARATOR                   # .../spec/tests/tsm/63206/silo-000
-    @copy_dir = FileUtils.mkdir_p(File.join(@root_dir, 'restore-directory')) + File::SEPARATOR         # .../spec/tests/tsm/63206/restore-directory
-
-    @silo = Store::Silo.new(@silo_dir)
+    @silo_dir = FileUtils.mkdir_p(File.join(@root_dir, 'silo-000')) ##+ File::SEPARATOR                   # .../spec/tests/tsm/63206/silo-000
+    @copy_dir = FileUtils.mkdir_p(File.join(@root_dir, 'restore-directory')) ##+ File::SEPARATOR         # .../spec/tests/tsm/63206/restore-directory
+    @silo = Store::Silo.new(@silo_dir[0]  + File::SEPARATOR)
     @silo.put(new_ieid, some_data)
     @silo.put(new_ieid, some_data)
     @silo.put(new_ieid, some_data)
@@ -125,25 +124,26 @@ describe Store::TsmExecutor do
 
   it "should allow us to save material to tape, giving us a tsm-style directory specification (braces around the mount point)" do
     nimby
-    @@tsm = Store::TsmExecutor.new servername, 120
-    path = @@tsm.save(@silo_dir)
+    t = Store::TsmExecutor.new servername, 120
+    self.class_variable_set(:@@tsm , t)
+    path = self.class_variable_get(:@@tsm).save(@silo_dir)
 
-    @@tsm.status.should == 0
+    self.class_variable_get(:@@tsm).status.should == 0
     (path =~ /\{.*\}/).should == 0
     (path.gsub('{', '').gsub('}', '')).should == @silo_dir
   end
 
   it "should allow us to list saved materials from tape" do
     nimby
-    listing = @@tsm.list(tsm_directory(@silo_dir))
-    @@tsm.status.should == 0
+    listing = self.class_variable_get(:@@tsm).list(tsm_directory(@silo_dir))
+    self.class_variable_get(:@@tsm).status.should == 0
     listing.length.should > 0
   end
 
   it "should allow us to restore saved materials from tape" do
     nimby
-    @@tsm.restore(tsm_directory(@silo_dir), @copy_dir)
-    @@tsm.status.should == 0
+    self.class_variable_get(:@@tsm).restore(tsm_directory(@silo_dir), @copy_dir)
+    self.class_variable_get(:@@tsm).status.should == 0
   end
 
   it "should have a copy of all of our restored material" do
@@ -172,7 +172,7 @@ describe Store::TsmExecutor do
 
     # find something to delete
 
-    list1 = @@tsm.list(tsm_directory(@silo_dir))
+    list1 = self.class_variable_get(:@@tsm).list(tsm_directory(@silo_dir))
     list1.length.should > 0
 
     to_delete = nil
@@ -181,12 +181,12 @@ describe Store::TsmExecutor do
 
     # delete it:
     
-    @@tsm.delete(to_delete)
-    @@tsm.status.should == 0
+    self.class_variable_get(:@@tsm).delete(to_delete)
+    self.class_variable_get(:@@tsm).status.should == 0
 
     # look for it, and don't find it:
 
-    list2 = @@tsm.list(tsm_directory(@silo_dir))
+    list2 = self.class_variable_get(:@@tsm).list(tsm_directory(@silo_dir))
     (list2.inject(false) { |found, rec| found || (rec[:path] == to_delete) }).should == false
     list1.length.should == list2.length + 1
   end
@@ -194,15 +194,15 @@ describe Store::TsmExecutor do
   it "should allow us to delete a set of directories from tape" do
     pending "Tivoli deletes are no longer supported by silo code."
     nimby
-    @@tsm.delete(tsm_directory(@silo_dir))
-    @@tsm.status.should == 0
+    self.class_variable_get(:@@tsm).delete(tsm_directory(@silo_dir))
+    self.class_variable_get(:@@tsm).status.should== 0
   end
 
   it "should now not list any saved materials on tape" do
     pending "Tivoli deletes are no longer supported by silo code."
     nimby
-    list = @@tsm.list(tsm_directory(@silo_dir))
-    @@tsm.status.should == 0
+    list = self.class_variable_get(:@@tsm).list(tsm_directory(@silo_dir))
+    self.class_variable_get(:@@tsm).status.should == 0
     list.length.should  == 0
   end
 

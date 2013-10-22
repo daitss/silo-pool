@@ -58,7 +58,7 @@ describe SiloTape do
 
     FileUtils::mkdir_p @cache_root
 
-    @@silo = nil
+    Store.class_variable_set(:@@silo,nil)  
   end
 
   after(:all) do
@@ -77,12 +77,14 @@ describe SiloTape do
   end
 
   it "should not allow PUTs" do
-    @@silo = SiloTape.new @hostname, @silo_root, @cache_root, TAPE_SERVER 
-    lambda { @@silo.put "somename", "somedata" }.should raise_error
+    #@@silo = SiloTape.new @hostname, @silo_root, @cache_root, TAPE_SERVER 
+    silotape = SiloTape.new @hostname, @silo_root, @cache_root, TAPE_SERVER 
+    Store.class_variable_set(:@@silo, silotape) 
+    lambda { Store.class_variable_get(:@@silo).put "somename", "somedata" }.should raise_error
   end
 
   it "should get the original datetime from the silo for E20010101_AAAAAG, which was placed by SiloDB" do
-    (DateTime.now - @@silo.datetime('E20010101_AAAAAG') < 1).should == true
+    (DateTime.now - Store.class_variable_get(:@@silo).datetime('E20010101_AAAAAG') < 1).should == true
   end
 
 end

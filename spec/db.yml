@@ -1,5 +1,7 @@
 # The databases and access that must exist prior to doing the db-based spec tests:
 #
 
-silos_mysql:     { vendor: mysql,    hostname: localhost, database: silos_spec_test, username: root, password: }
-silos_postgres:  { vendor: postgres, hostname: localhost, database: silos_spec_test, username: fischer, password: }
+silos_mysql:     { vendor: mysql,    hostname: localhost, database: silos_spec_test, username: fischer, password: topsecret }
+#silos_mysql:     mysql://fischer:topsecret@localhost/silos_spec_test
+silos_postgres:  { vendor: postgres, hostname: localhost, database: silos_spec_test, username: fischer, password: topsecret }
+#silos_postgres:  postgres://fischer:topsecret@localhost/silos_spec_test

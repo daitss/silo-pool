@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'datyl/config'
 require 'datyl/logger'
 require 'socket'
@@ -25,7 +26,7 @@ end
 
 
 configure do
-  $KCODE = 'UTF8'
+                  
 
   set :logging,     false        # Stop CommonLogger from logging to STDERR
   set :dump_errors, false        # Don't add backtraces automatically (we'll decide)

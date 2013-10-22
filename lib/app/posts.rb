@@ -20,9 +20,10 @@ post '/create/:name' do |name|
 
   # Note: PoolReservation checks for 'put' permissions on silos (thought is is technically not a PUT,
   # we use that designation in the pool administration GUI to limit the set of writable silos)
-
-  PoolReservation.new(request.content_length.to_i) do |silo|
-    silo.put(name, request.body, request.content_type || 'application/x-tar')
+  silo = Object.new
+  PoolReservation.new(request.content_length.to_i) do |s|
+    s.put(name, request.body, request.content_type || 'application/x-tar')
+    silo = s
   end
 
   computed_md5 = silo.md5(name)

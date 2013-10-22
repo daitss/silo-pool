@@ -9,6 +9,7 @@ require 'enumerator'
 require 'socket'
 require 'store/exceptions'
 require 'time'
+require 'store/utils'       
 
 # TODO: add code to ensure that the last compoent of the silo filesystem is unique; it's an assumption
 # but not explicitly enfoced.
@@ -32,7 +33,6 @@ module Store
     def self.setup *args
 
       connection_string = (args.length == 2 ? StoreUtils.connection_string(args[0], args[1]) : args[0])
-
       dm = DataMapper.setup(:store_master, connection_string)
 
       begin

@@ -134,6 +134,7 @@ module Store
       end
 
     rescue => e
+	    puts e.backtrace
       raise TarReaderError, "Error reading file #{file_path}: #{e.class} #{e.message}"
     end
 
@@ -192,10 +193,14 @@ module Store
     # The location of the checksum itself (at buff[148..155]) is treated as a string of blanks.
 
     def compute_header_checksum buff
+=begin	    
       sum =  0
       (0   .. 147).each { |i| sum += buff[i] }
       (156 .. 511).each { |i| sum += buff[i] }
       sum + 32 * 8   
+=end
+      sum = buff[0 .. 147].sum + buff[156 .. 511].sum
+      sum + 32 * 8
     end
 
     # CONVERT_FROM_BINARY_MAYBE(BUFF) returns a number (a fixnum) extracted from the string BUFF
@@ -215,8 +220,8 @@ module Store
 
 
     def convert_from_binary_maybe buff
-      if buff[0] & 0b1000_0000 == 0b1000_0000
-        s = buff[0] & ~ 0b1000_0000                                       # mask out high bit
+      if buff[0].to_i & 0b1000_0000 == 0b1000_0000
+        s = buff[0].to_i & ~ 0b1000_0000                                       # mask out high bit
         (1..(buff.length - 1)).each { |i| s = 256 * s + buff[i] }         # Horner's algorithm
         return s
       else
