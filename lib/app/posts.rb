@@ -63,7 +63,7 @@ post '/:partition/knobs/allowed-methods' do |partition|
 
   forbidden  = silo.possible_methods - allowed
 
-  Logger.warn "Request from #{@env['REMOTE_ADDR']} to change allowed methods of #{silo.filesystem} from [#{silo.allowed_methods.map { |m| method_to_text(m) }. join(', ')}] to [#{ allowed.map { |m| method_to_text(m) }. join(', ')}]."
+  Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to change allowed methods of #{silo.filesystem} from [#{silo.allowed_methods.map { |m| method_to_text(m) }. join(', ')}] to [#{ allowed.map { |m| method_to_text(m) }. join(', ')}]."
 
   forbidden.each { |m| silo.forbid(m) }
   allowed.each   { |m| silo.allow(m) }
@@ -78,7 +78,7 @@ post '/new-silo?' do
   
   raise BadFilesystem, "#{new_filesystem} is already listed as a silo" if Store::DB::SiloRecord.lookup(hostname, new_filesystem)
 
-  Logger.warn "Request from #{@env['REMOTE_ADDR']} to add silo #{new_filesystem}"
+  Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to add silo #{new_filesystem}"
 
   raise BadFilesystem, "#{new_filesystem} doesn't exist"      unless File.exists? new_filesystem
   raise BadFilesystem, "#{new_filesystem} isn't a directory"  unless File.directory? new_filesystem
@@ -99,11 +99,11 @@ post '/credentials?' do
   case params[:action]
 
   when /clear password/i
-    Logger.warn "Request from #{@env['REMOTE_ADDR']} to remove password protection for this silo pool."
+    Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to remove password protection for this silo pool."
     DB::Authentication.clear
 
   when /change password/i, /set password/i
-    Logger.warn "Request from #{@env['REMOTE_ADDR']} to change the password protection for this silo pool."
+    Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to change the password protection for this silo pool."
     DB::Authentication.create('admin', params[:password])
   end
 
@@ -116,7 +116,7 @@ post '/:partition/knobs/allowed-states' do |partition|
   silo      = get_silo(partition)
   new_state = text_to_state(params[:state])
 
-  Logger.warn "Request from #{@env['REMOTE_ADDR']} to change state of #{silo.filesystem} from #{state_to_text(silo.state)} to #{state_to_text(new_state)}."
+  Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to change state of #{silo.filesystem} from #{state_to_text(silo.state)} to #{state_to_text(new_state)}."
 
   silo.state new_state if silo.state != new_state
   redirect absolutely("/silos/")
@@ -131,10 +131,10 @@ post '/:partition/knobs/retire-silo' do |partition|
   redirect absolutely("/silos/") if (do_retire and silo.retired?) or (not do_retire and not silo.retired?)
 
   if do_retire
-    Logger.warn "Request from #{@env['REMOTE_ADDR']} to retire #{silo.filesystem}." 
+    Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to retire #{silo.filesystem}." 
     silo.retire
   else
-    Logger.warn "Request from #{@env['REMOTE_ADDR']} to un-retire #{silo.filesystem}." 
+    Datyl::Logger.warn "Request from #{@env['REMOTE_ADDR']} to un-retire #{silo.filesystem}." 
     silo.reactivate    
   end
 
