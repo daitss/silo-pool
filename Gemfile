@@ -2,12 +2,10 @@
 
 source "http://rubygems.org"
 
-# gem 'ruby-prof'
+gem 'nokogiri', "~> 1.5.10"
 gem 'mime-types', :require => 'mime/types'
 gem 'data_mapper'
 gem 'dm-postgres-adapter'
-gem 'dm-mysql-adapter'
-gem 'nokogiri'
 gem 'builder'
 gem 'log4r'
 gem 'open4'
