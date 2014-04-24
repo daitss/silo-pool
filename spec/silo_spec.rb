@@ -33,13 +33,16 @@ describe Store::Silo do
   it "should create a silo based on a directory" do
     lambda { Store::Silo.new @silo_root }.should_not raise_error
   end
-  
+=begin 
+#
+#commented out see the comments in  lib/store/silo.rb .  initialize method
+#
   it "should not create a silo on anything but a directory" do
     t = Tempfile.new('testtmp')
     regular_file = t.path
     lambda { Store::Silo.new regular_file }.should raise_error(Store::StorageError)
   end
-
+=end
   it "should take a object name and some data to store an object" do
     name = "test object"
     data =  "some data"

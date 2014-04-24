@@ -299,12 +299,12 @@ module Store
         }
 
         case
-        when (rec.latest_md5.nil? and rec.latest_sha1.nil?):
+        when (rec.latest_md5.nil? and rec.latest_sha1.nil?) then 
             fix[:status] = :missing
             fix[:sha1]   = ''
             fix[:md5]    = ''
             fix[:size]   = 0
-        when (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1):
+        when (rec.latest_md5 == rec.initial_md5 and rec.latest_sha1 == rec.initial_sha1) then
             fix[:status] = :ok
         else
           fix[:status] = :fail

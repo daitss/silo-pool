@@ -1,3 +1,4 @@
+# encoding: UTF-8
 require 'datyl/config'
 require 'datyl/logger'
 require 'socket'
@@ -25,7 +26,7 @@ end
 
 
 configure do
-  $KCODE = 'UTF8'
+                  
 
   set :logging,     false        # Stop CommonLogger from logging to STDERR
   set :dump_errors, false        # Don't add backtraces automatically (we'll decide)
@@ -39,20 +40,20 @@ configure do
   set :fixity_stale_days,     config.fixity_stale_days     || 45
   set :fixity_expired_days,   config.fixity_expired_days   || 60
 
-  Logger.setup 'SiloPool', ENV['VIRTUAL_HOSTNAME']
+  Datyl::Logger.setup 'SiloPool', ENV['VIRTUAL_HOSTNAME']
 
-  Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
-  Logger.filename = config.log_filename         if config.log_filename
+  Datyl::Logger.facility = config.log_syslog_facility  if config.log_syslog_facility
+  Datyl::Logger.filename = config.log_filename         if config.log_filename
 
-  Logger.stderr unless (config.log_filename or config.log_syslog_facility)
+  Datyl::Logger.stderr unless (config.log_filename or config.log_syslog_facility)
 
-  use Rack::CommonLogger, Logger.new(:info, 'Rack:')  # Bend CommonLogger to our logging system
+  use Rack::CommonLogger, Datyl::Logger.new(:info, 'Rack:')  # Bend CommonLogger to our logging system
 
-  Logger.info "Starting #{Store.version.name}; Tivoli server is #{settings.tivoli_server || 'not defined.' }."
-  Logger.info "Using #{ENV['TMPDIR'] || 'system default'} for temp directory"
-  Logger.info "Using database #{StoreUtils.safen_connection_string(config.silo_db)}"
+  Datyl::Logger.info "Starting #{Store.version.name}; Tivoli server is #{settings.tivoli_server || 'not defined.' }."
+  Datyl::Logger.info "Using #{ENV['TMPDIR'] || 'system default'} for temp directory"
+  Datyl::Logger.info "Using database #{StoreUtils.safen_connection_string(config.silo_db)}"
 
-  DataMapper::Logger.new(Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
+  DataMapper::Logger.new(Datyl::Logger.new(:info, 'DataMapper:'), :debug) if config.log_database_queries
 
   Store::DB.setup config.silo_db
 end

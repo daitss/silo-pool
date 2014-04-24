@@ -34,7 +34,7 @@ error do
   # header info for the client:
 
   when e.is_a?(Store::Http401)
-    Logger.warn e.client_message, @env
+    Datyl::Logger.warn e.client_message, @env
     response['WWW-Authenticate'] = "Basic realm=\"Password-Protected Pool for\ #{hostname}\""
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
 
@@ -45,13 +45,13 @@ error do
   # can catch that quickly with our log monitoring material.
 
   when (e.is_a?(Store::Http405) and [ 'DELETE', 'PUT', 'POST' ].include?(request.request_method))
-    Logger.err e.client_message, @env
+    Datyl::Logger.err e.client_message, @env
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
 
   # Any other 4xx error; but see not_found below!
     
   when e.is_a?(Store::Http400Error)
-    Logger.warn e.client_message, @env
+    Datyl::Logger.warn e.client_message, @env
     halt e.status_code, { 'Content-Type' => 'text/plain' },  e.client_message
 
   # Configuration errors messages are likely to be sensitive but
@@ -59,7 +59,7 @@ error do
   # on the side of helpfulness and display the message in the browser:
 
   when e.is_a?(Store::ConfigurationError)
-    Logger.err e.client_message, @env
+    Datyl::Logger.err e.client_message, @env
     halt 500, { 'Content-Type' => 'text/plain' }, e.client_message
 
   # Next are any other errors with safe, sufficiently informative messages for
@@ -67,7 +67,7 @@ error do
   # of messages not leak sensitive information.
 
   when e.is_a?(Store::HttpError)
-    Logger.err e.client_message, @env
+    Datyl::Logger.err e.client_message, @env
     halt e.status_code, { 'Content-Type' => 'text/plain' }, e.client_message
     
   # Anything else we catch here, log a back trace as well - minimal
@@ -77,8 +77,8 @@ error do
   # sprinked in the code now, it awaits your shrewd refactoring.)
 
   else
-    Logger.err "Internal Server Error - #{e.class} #{e.message}", @env
-    e.backtrace.each { |line| Logger.err line, @env }
+    Datyl::Logger.err "Internal Server Error - #{e.class} #{e.message}", @env
+    e.backtrace.each { |line| Datyl::Logger.err line, @env }
     halt 500, { 'Content-Type' => 'text/plain' }, "Internal Service Error - See system logs for more information\n"
   end
 end
@@ -92,7 +92,7 @@ not_found  do
 
   err = @env['sinatra.error']
   message = err.is_a?(Store::Http404) ? err.client_message : "404 Not Found - #{request.url} doesn't exist.\n"
-  Logger.warn message, @env
+  Datyl::Logger.warn message, @env
   content_type 'text/plain'
   message
 end

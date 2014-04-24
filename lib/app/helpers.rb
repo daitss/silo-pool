@@ -153,7 +153,7 @@ helpers do
       end
     end
 
-    Logger.info "Using hostname '#{hostname}' for silo lookup: #{silos.length} #{silos.length == 1 ? 'silo' : 'silos'} found."
+    Datyl::Logger.info "Using hostname '#{hostname}' for silo lookup: #{silos.length} #{silos.length == 1 ? 'silo' : 'silos'} found."
 
     return silos
   end
@@ -268,14 +268,14 @@ helpers do
   def safe_silo_size silo, name
     pretty_size(silo.size(name))
   rescue => e
-    Logger.err "Error when retrieving size information for #{name} from #{silo}: #{e.class} - #{e.message}"
+    Datyl::Logger.err "Error when retrieving size information for #{name} from #{silo}: #{e.class} - #{e.message}"
     'error retrieving size'
   end
 
   def safe_silo_datetime silo, name
     silo.datetime(name).strftime("%B %d, %Y - %r")
   rescue => e
-    Logger.err "Error when retrieving date information for #{name} from #{silo}: #{e.class} - #{e.message}"
+    Datyl::Logger.err "Error when retrieving date information for #{name} from #{silo}: #{e.class} - #{e.message}"
     'error retrieving date'
   end
 
@@ -286,7 +286,7 @@ helpers do
   # block, or in selected routes.
 
   def log_start_of_request
-    Logger.info 'Request Received: ' + (request.content_length ? "#{request.content_length}" :  '-'), env
+    Datyl::Logger.info 'Request Received: ' + (request.content_length ? "#{request.content_length}" :  '-'), env
   end
 
 end

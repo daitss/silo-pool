@@ -59,7 +59,8 @@ describe "pool reservation" do
 
     data = "x" * 4_712_000  # should fill up the first of the empty silos after 3 PUTs.
 
-    @@selected_silo = nil
+    #@@selected_silo = nil
+    PoolReservation.class_variable_set(:@@selected_silo, nil)
 
     PoolReservation.new(data.length) do |silo|
       @@selected_silo = silo
