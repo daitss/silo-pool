@@ -214,7 +214,7 @@ module Store
       deleted_on      = nil
       created_on      = nil
       count           = 0
-      max_time        = DateTime.parse('1970-01-01')
+      max_time        = DateTime.strptime('1970-01-01', '%Y-%m-%d')
       min_time        = DateTime.now
       history_records = DB::HistoryRecord.list(silo_record, name)  ### TODO: list raw here, perhaps, for speedup
 
@@ -286,7 +286,7 @@ module Store
     def silo_fixity_report
       fixity_records = []
       count          = 0
-      max_time       = DateTime.parse('1970-01-01')
+      max_time       = DateTime.parse('1970-01-01', "%Y-%m-%d")
       min_time       = DateTime.now
 
       DB::PackageRecord.raw_list(silo_record, :extant => true).each do |rec|

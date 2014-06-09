@@ -159,7 +159,7 @@ module Store
           end
         when :listing                # modification date,  # time                            # access date,        # time
           if line =~ %r{^Modified:\s+(\d{2}/\d{2}/\d{4})\s+(\d{2}:\d{2}:\d{2})\s+Accessed:\s+(\d{2}/\d{2}/\d{4})\s+(\d{2}:\d{2}:\d{2})}
-            rec.mtime = Time.parse($1 + ' ' + $2)
+            rec.mtime = Time.strptime($1 + ' ' + $2, "%m/%d/%Y %H:%M:%S")
             listing.push rec
             state = :other
           end
