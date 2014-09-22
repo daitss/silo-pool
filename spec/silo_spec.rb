@@ -31,7 +31,7 @@ describe Store::Silo do
   end
   
   it "should create a silo based on a directory" do
-    lambda { Store::Silo.new @silo_root }.should_not raise_error
+    expect{ Store::Silo.new @silo_root }.not_to raise_error
   end
 =begin 
 #
@@ -46,7 +46,7 @@ describe Store::Silo do
   it "should take a object name and some data to store an object" do
     name = "test object"
     data =  "some data"
-    lambda { @silo.put name, data }.should_not raise_error
+    expect{ @silo.put name, data }.not_to raise_error
   end
 
   it "should find an existing object given an object name" do
@@ -78,7 +78,7 @@ describe Store::Silo do
     name = some_name
     data = some_data
     @silo.put name, data
-    lambda {@silo.put(name, data)}.should raise_error(Store::SiloResourceExists)
+    expect{@silo.put(name, data)}.to raise_error(Store::SiloResourceExists)
   end
 
   it "should have size for an object" do
@@ -97,7 +97,7 @@ describe Store::Silo do
 
   it "should raise StorageError on requests for size for non-existant objects" do
     name = some_name
-    lambda {@silo.size(name)}.should raise_error(Store::StorageError)
+    expect{@silo.size(name)}.to raise_error(Store::StorageError)
   end
 
   it "should return size of zero, empty string, and specific md5 checksum on reading a zero length file" do
@@ -138,14 +138,14 @@ describe Store::Silo do
 
   it "datetime should raise an error if the object does not exist" do
     name = "bogus name"
-    lambda{ @silo.datetime(name)}.should raise_error(Store::StorageError)	
+    expect{ @silo.datetime(name)}.to raise_error(Store::StorageError)	
   end
 
   it "datetime should not raise error if the object does exist"	do
     name = "the name"
     data = "some data"
     @silo.put name, data
-    lambda{ @silo.datetime(name)}.should_not raise_error(Store::StorageError)				
+    expect{ @silo.datetime(name)}.not_to raise_error
   end
 
   it "datetime should return the time an object was created" do
@@ -185,7 +185,7 @@ describe Store::Silo do
     data  = "Now is the time for all good men to come to the aid of their country!\n"
     name  = "George Washington!?"
 
-    lambda{ @silo.put(name, data)}.should raise_error(Store::SiloBadName)
+    expect{ @silo.put(name, data)}.to raise_error(Store::SiloBadName)
   end  			
 
   it "should allow grep of all the names in the collection" do
@@ -302,14 +302,14 @@ describe Store::Silo do
   @in_silo.put name, data
   @out_silo.put name, data
 
-  lambda { @in_silo.copy_to_silo(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
+  expect{ @in_silo.copy_to_silo(name, @out_silo) }.to raise_error(Store::SiloResourceExists)
  end
 
  it "should throw exception on a copy of data from one silo to another, where the source data does not exist" do
   name = some_name
   data = some_data
 
-  lambda{ @in_silo.copy_to_silo(name, @out_silo) }.should raise_error(Store::SiloError)
+  expect{ @in_silo.copy_to_silo(name, @out_silo) }.to raise_error(Store::SiloError)
  end
 
 # Internally, move_to_silo decides on which of two implementations to use. If the two silos are one
@@ -337,13 +337,13 @@ describe Store::Silo do
   @in_silo.put name, data
   @out_silo.put name, data
 
-  lambda { @in_silo.move_to_silo_with_rename(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
+  expect{ @in_silo.move_to_silo_with_rename(name, @out_silo) }.to raise_error(Store::SiloResourceExists)
  end
 
  it "should throw specific exceptions for a silo move of data that doesn't exist in the source silo" do
   name = some_name
 
-  lambda { @in_silo.move_to_silo_with_rename(name, @out_silo) }.should raise_error(Store::SiloError)
+  expect{ @in_silo.move_to_silo_with_rename(name, @out_silo) }.to raise_error(Store::SiloError)
  end
 
 
@@ -354,7 +354,7 @@ describe Store::Silo do
   @in_silo.put name, data
   @out_silo.put name, data
 
-  lambda { @in_silo.move_to_silo_with_rename(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
+  expect{ @in_silo.move_to_silo_with_rename(name, @out_silo) }.to raise_error(Store::SiloResourceExists)
   @in_silo.get(name).should == data
  end
 
@@ -379,13 +379,13 @@ describe Store::Silo do
   @in_silo.put name, data
   @out_silo.put name, data
 
-  lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
+  expect{ @in_silo.move_to_silo_with_copy(name, @out_silo) }.to raise_error(Store::SiloResourceExists)
  end
 
  it "should throw specific exceptions for a silo move of data that doesn't exist in the source silo" do
   name = some_name
 
-  lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::StorageError)
+  expect{ @in_silo.move_to_silo_with_copy(name, @out_silo) }.to raise_error(Store::StorageError)
  end
 
 
@@ -396,7 +396,7 @@ describe Store::Silo do
   @in_silo.put name, data
   @out_silo.put name, data
 
-  lambda { @in_silo.move_to_silo_with_copy(name, @out_silo) }.should raise_error(Store::SiloResourceExists)
+  expect{ @in_silo.move_to_silo_with_copy(name, @out_silo) }.to raise_error(Store::SiloResourceExists)
   @in_silo.get(name).should == data
  end
 

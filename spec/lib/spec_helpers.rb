@@ -4,9 +4,15 @@ require 'digest/sha1'
 require 'fileutils'
 require 'socket'
 require 'yaml'
+require 'rspec/collection_matchers'
+
+RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+  c.syntax = [:should, :expect]
+  end
+end
 
 # Common routines for db_spec, silo_spec, silodb_spec, and silotape_spec (maybe table classes as well)
-
 
 # Helpers for tables class spec tests.
 
@@ -69,11 +75,6 @@ class PostgresMaker < DbMaker
     `dropdb #{name}`
   end
 end
-
-
-
-
-
 
 def my_host
   Socket.gethostname

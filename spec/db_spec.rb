@@ -37,7 +37,7 @@ end
 
 #### .should 
 
-share_examples_for "DataMapper ReservedDiskSpace class using any database" do
+shared_examples "DataMapper ReservedDiskSpace class using any database" do
 
   it "should alow us to create a record" do
     rec = DB::ReservedDiskSpace.create(:partition => '/', :size => rand(1000))
@@ -143,7 +143,7 @@ end
 
 
 
-share_examples_for "DataMapper SiloRecord class using any database" do
+shared_examples "DataMapper SiloRecord class using any database" do
 
   it "should return an empty list when there are no silos" do
     DB::SiloRecord.list.should == []
@@ -333,7 +333,7 @@ end
 
 
 
-share_examples_for "DataMapper PackageRecord class using any database" do
+shared_examples "DataMapper PackageRecord class using any database" do
 
   # We have a broken-by-design issue here.  We can have a package with no
   # history entries,  which should not be allowed.
@@ -449,7 +449,7 @@ describe "DataMapper PackageRecord class using Mysql" do
 end
 
 
-share_examples_for "DataMapper HistoryRecord class using any database" do
+shared_examples "DataMapper HistoryRecord class using any database" do
 
   it "should allow us get an empty list of histories, initially, for a silo_record and package name that's never been recorded" do
     DB::HistoryRecord.list(@silo_rec, @package_name_1).should == []
